@@ -1,0 +1,25 @@
+name: qtclass_studio
+description: "量潮课堂 - 课程与学员管理"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/delivery_modes.json
+    - assets/courses.json
+    - assets/students.json

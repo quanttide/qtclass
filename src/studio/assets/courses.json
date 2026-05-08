@@ -1,0 +1,53 @@
+[
+  {
+    "id": "course_001",
+    "title": "Python 数据分析",
+    "description": "从零开始学习 Python 数据分析，涵盖 NumPy、Pandas、Matplotlib 等核心库",
+    "classes": [
+      {
+        "id": "class_001",
+        "name": "2026春实训班",
+        "course_id": "course_001",
+        "delivery_mode_id": "dm_school_enterprise",
+        "lessons": [
+          { "id": "lesson_001", "title": "Python 基础", "duration_minutes": 90, "teacher_id": "teacher_001" },
+          { "id": "lesson_002", "title": "NumPy 入门", "duration_minutes": 90, "teacher_id": "teacher_001" },
+          { "id": "lesson_003", "title": "Pandas 数据处理", "duration_minutes": 120, "teacher_id": "teacher_001" }
+        ],
+        "start_date": "2026-03-01",
+        "end_date": "2026-06-30"
+      },
+      {
+        "id": "class_002",
+        "name": "2026秋实训班",
+        "course_id": "course_001",
+        "delivery_mode_id": "dm_training_base",
+        "lessons": [
+          { "id": "lesson_004", "title": "Python 进阶", "duration_minutes": 90, "teacher_id": "teacher_001" },
+          { "id": "lesson_005", "title": "数据可视化", "duration_minutes": 120, "teacher_id": "teacher_002" }
+        ],
+        "start_date": "2026-09-01",
+        "end_date": "2026-12-31"
+      }
+    ]
+  },
+  {
+    "id": "course_002",
+    "title": "大数据技术实战",
+    "description": "Hadoop、Spark、Flink 等大数据技术栈的实战训练",
+    "classes": [
+      {
+        "id": "class_003",
+        "name": "大数据训练营第3期",
+        "course_id": "course_002",
+        "delivery_mode_id": "dm_training_base",
+        "lessons": [
+          { "id": "lesson_006", "title": "HDFS 原理与实践", "duration_minutes": 120, "teacher_id": "teacher_002" },
+          { "id": "lesson_007", "title": "MapReduce 编程", "duration_minutes": 120, "teacher_id": "teacher_002" }
+        ],
+        "start_date": "2026-04-01",
+        "end_date": "2026-07-31"
+      }
+    ]
+  }
+]

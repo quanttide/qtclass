@@ -1,0 +1,26 @@
+{
+  "students": [
+    { "id": "stu_001", "name": "张三", "type": "paid", "organization_id": "org_001" },
+    { "id": "stu_002", "name": "李四", "type": "vip", "organization_id": "org_001" },
+    { "id": "stu_003", "name": "王五", "type": "free", "organization_id": "org_002" },
+    { "id": "stu_004", "name": "赵六", "type": "paid", "organization_id": "org_002" }
+  ],
+  "organizations": [
+    { "id": "org_001", "name": "杭州电子科技大学", "type": "university" },
+    { "id": "org_002", "name": "量潮科技", "type": "enterprise" }
+  ],
+  "customers": [
+    { "id": "cust_001", "name": "杭电计算机学院", "organization_id": "org_001" },
+    { "id": "cust_002", "name": "量潮内部培训部", "organization_id": "org_002" }
+  ],
+  "contracts": [
+    { "id": "ct_001", "organization_id": "org_001", "class_id": "class_001", "delivery_mode_id": "dm_school_enterprise", "amount": 120000 },
+    { "id": "ct_002", "organization_id": "org_002", "class_id": "class_003", "delivery_mode_id": "dm_training_base", "amount": 80000 }
+  ],
+  "enrollments": [
+    { "id": "enr_001", "student_id": "stu_001", "class_id": "class_001", "enrolled_at": "2026-02-20" },
+    { "id": "enr_002", "student_id": "stu_002", "class_id": "class_001", "enrolled_at": "2026-02-21" },
+    { "id": "enr_003", "student_id": "stu_003", "class_id": "class_003", "enrolled_at": "2026-03-15" },
+    { "id": "enr_004", "student_id": "stu_004", "class_id": "class_003", "enrolled_at": "2026-03-16" }
+  ]
+}
