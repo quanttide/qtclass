@@ -1,0 +1,8 @@
+[PASS] Schedule page displayed
+[PASS] Card tap - screen content changed
+[PASS] In classroom view (window alive)
+[PASS] Attendance button - screen content changed
+[PASS] Mark all present - screen content changed
+[FAIL] End class button - screen unchanged, click likely missed
+[PASS] Confirm dialog - screen content changed
+[PASS] Back on schedule page
