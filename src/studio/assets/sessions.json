@@ -1,0 +1,57 @@
+[
+  {
+    "id": "sess_001",
+    "course_name": "Python 数据分析",
+    "class_name": "2026春实训班",
+    "lesson_title": "Python 基础",
+    "teacher": { "id": "t_001", "name": "王老师" },
+    "start_time": "2026-05-08T09:00:00",
+    "duration_minutes": 90,
+    "location": "线上教室 A",
+    "status": "inProgress",
+    "students": [
+      { "id": "stu_001", "name": "张三" },
+      { "id": "stu_002", "name": "李四" },
+      { "id": "stu_003", "name": "王五" },
+      { "id": "stu_004", "name": "赵六" },
+      { "id": "stu_005", "name": "陈七" },
+      { "id": "stu_006", "name": "刘八" }
+    ]
+  },
+  {
+    "id": "sess_002",
+    "course_name": "Python 数据分析",
+    "class_name": "2026春实训班",
+    "lesson_title": "NumPy 入门",
+    "teacher": { "id": "t_001", "name": "王老师" },
+    "start_time": "2026-05-08T14:00:00",
+    "duration_minutes": 90,
+    "location": "线上教室 A",
+    "status": "upcoming",
+    "students": [
+      { "id": "stu_001", "name": "张三" },
+      { "id": "stu_002", "name": "李四" },
+      { "id": "stu_003", "name": "王五" },
+      { "id": "stu_004", "name": "赵六" },
+      { "id": "stu_005", "name": "陈七" },
+      { "id": "stu_006", "name": "刘八" }
+    ]
+  },
+  {
+    "id": "sess_003",
+    "course_name": "大数据技术实战",
+    "class_name": "大数据训练营第3期",
+    "lesson_title": "HDFS 原理与实践",
+    "teacher": { "id": "t_002", "name": "李老师" },
+    "start_time": "2026-05-07T09:00:00",
+    "duration_minutes": 120,
+    "location": "实训基地 3楼机房",
+    "status": "completed",
+    "students": [
+      { "id": "stu_003", "name": "王五" },
+      { "id": "stu_004", "name": "赵六" },
+      { "id": "stu_007", "name": "孙八" },
+      { "id": "stu_008", "name": "周九" }
+    ]
+  }
+]
