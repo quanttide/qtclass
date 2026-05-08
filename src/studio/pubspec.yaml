@@ -20,6 +20,4 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/delivery_modes.json
-    - assets/courses.json
-    - assets/students.json
+    - assets/sessions.json

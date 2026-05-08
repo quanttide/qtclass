@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'services/app_state.dart';
-import 'screens/home_screen.dart';
+import 'screens/schedule_screen.dart';
 
 void main() {
   runApp(
@@ -27,7 +27,7 @@ class QtClassApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const ScheduleScreen(),
     );
   }
 }

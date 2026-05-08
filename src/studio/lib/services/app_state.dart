@@ -3,25 +3,26 @@ import '../models/models.dart';
 import 'data_service.dart';
 
 class AppState extends ChangeNotifier {
-  final DataService _dataService = DataService();
+  final DataService _dataService;
 
-  List<DeliveryMode> _deliveryModes = [];
-  List<Course> _courses = [];
-  List<Student> _students = [];
-  List<Organization> _organizations = [];
-  List<Contract> _contracts = [];
-  List<Enrollment> _enrollments = [];
+  AppState({DataService? dataService}) : _dataService = dataService ?? DataService();
+
+  List<Session> _sessions = [];
   bool _isLoading = false;
   String? _error;
 
-  List<DeliveryMode> get deliveryModes => _deliveryModes;
-  List<Course> get courses => _courses;
-  List<Student> get students => _students;
-  List<Organization> get organizations => _organizations;
-  List<Contract> get contracts => _contracts;
-  List<Enrollment> get enrollments => _enrollments;
+  List<Session> get sessions => _sessions;
   bool get isLoading => _isLoading;
   String? get error => _error;
+
+  List<Session> get upcomingSessions =>
+      _sessions.where((s) => s.status == SessionStatus.upcoming).toList();
+
+  List<Session> get inProgressSessions =>
+      _sessions.where((s) => s.status == SessionStatus.inProgress).toList();
+
+  List<Session> get completedSessions =>
+      _sessions.where((s) => s.status == SessionStatus.completed).toList();
 
   Future<void> loadAll() async {
     _isLoading = true;
@@ -29,22 +30,7 @@ class AppState extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final results = await Future.wait([
-        _dataService.loadDeliveryModes(),
-        _dataService.loadCourses(),
-        _dataService.loadStudents(),
-        _dataService.loadOrganizations(),
-        _dataService.loadContracts(),
-        _dataService.loadEnrollments(),
-      ]);
-
-      _deliveryModes = results[0] as List<DeliveryMode>;
-      _courses = results[1] as List<Course>;
-      _students = results[2] as List<Student>;
-      _organizations = results[3] as List<Organization>;
-      _contracts = results[4] as List<Contract>;
-      _enrollments = results[5] as List<Enrollment>;
-
+      _sessions = await _dataService.loadSessions();
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -54,36 +40,18 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  DeliveryMode? deliveryModeById(String id) {
-    try {
-      return _deliveryModes.firstWhere((d) => d.id == id);
-    } catch (_) {
-      return null;
+  void markAttendance(String sessionId, String studentId, AttendanceStatus status) {
+    final session = _sessions.firstWhere((s) => s.id == sessionId);
+    final student = session.students.firstWhere((s) => s.id == studentId);
+    student.attendance = status;
+    notifyListeners();
+  }
+
+  void markAllAttendance(String sessionId, AttendanceStatus status) {
+    final session = _sessions.firstWhere((s) => s.id == sessionId);
+    for (final student in session.students) {
+      student.attendance = status;
     }
-  }
-
-  Organization? organizationById(String id) {
-    try {
-      return _organizations.firstWhere((o) => o.id == id);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  Student? studentById(String id) {
-    try {
-      return _students.firstWhere((s) => s.id == id);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  List<Class> classesByCourseId(String courseId) {
-    final course = _courses.firstWhere((c) => c.id == courseId);
-    return course.classes;
-  }
-
-  List<Enrollment> enrollmentsByClassId(String classId) {
-    return _enrollments.where((e) => e.classId == classId).toList();
+    notifyListeners();
   }
 }
