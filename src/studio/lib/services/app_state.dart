@@ -8,10 +8,12 @@ class AppState extends ChangeNotifier {
   AppState({DataService? dataService}) : _dataService = dataService ?? DataService();
 
   List<Session> _sessions = [];
+  List<Lecture> _lectures = [];
   bool _isLoading = false;
   String? _error;
 
   List<Session> get sessions => _sessions;
+  List<Lecture> get lectures => _lectures;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
@@ -24,13 +26,26 @@ class AppState extends ChangeNotifier {
   List<Session> get completedSessions =>
       _sessions.where((s) => s.status == SessionStatus.completed).toList();
 
+  Lecture? lectureForSession(String sessionId) {
+    try {
+      return _lectures.firstWhere((l) => l.sessionId == sessionId);
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<void> loadAll() async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _sessions = await _dataService.loadSessions();
+      final results = await Future.wait([
+        _dataService.loadSessions(),
+        _dataService.loadLectures(),
+      ]);
+      _sessions = results[0] as List<Session>;
+      _lectures = results[1] as List<Lecture>;
       _isLoading = false;
       notifyListeners();
     } catch (e) {

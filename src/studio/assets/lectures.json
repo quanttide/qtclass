@@ -1,0 +1,73 @@
+[
+  {
+    "id": "lec_001",
+    "session_id": "sess_001",
+    "title": "Python 基础",
+    "description": "Python 是一门简洁而强大的编程语言。本课时从零开始，带你掌握 Python 的核心语法与编程范式，为后续数据分析实战打下坚实基础。",
+    "target_audience": "有 1 年以上编码经验的开发者，使用过 AI 辅助编程工具，开始感到代码质量不可控。",
+    "learning_objectives": [
+      "掌握 Python 变量、数据类型与运算符",
+      "理解函数定义与模块化编程",
+      "能够使用 Python 完成简单的数据处理任务"
+    ],
+    "outline": [
+      "Python 环境搭建与开发工具选择",
+      "变量、字符串与数值运算",
+      "列表、字典与集合操作",
+      "条件判断与循环结构",
+      "函数定义与作用域",
+      "文件读写与异常处理",
+      "综合实战：命令行日记工具"
+    ],
+    "duration_minutes": 90,
+    "difficulty": "初级",
+    "format": "视频 + 可运行示例"
+  },
+  {
+    "id": "lec_002",
+    "session_id": "sess_002",
+    "title": "NumPy 入门",
+    "description": "NumPy 是 Python 数据科学生态的基石。本课时将带你理解数组计算的核心概念，掌握高效的数据操作方式。",
+    "target_audience": "有 1 年以上编码经验的开发者，了解 Python 基础语法。",
+    "learning_objectives": [
+      "理解 ndarray 数据结构与优势",
+      "掌握数组创建、索引与切片",
+      "能够使用向量化运算替代显式循环"
+    ],
+    "outline": [
+      "为什么需要 NumPy——Python 列表的局限",
+      "ndarray 创建与属性",
+      "索引、切片与花式索引",
+      "向量化运算与广播机制",
+      "常用数学与统计函数",
+      "综合实战：股票收益率计算"
+    ],
+    "duration_minutes": 90,
+    "difficulty": "初级",
+    "format": "视频 + 可运行示例"
+  },
+  {
+    "id": "lec_003",
+    "session_id": "sess_003",
+    "title": "HDFS 原理与实践",
+    "description": "HDFS 是大数据存储的基石。本课时深入理解 HDFS 的架构设计、读写流程与常用操作，为后续 MapReduce 与 Spark 学习铺平道路。",
+    "target_audience": "有 1 年以上后端开发经验，了解分布式系统基本概念。",
+    "learning_objectives": [
+      "理解 HDFS 的 master/slave 架构",
+      "掌握 HDFS 文件读写流程",
+      "能够使用 Shell 与 Java API 操作 HDFS"
+    ],
+    "outline": [
+      "HDFS 设计目标与适用场景",
+      "NameNode 与 DataNode 架构",
+      "文件读写流程详解",
+      "副本机制与 rack awareness",
+      "Shell 命令操作实战",
+      "Java API 编程实践",
+      "常见故障与调优策略"
+    ],
+    "duration_minutes": 120,
+    "difficulty": "中级",
+    "format": "视频 + 可运行示例"
+  }
+]
