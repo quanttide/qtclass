@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:qtclass_studio/models/models.dart';
+import 'package:qtclass_studio/models/session.dart';
 import 'package:qtclass_studio/services/app_state.dart';
 import 'package:qtclass_studio/services/data_service.dart';
 

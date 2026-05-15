@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:qtclass_studio/main.dart' as app;
 import 'package:qtclass_studio/services/app_state.dart';
 import 'package:qtclass_studio/services/data_service.dart';
-import 'package:qtclass_studio/models/models.dart';
+import 'package:qtclass_studio/models/session.dart';
 
 class SnapshotDataService extends DataService {
   @override

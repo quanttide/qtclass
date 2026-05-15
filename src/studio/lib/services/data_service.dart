@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import '../models/models.dart';
+import '../models/session.dart';
+import '../models/lecture.dart';
 
 class DataService {
   Future<List<Session>> loadSessions() async {

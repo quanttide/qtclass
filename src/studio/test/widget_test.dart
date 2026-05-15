@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:qtclass_studio/models/models.dart';
+import 'package:qtclass_studio/models/session.dart';
 
 void main() {
   test('SessionStatus has 3 values', () {
