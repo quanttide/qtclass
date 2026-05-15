@@ -11,19 +11,19 @@ class Lecture {
   final String id;
   final String title;
   final String description;
+  final Level level;
   final List<String> targets;
   final List<String> objectives;
   final List<String> points;
-  final Level level;
 
   const Lecture({
     required this.id,
     required this.title,
     required this.description,
+    required this.level,
     required this.targets,
     required this.objectives,
     required this.points,
-    required this.level,
   });
 
   factory Lecture.fromJson(Map<String, dynamic> json) {
@@ -31,6 +31,9 @@ class Lecture {
       id: json['id'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
+      level: Level.values.firstWhere(
+        (l) => l.label == json['level'] as String,
+      ),
       targets: (json['targets'] as List)
           .map((e) => e as String)
           .toList(),
@@ -40,9 +43,6 @@ class Lecture {
       points: (json['points'] as List)
           .map((e) => e as String)
           .toList(),
-      level: Level.values.firstWhere(
-        (l) => l.label == json['level'] as String,
-      ),
     );
   }
 }

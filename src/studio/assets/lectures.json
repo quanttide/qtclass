@@ -3,6 +3,7 @@
     "id": "lec_001",
     "title": "Python 基础",
     "description": "Python 是一门简洁而强大的编程语言。本课时从零开始，带你掌握 Python 的核心语法与编程范式，为后续数据分析实战打下坚实基础。",
+    "level": "初级",
     "targets": ["有 1 年以上编码经验的开发者，使用过 AI 辅助编程工具，开始感到代码质量不可控。"],
     "objectives": [
       "掌握 Python 变量、数据类型与运算符",
@@ -24,6 +25,7 @@
     "id": "lec_002",
     "title": "NumPy 入门",
     "description": "NumPy 是 Python 数据科学生态的基石。本课时将带你理解数组计算的核心概念，掌握高效的数据操作方式。",
+    "level": "初级",
     "targets": ["有 1 年以上编码经验的开发者，了解 Python 基础语法。"],
     "objectives": [
       "理解 ndarray 数据结构与优势",
@@ -44,6 +46,7 @@
     "id": "lec_003",
     "title": "HDFS 原理与实践",
     "description": "HDFS 是大数据存储的基石。本课时深入理解 HDFS 的架构设计、读写流程与常用操作，为后续 MapReduce 与 Spark 学习铺平道路。",
+    "level": "中级",
     "targets": ["有 1 年以上后端开发经验，了解分布式系统基本概念。"],
     "objectives": [
       "理解 HDFS 的 master/slave 架构",
