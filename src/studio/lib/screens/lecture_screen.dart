@@ -214,11 +214,11 @@ class _MetaFooter extends StatelessWidget {
         runSpacing: 8,
         children: [
           _MetaChip(
-            label: '时长 ${lecture.duration} 分钟',
+            label: '时长 ${lecture.duration.inMinutes} 分钟',
             color: Colors.indigo,
           ),
           _MetaChip(
-            label: '难度 ${lecture.level}',
+            label: '难度 ${lecture.level.label}',
             color: Colors.indigo,
           ),
         ],

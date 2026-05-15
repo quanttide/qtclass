@@ -1,3 +1,12 @@
+enum Level {
+  beginner('初级'),
+  intermediate('中级'),
+  advanced('高级');
+
+  final String label;
+  const Level(this.label);
+}
+
 class Lecture {
   final String id;
   final String title;
@@ -6,8 +15,8 @@ class Lecture {
   final List<String> objectives;
   // 单个课时的要点提纲，不是多课时大纲
   final List<String> points;
-  final int duration;
-  final String level;
+  final Duration duration;
+  final Level level;
 
   const Lecture({
     required this.id,
@@ -34,8 +43,10 @@ class Lecture {
       points: (json['points'] as List)
           .map((e) => e as String)
           .toList(),
-      duration: json['duration'] as int,
-      level: json['level'] as String,
+      duration: Duration(minutes: json['duration'] as int),
+      level: Level.values.firstWhere(
+        (l) => l.label == json['level'] as String,
+      ),
     );
   }
 }
