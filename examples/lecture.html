@@ -5,80 +5,121 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>重构是 Vibe Coding 的第一等公民</title>
   <style>
+    :root {
+      --brand: #2563eb;
+      --brand-light: #eff6ff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --bg: #f1f5f9;
+      --surface: #fff;
+      --border: #e2e8f0;
+      --radius: 16px;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.6;
-      color: #1a1a2e;
-      background: #f8f9fa;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.7;
+      color: var(--text-primary);
+      background: var(--bg);
       padding: 2rem 1rem;
     }
     article {
-      max-width: 720px;
+      max-width: 680px;
       margin: 0 auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-      padding: 2.5rem;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      padding: 2.5rem 2.5rem 1rem;
     }
     h1 {
-      font-size: 1.75rem;
-      margin-bottom: 1rem;
-      color: #0a0a23;
+      font-size: 1.625rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+    }
+    .pullquote {
+      background: var(--brand-light);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.8;
+    }
+    .pullquote::before {
+      content: "\201C";
+      font-size: 1.5rem;
+      color: var(--brand);
+      font-weight: 700;
+      margin-right: 0.25rem;
+    }
+
+    /* Sections */
+    section {
+      padding: 1.5rem 2.5rem;
+    }
+    section + section {
+      border-top: 1px solid var(--border);
     }
     h2 {
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-      color: #495057;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 0.75rem;
     }
     p {
-      margin-bottom: 1rem;
-      color: #343a40;
+      color: var(--text-secondary);
+      max-width: 36em;
     }
-    hr {
-      border: none;
-      border-top: 1px solid #e9ecef;
-      margin: 1.5rem 0;
-    }
-    ol {
+    ul, ol {
       padding-left: 1.25rem;
-      color: #343a40;
+      color: var(--text-secondary);
     }
-    ol li {
-      margin-bottom: 0.5rem;
+    ul li, ol li {
+      margin-bottom: 0.375rem;
     }
-    ul {
-      padding-left: 1.25rem;
-      color: #343a40;
-    }
-    ul li {
-      margin-bottom: 0.25rem;
-    }
-    .meta {
+
+    /* Meta tags */
+    .meta-footer {
+      background: var(--brand-light);
+      padding: 1.25rem 2.5rem;
       display: flex;
-      gap: 1.5rem;
-      font-size: 0.9rem;
-      color: #868e96;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
-    .meta span {
-      display: flex;
+    .tag {
+      display: inline-flex;
       align-items: center;
-      gap: 0.25rem;
+      gap: 0.375rem;
+      font-size: 0.8125rem;
+      color: var(--brand);
+      background: rgba(37,99,235,0.08);
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
   <article>
-    <h1>重构是 Vibe Coding 的第一等公民</h1>
-    <hr>
-    <section>
-      <h2>描述</h2>
-      <p>Vibe Coding 不等于毫无章法的生成。它是"直觉式构建"与"结构化重构"的持续循环。没有重构兜底，Vibe 只是技术债的狂欢；掌握重构，Vibe 才是真正的超级生产力。</p>
-    </section>
+    <div class="header">
+      <h1>重构是 Vibe Coding 的第一等公民</h1>
+      <div class="pullquote">Vibe Coding 不等于毫无章法的生成。它是"直觉式构建"与"结构化重构"的持续循环。没有重构兜底，Vibe 只是技术债的狂欢；掌握重构，Vibe 才是真正的超级生产力。</div>
+    </div>
+
     <section>
       <h2>目标用户</h2>
       <p>有 1 年以上编码经验的开发者，使用过 AI 辅助编程工具，开始感到代码质量不可控。</p>
     </section>
+
     <section>
       <h2>学习目标</h2>
       <ul>
@@ -87,6 +128,7 @@
         <li>完成一次从混乱代码到可维护结构的实战推演</li>
       </ul>
     </section>
+
     <section>
       <h2>提纲</h2>
       <ol>
@@ -99,15 +141,12 @@
         <li>不只是代码——重构作为一种思维方式</li>
       </ol>
     </section>
-    <hr>
-    <section>
-      <h2>课时信息</h2>
-      <div class="meta">
-        <span>时长：20 分钟</span>
-        <span>难度：中级</span>
-        <span>形式：视频 + 可运行示例</span>
-      </div>
-    </section>
+
+    <div class="meta-footer">
+      <span class="tag">时长 20 分钟</span>
+      <span class="tag">难度 中级</span>
+      <span class="tag">视频 + 可运行示例</span>
+    </div>
   </article>
 </body>
 </html>
