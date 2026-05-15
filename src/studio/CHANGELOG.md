@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## studio/v0.0.2 - 2026-05-16
 
 - feat: 新增 LectureScreen 课时详情页
 - feat: 新增 Lecture 课时数据模型
