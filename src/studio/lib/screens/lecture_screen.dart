@@ -51,8 +51,21 @@ class _LectureBody extends StatelessWidget {
         const SizedBox(height: 12),
         _InfoCard(
           title: '目标用户',
-          child: Text(lecture.target,
-              style: const TextStyle(color: Colors.black87, height: 1.6)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: lecture.targets
+                .map((t) => Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('• ', style: TextStyle(color: Colors.indigo)),
+                          Expanded(child: Text(t, style: const TextStyle(height: 1.6))),
+                        ],
+                      ),
+                    ))
+                .toList(),
+          ),
         ),
         const SizedBox(height: 12),
         _InfoCard(
@@ -206,10 +219,6 @@ class _MetaFooter extends StatelessWidget {
           ),
           _MetaChip(
             label: '难度 ${lecture.level}',
-            color: Colors.indigo,
-          ),
-          _MetaChip(
-            label: lecture.format,
             color: Colors.indigo,
           ),
         ],

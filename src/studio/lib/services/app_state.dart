@@ -28,8 +28,9 @@ class AppState extends ChangeNotifier {
       _sessions.where((s) => s.status == SessionStatus.completed).toList();
 
   Lecture? lectureForSession(String sessionId) {
+    final lectureId = sessionId.replaceFirst('sess', 'lec');
     try {
-      return _lectures.firstWhere((l) => l.sessionId == sessionId);
+      return _lectures.firstWhere((l) => l.id == lectureId);
     } catch (_) {
       return null;
     }
