@@ -1,5 +1,5 @@
 enum Level {
-  beginner('初级'),
+  introductory('初级'),
   intermediate('中级'),
   advanced('高级');
 
