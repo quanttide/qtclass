@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/models.dart';
 import '../services/app_state.dart';
 import 'classroom_screen.dart';
+import 'lecture_screen.dart';
 
 class ScheduleScreen extends StatelessWidget {
   const ScheduleScreen({super.key});
@@ -84,17 +85,30 @@ class _SessionCard extends StatelessWidget {
         title: Text(session.lessonTitle, style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: Text('${session.courseName} · ${session.className}\n$timeStr · ${session.location}'),
         isThreeLine: true,
-        trailing: isInProgress
-            ? ElevatedButton(
+        trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => ClassroomScreen(sessionId: session.id)),
+                    MaterialPageRoute(builder: (_) => LectureScreen(sessionId: session.id)),
                   );
                 },
-                child: const Text('进入课堂'),
-              )
-            : null,
+                child: const Text('查看课时'),
+              ),
+              if (isInProgress)
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => ClassroomScreen(sessionId: session.id)),
+                    );
+                  },
+                  child: const Text('进入课堂'),
+                ),
+            ],
+          ),
         onTap: () {
           Navigator.push(
             context,
