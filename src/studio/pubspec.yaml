@@ -1,7 +1,7 @@
 name: qtclass_studio
 description: "量潮课堂客户端"
 publish_to: "none"
-version: 0.0.1
+version: 0.0.2
 
 environment:
   sdk: ^3.11.5
