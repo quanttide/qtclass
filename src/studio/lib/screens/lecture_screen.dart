@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/session.dart';
-import '../models/lecture.dart';
+import 'package:quanttide_course/quanttide_course.dart';
 import '../services/app_state.dart';
 
 class LectureScreen extends StatelessWidget {

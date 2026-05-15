@@ -11,6 +11,11 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   provider: ^6.1.5
+  quanttide_course:
+    git:
+      url: https://github.com/quanttide/quanttide-course-toolkit.git
+      path: packages/dart
+      ref: beaedcdc741acf3cc9fcc1655b8cc88a189c5f58
 
 dev_dependencies:
   flutter_test:
