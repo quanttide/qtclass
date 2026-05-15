@@ -7,6 +7,7 @@
 | `id` | string | 是 | — | 唯一标识，格式 `lec_001` |
 | `title` | string | 是 | — | 课时标题 |
 | `description` | string | 是 | — | 课时简介 |
+| `level` | string | 是 | — | 难度等级，见 Level 枚举 |
 | `targets` | string[] | 是 | — | 目标用户，允许多条 |
 | `objectives` | string[] | 是 | — | 学习目标，每条独立可验收 |
 | `points` | string[] | 是 | — | 要点提纲，有序 |
