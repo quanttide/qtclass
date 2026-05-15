@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/models.dart';
+import '../models/session.dart';
 import '../services/app_state.dart';
 import 'classroom_screen.dart';
 import 'lecture_screen.dart';

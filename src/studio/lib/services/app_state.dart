@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
-import '../models/models.dart';
+import '../models/session.dart';
+import '../models/lecture.dart';
 import 'data_service.dart';
 
 class AppState extends ChangeNotifier {
