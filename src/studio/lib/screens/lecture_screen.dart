@@ -51,7 +51,7 @@ class _LectureBody extends StatelessWidget {
         const SizedBox(height: 12),
         _InfoCard(
           title: '目标用户',
-          child: Text(lecture.targetAudience,
+          child: Text(lecture.target,
               style: const TextStyle(color: Colors.black87, height: 1.6)),
         ),
         const SizedBox(height: 12),
@@ -59,7 +59,7 @@ class _LectureBody extends StatelessWidget {
           title: '学习目标',
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: lecture.learningObjectives
+            children: lecture.objectives
                 .map((o) => Padding(
                       padding: const EdgeInsets.only(bottom: 6),
                       child: Row(
@@ -201,11 +201,11 @@ class _MetaFooter extends StatelessWidget {
         runSpacing: 8,
         children: [
           _MetaChip(
-            label: '时长 ${lecture.durationMinutes} 分钟',
+            label: '时长 ${lecture.duration} 分钟',
             color: Colors.indigo,
           ),
           _MetaChip(
-            label: '难度 ${lecture.difficulty}',
+            label: '难度 ${lecture.level}',
             color: Colors.indigo,
           ),
           _MetaChip(
