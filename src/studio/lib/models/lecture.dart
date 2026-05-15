@@ -13,9 +13,7 @@ class Lecture {
   final String description;
   final List<String> targets;
   final List<String> objectives;
-  // 单个课时的要点提纲，不是多课时大纲
   final List<String> points;
-  final Duration duration;
   final Level level;
 
   const Lecture({
@@ -25,7 +23,6 @@ class Lecture {
     required this.targets,
     required this.objectives,
     required this.points,
-    required this.duration,
     required this.level,
   });
 
@@ -43,7 +40,6 @@ class Lecture {
       points: (json['points'] as List)
           .map((e) => e as String)
           .toList(),
-      duration: Duration(minutes: json['duration'] as int),
       level: Level.values.firstWhere(
         (l) => l.label == json['level'] as String,
       ),
