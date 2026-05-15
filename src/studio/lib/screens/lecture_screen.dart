@@ -78,7 +78,7 @@ class _LectureBody extends StatelessWidget {
           title: '提纲',
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(lecture.outline.length, (i) {
+            children: List.generate(lecture.points.length, (i) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
@@ -100,7 +100,7 @@ class _LectureBody extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     Expanded(
-                      child: Text(lecture.outline[i],
+                      child: Text(lecture.points[i],
                           style: const TextStyle(height: 1.5)),
                     ),
                   ],

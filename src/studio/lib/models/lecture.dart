@@ -6,8 +6,8 @@ class Lecture {
   final String description;
   final String target;
   final List<String> objectives;
-  // 单个课时的提纲，不是多课时大纲，故用单数
-  final List<String> outline;
+  // 单个课时的要点提纲，不是多课时大纲
+  final List<String> points;
   final int duration;
   // difficulty 改为 level 以统一量潮课堂难度等级体系
   final String level;
@@ -21,7 +21,7 @@ class Lecture {
     required this.description,
     required this.target,
     required this.objectives,
-    required this.outline,
+    required this.points,
     required this.duration,
     required this.level,
     required this.format,
@@ -37,7 +37,7 @@ class Lecture {
       objectives: (json['objectives'] as List)
           .map((e) => e as String)
           .toList(),
-      outline: (json['outline'] as List)
+      points: (json['points'] as List)
           .map((e) => e as String)
           .toList(),
       duration: json['duration'] as int,
