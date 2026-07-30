@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>量潮课堂｜学习路径结果</title>
+  <style>
+    :root {
+      --ink: #171717;
+      --muted: #6f6f6f;
+      --line: #dedede;
+      --soft: #f6f6f3;
+      --paper: #ffffff;
+      --accent: #2f6b4f;
+      --accent-soft: #e8f1ec;
+      --warn: #a85f1f;
+      --warn-soft: #fff4e8;
+      --danger: #9b3535;
+      --danger-soft: #fff0f0;
+      --shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    button { font: inherit; }
+
+    /* ============================================================
+       RESULT PAGE
+       ============================================================ */
+    #page-result {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--paper);
+      align-items: center;
+      padding: 0;
+    }
+
+    .result-nav {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .result-nav-brand {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -.01em;
+    }
+
+    .result-nav-back {
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color .15s;
+      font-weight: 500;
+      background: none;
+      border: none;
+      font-family: inherit;
+      text-decoration: none;
+    }
+    .result-nav-back:hover { color: var(--ink); }
+
+    .result-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 64px 32px 80px;
+    }
+
+    .result-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: .04em;
+      margin-bottom: 12px;
+    }
+
+    .result-container h1 {
+      font-size: clamp(24px, 3.2vw, 36px);
+      font-weight: 750;
+      line-height: 1.2;
+      letter-spacing: -.03em;
+      margin: 0 0 12px;
+      text-align: center;
+    }
+
+    .result-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      text-align: center;
+      max-width: 520px;
+      margin: 0 0 40px;
+    }
+
+    .result-path {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 44px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .result-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .result-node-dot {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--line);
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: 700;
+      background: var(--paper);
+      transition: border-color .4s ease, background .4s ease, color .4s ease;
+    }
+
+    .result-node-dot.done {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .result-node-dot.next {
+      border-color: var(--accent);
+      color: var(--accent);
+      animation: resultPulse 2.2s ease-in-out infinite;
+    }
+
+    @keyframes resultPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(47, 107, 79, 0.2); }
+      50% { box-shadow: 0 0 0 10px rgba(47, 107, 79, 0); }
+    }
+
+    .result-node-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .result-node.done .result-node-label { color: var(--ink); }
+
+    .result-path-line {
+      width: 52px;
+      height: 2px;
+      background: var(--line);
+      margin: 0 -4px;
+      margin-bottom: 26px;
+    }
+
+    .result-path-line.done { background: var(--accent); }
+
+    .result-info-cards {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .result-info-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 22px;
+      background: var(--soft);
+      animation: resultFadeIn .5s ease both;
+    }
+
+    .result-info-card:nth-child(2) { animation-delay: .12s; }
+
+    @keyframes resultFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-info-card-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .result-info-card-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .result-btn {
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 650;
+      cursor: pointer;
+      transition: .2s ease;
+      font-family: inherit;
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid var(--accent);
+    }
+
+    .result-btn:hover {
+      filter: brightness(.92);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(47, 107, 79, .15);
+    }
+
+    @media (max-width: 760px) {
+      .result-nav { padding: 0 20px; }
+      .result-container { padding: 48px 20px 64px; }
+      .result-info-cards { grid-template-columns: 1fr; }
+      .result-path-line { width: 32px; }
+      .result-node-dot { width: 40px; height: 40px; font-size: 13px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div id="page-result">
+    <nav class="result-nav">
+      <div class="result-nav-brand">量潮课堂</div>
+      <a class="result-nav-back" href="home.html">← 返回首页</a>
+    </nav>
+    <div class="result-container">
+      <div class="result-tag">分支结果 · 学习路径生成</div>
+      <h1>你的 Python 学习路径已生成</h1>
+      <p class="result-desc">根据你的设备环境，我们调整了对应的运行方式。不同选择会影响学习入口，但最终都会进入 Python 基础学习。</p>
+
+      <div class="result-path">
+        <div class="result-node done">
+          <div class="result-node-dot done">✓</div>
+          <div class="result-node-label">开启 Python 学习任务</div>
+        </div>
+        <div class="result-path-line done"></div>
+        <div class="result-node done">
+          <div class="result-node-dot done">✓</div>
+          <div class="result-node-label">选择运行环境</div>
+        </div>
+        <div class="result-path-line"></div>
+        <div class="result-node">
+          <div class="result-node-dot next">→</div>
+          <div class="result-node-label">解锁第一次成功运行</div>
+        </div>
+      </div>
+
+      <div class="result-info-cards">
+        <div class="result-info-card">
+          <div class="result-info-card-title">你的学习路线</div>
+          <div class="result-info-card-value" id="resultEnvDisplay">--</div>
+        </div>
+        <div class="result-info-card">
+          <div class="result-info-card-title">当前阶段</div>
+          <div class="result-info-card-value" id="resultToolDisplay">--</div>
+        </div>
+      </div>
+
+      <div class="result-actions">
+        <button class="result-btn" id="resultContinueBtn">继续学习</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      // Read state from URL params (passed from player.html)
+      const params = new URLSearchParams(location.search);
+      const env = params.get('env') || 'windows';
+
+      const labels = {
+        windows: 'Windows 运行环境',
+        macos: 'macOS 运行环境',
+        linux: 'Linux 运行环境'
+      };
+
+      document.getElementById('resultEnvDisplay').textContent = labels[env] || '--';
+      document.getElementById('resultToolDisplay').textContent = '解锁第一次成功运行';
+
+      document.getElementById('resultContinueBtn').addEventListener('click', () => {
+        alert('下一课程即将上线，敬请期待');
+      });
+    })();
+  </script>
+</body>
+</html>
