@@ -288,14 +288,7 @@ class _DemoCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () {
-                      final playerState = context.read<PlayerState>();
-                      if (playerState.currentSegmentId == 'intro') {
-                        playerState.seek(1.0);
-                      } else if (playerState.currentSegmentId == 'first-program') {
-                        playerState.seek(1.0);
-                      }
-                    },
+                    onPressed: () => context.read<PlayerState>().seek(1.0),
                     child: const Text('跳至下一节点'),
                   ),
                 ),

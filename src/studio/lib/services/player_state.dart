@@ -98,7 +98,14 @@ class PlayerState extends ChangeNotifier {
     final seg = currentSegment;
     if (seg == null) return;
     _elapsed = (ratio * seg.duration).clamp(0, seg.duration);
-    if (_elapsed < seg.duration - 0.2) _endHandled = false;
+    if (_elapsed < seg.duration - 0.2) {
+      _endHandled = false;
+    } else if (_elapsed >= seg.duration) {
+      // 跳到末尾时直接触发片段结束，不等待 timer
+      pause();
+      _handleSegmentEnd();
+      return;
+    }
     notifyListeners();
   }
 
