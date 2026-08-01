@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../services/history_service.dart';
 import 'player_screen.dart';
 
 /// 课程首页
@@ -13,29 +12,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _historyService = HistoryService();
-  bool _hasProgress = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkProgress();
-  }
-
-  Future<void> _checkProgress() async {
-    final state = await _historyService.loadPlayerState();
-    if (mounted) {
-      setState(() {
-        _hasProgress = state != null;
-      });
-    }
-  }
-
   void _startLearning() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => PlayerScreen(resume: _hasProgress),
+        builder: (_) => const PlayerScreen(),
       ),
     );
   }
@@ -144,9 +125,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               backgroundColor: theme.colorScheme.primary,
                               foregroundColor: theme.colorScheme.onPrimary,
                             ),
-                            child: Text(
-                              _hasProgress ? '继续学习' : '开始学习',
-                              style: const TextStyle(
+                            child: const Text(
+                              '开始学习',
+                              style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
                               ),
