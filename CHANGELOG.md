@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.0-alpha.2] - 2026-08-01
+
+### Removed
+- 移除全部 LMS 能力（迁移至 `qtcloud-learn`，见其 ROADMAP v0.5）：
+  - 课表 / 考勤：session 模型、schedule / classroom 页面、sessions.json、AppState 的 sessions 加载
+  - 学习记录：learning_record 模型、history_service（localStorage）及播放器内历史记录弹层
+  - lecture 页（依赖 session 数据）与对应测试
+- 移除 integration_test（原测试课表 / 考勤流程）
+
+### Changed
+- 播放器不再本地保存学习记录（改为 `qtcloud-learn` 服务端进度数据）
+
 ## [0.1.0-alpha.1] - 2026-07-31
 
 ### Added

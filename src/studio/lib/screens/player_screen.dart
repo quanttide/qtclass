@@ -1,10 +1,7 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/player_state.dart';
-import '../services/history_service.dart';
 import '../services/course_data.dart';
-import '../models/learning_record.dart';
 import '../widgets/player_controls.dart';
 import '../widgets/interaction_overlay.dart';
 import '../widgets/sidebar.dart';
@@ -13,36 +10,13 @@ import '../widgets/sidebar.dart';
 ///
 /// 映射自 `doc/screens/player.html` — 核心交互界面。
 class PlayerScreen extends StatefulWidget {
-  final bool resume;
-
-  const PlayerScreen({super.key, this.resume = false});
+  const PlayerScreen({super.key});
 
   @override
   State<PlayerScreen> createState() => _PlayerScreenState();
 }
 
 class _PlayerScreenState extends State<PlayerScreen> {
-  final _historyService = HistoryService();
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.resume) {
-      _restoreProgress();
-    }
-  }
-
-  Future<void> _restoreProgress() async {
-    final saved = await _historyService.loadPlayerState();
-    if (saved != null && mounted) {
-      context.read<PlayerState>().restoreProgress(
-            env: saved['env'] as String?,
-            runState: saved['runState'] as String?,
-            finished: saved['finished'] as bool? ?? false,
-          );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,41 +81,18 @@ class _PlayerScreenState extends State<PlayerScreen> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('是否保存当前学习进度？'),
-          content: const Text('返回之前的步骤可能影响当前进度。建议先保存记录。'),
+          title: const Text('跳转路径'),
+          content: const Text('返回之前的步骤可能影响当前进度。'),
           actions: [
             TextButton(
-              onPressed: () async {
-                await _saveRecord();
-                if (ctx.mounted) Navigator.pop(ctx);
-              },
-              child: const Text('保存并跳转'),
-            ),
-            TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('取消'),
+              child: const Text('知道了'),
             ),
           ],
         ),
       );
     }
   }
-
-  Future<void> _saveRecord() async {
-    final state = context.read<PlayerState>();
-    final record = LearningRecord(
-      time: DateTime.now().toLocal().toString().substring(0, 19),
-      env: state.env,
-      envLabel: state.env != null ? CourseData.labelEnv(state.env) : '未选择',
-      runState: state.runState,
-      runStateLabel: state.runState != null
-          ? CourseData.labelRunState(state.runState)
-          : '未选择',
-      finished: state.finished,
-    );
-    await _historyService.addRecord(record);
-  }
-
 }
 
 // ============================================================
@@ -225,33 +176,11 @@ class _Topbar extends StatelessWidget {
           const Spacer(),
           // 操作按钮
           TextButton(
-            onPressed: () => _showHistoryOverlay(context),
-            child: const Text('查看历史'),
-          ),
-          TextButton(
-            onPressed: () async {
-              await context.read<_PlayerScreenState>()._saveRecord();
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('学习记录已保存 ✓')),
-                );
-              }
-            },
-            child: const Text('保存记录'),
-          ),
-          TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('← 返回首页'),
           ),
         ],
       ),
-    );
-  }
-
-  void _showHistoryOverlay(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) => _HistoryDialog(),
     );
   }
 }
@@ -1124,122 +1053,3 @@ class _ResultInfoCard extends StatelessWidget {
 
 // ============================================================
 // 历史记录弹窗
-// ============================================================
-class _HistoryDialog extends StatefulWidget {
-  @override
-  State<_HistoryDialog> createState() => _HistoryDialogState();
-}
-
-class _HistoryDialogState extends State<_HistoryDialog> {
-  final _historyService = HistoryService();
-  List<LearningRecord> _records = [];
-  bool _loaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _load();
-  }
-
-  Future<void> _load() async {
-    final records = await _historyService.loadHistory();
-    if (mounted) {
-      setState(() {
-        _records = records;
-        _loaded = true;
-      });
-    }
-  }
-
-  Future<void> _delete(int index) async {
-    await _historyService.deleteRecord(index);
-    await _load();
-  }
-
-  void _restore(int index) {
-    final record = _records[index];
-    context.read<PlayerState>().restoreProgress(
-          env: record.env,
-          runState: record.runState,
-          finished: record.finished,
-        );
-    Navigator.pop(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return AlertDialog(
-      title: Row(
-        children: [
-          Text(
-            '历史记录',
-            style: theme.textTheme.titleMedium,
-          ),
-          const Spacer(),
-          Text(
-            '${_records.length} 条',
-            style: TextStyle(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
-      content: SizedBox(
-        width: 500,
-        height: 300,
-        child: !_loaded
-            ? const Center(child: CircularProgressIndicator())
-            : _records.isEmpty
-                ? Center(
-                    child: Text(
-                      '暂无保存记录',
-                      style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-                    ),
-                  )
-                : ListView.separated(
-                    itemCount: _records.length,
-                    separatorBuilder: (_, __) => const Divider(height: 1),
-                    itemBuilder: (context, index) {
-                      final record = _records.reversed.toList()[index];
-                      return ListTile(
-                        dense: true,
-                        title: Text(
-                          '${record.envLabel} · ${record.runStateLabel}',
-                          style: const TextStyle(fontSize: 13),
-                        ),
-                        subtitle: Text(
-                          record.time,
-                          style: const TextStyle(fontSize: 11),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextButton(
-                              onPressed: () => _restore(_records.length - 1 - index),
-                              child: const Text('恢复'),
-                            ),
-                            TextButton(
-                              onPressed: () => _delete(_records.length - 1 - index),
-                              child: Text(
-                                '删除',
-                                style: TextStyle(color: theme.colorScheme.error),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('关闭'),
-        ),
-      ],
-    );
-  }
-}
