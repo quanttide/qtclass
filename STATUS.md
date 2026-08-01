@@ -4,6 +4,13 @@
 > 仓库：quanttide/qtclass
 > 最新 commit：9eae6f7 (2026-07-11)
 
+## LMS 冻结声明
+
+> 依据量潮课程云域的迁移计划（[qtcloud-learn/ROADMAP.md](../qtcloud-learn/ROADMAP.md)），
+> 自 2026-08 起本仓库**冻结 LMS 能力迭代**（课表 / 考勤 / 学习记录 / session 模型等），仅做缺陷修复；
+> 上述能力统一收拢到 `qtcloud-learn`（量潮学习云），迁移完成后从本仓库移除。
+> 播放器（player / lecture）职责不受影响，继续在本仓库演进。
+
 ## 版本历史
 
 | 版本 | 日期 | 内容 |
