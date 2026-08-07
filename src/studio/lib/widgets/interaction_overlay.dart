@@ -6,6 +6,7 @@ import '../models/choice_option.dart';
 
 /// 互动覆盖层 — 决策节点弹层
 ///
+/// 互动配置来自 `CourseData.interactions[state.interactionId]`（课程数据驱动）。
 /// 映射自 `doc/screens/player.md → 互动覆盖层 (Interaction Overlay)`。
 class InteractionOverlay extends StatelessWidget {
   const InteractionOverlay({super.key});
@@ -14,8 +15,10 @@ class InteractionOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<PlayerState>(
       builder: (context, state, _) {
-        final type = state.interactionType;
-        if (type == null) return const SizedBox.shrink();
+        final interactionId = state.interactionId;
+        if (interactionId == null) return const SizedBox.shrink();
+        final interaction = CourseData.interactions[interactionId];
+        if (interaction == null) return const SizedBox.shrink();
 
         return Stack(
           children: [
@@ -32,7 +35,11 @@ class InteractionOverlay extends StatelessWidget {
                     elevation: 8,
                     child: Padding(
                       padding: const EdgeInsets.all(34),
-                      child: _InteractionCardContent(type: type),
+                      child: _InteractionCardContent(
+                        title: interaction.title,
+                        desc: interaction.desc,
+                        options: interaction.options,
+                      ),
                     ),
                   ),
                 ),
@@ -46,18 +53,25 @@ class InteractionOverlay extends StatelessWidget {
 }
 
 class _InteractionCardContent extends StatelessWidget {
-  final InteractionType type;
+  final String title;
+  final String desc;
+  final List<ChoiceOption> options;
 
-  const _InteractionCardContent({required this.type});
+  const _InteractionCardContent({
+    required this.title,
+    required this.desc,
+    required this.options,
+  });
 
   @override
   Widget build(BuildContext context) {
     final state = context.watch<PlayerState>();
     final theme = Theme.of(context);
 
-    // 根据互动类型配置
-    final config = _getConfig(type, state);
-    final options = config.options;
+    // 过滤已尝试过的选项（避免重复选择同一分支）
+    final available = options
+        .where((o) => !state.triedChoices.contains(o.id))
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,22 +101,24 @@ class _InteractionCardContent extends StatelessWidget {
         const SizedBox(height: 12),
         // 标题
         Text(
-          config.title,
+          title,
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w700,
             height: 1.35,
           ),
         ),
-        const SizedBox(height: 10),
-        // 描述
-        Text(
-          config.desc,
-          style: TextStyle(
-            color: theme.colorScheme.onSurfaceVariant,
-            height: 1.7,
-            fontSize: 14,
+        if (desc.isNotEmpty) ...[
+          const SizedBox(height: 10),
+          // 描述
+          Text(
+            desc,
+            style: TextStyle(
+              color: theme.colorScheme.onSurfaceVariant,
+              height: 1.7,
+              fontSize: 14,
+            ),
           ),
-        ),
+        ],
         const SizedBox(height: 20),
         // 选项网格
         LayoutBuilder(
@@ -110,14 +126,15 @@ class _InteractionCardContent extends StatelessWidget {
             return Wrap(
               spacing: 12,
               runSpacing: 12,
-              children: options.map((option) {
+              children: available.map((option) {
                 final isSelected = state.selectedChoice == option.id;
                 return SizedBox(
                   width: (constraints.maxWidth - 24) / 3,
                   child: _OptionCard(
                     option: option,
                     isSelected: isSelected,
-                    onTap: () => context.read<PlayerState>().selectOption(option.id),
+                    onTap: () =>
+                        context.read<PlayerState>().selectOption(option.id),
                   ),
                 );
               }).toList(),
@@ -125,7 +142,8 @@ class _InteractionCardContent extends StatelessWidget {
           },
         ),
         // 反馈区域
-        if (state.selectedChoice != null && _getFeedback(type, state.selectedChoice!).isNotEmpty)
+        if (state.selectedChoice != null &&
+            _getFeedback(state.selectedChoice!, options).isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 18),
             child: Container(
@@ -139,7 +157,7 @@ class _InteractionCardContent extends StatelessWidget {
                 ),
               ),
               child: Text(
-                _getFeedback(type, state.selectedChoice!),
+                _getFeedback(state.selectedChoice!, options),
                 style: TextStyle(
                   fontSize: 13,
                   color: theme.colorScheme.primary,
@@ -166,48 +184,11 @@ class _InteractionCardContent extends StatelessWidget {
     );
   }
 
-  _InteractionConfig _getConfig(InteractionType type, PlayerState state) {
-    if (type == InteractionType.env) {
-      return _InteractionConfig(
-        title: '你准备在哪台电脑上运行 Python？',
-        desc: '不同系统的操作入口不同。请选择你正在使用的设备，系统将展示对应的运行说明。',
-        options: CourseData.environmentOptions,
-      );
-    } else {
-      final available = CourseData.runStateOptions
-          .where((o) => !state.triedRunStates.contains(o.id))
-          .toList();
-      return _InteractionConfig(
-        title: '运行结果反馈',
-        desc: '',
-        options: available,
-      );
-    }
+  String _getFeedback(String choiceId, List<ChoiceOption> options) {
+    final matched = options.where((o) => o.id == choiceId);
+    if (matched.isEmpty) return '';
+    return matched.first.feedback;
   }
-
-  String _getFeedback(InteractionType type, String choiceId) {
-    if (type == InteractionType.env) {
-      return CourseData.environmentOptions
-          .firstWhere((o) => o.id == choiceId)
-          .feedback;
-    } else {
-      return CourseData.runStateOptions
-          .firstWhere((o) => o.id == choiceId)
-          .feedback;
-    }
-  }
-}
-
-class _InteractionConfig {
-  final String title;
-  final String desc;
-  final List<ChoiceOption> options;
-
-  const _InteractionConfig({
-    required this.title,
-    required this.desc,
-    required this.options,
-  });
 }
 
 class _OptionCard extends StatelessWidget {

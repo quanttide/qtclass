@@ -5,6 +5,7 @@ import '../services/course_data.dart';
 
 /// 侧边栏 — 学习路径、演示控制、互动节点、课程脉络
 ///
+/// 路径 / 互动节点 / 脉络均来自课程数据（`CourseData.pathSteps` 等）。
 /// 映射自 `doc/screens/player.md → 侧边栏`。
 class Sidebar extends StatelessWidget {
   final VoidCallback onJumpToPath;
@@ -45,6 +46,7 @@ class _PathCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final steps = CourseData.pathSteps;
 
     return Card(
       margin: EdgeInsets.zero,
@@ -61,56 +63,19 @@ class _PathCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            _PathStep(
-              theme: theme,
-              stepIndex: 0,
-              label: '开启 Python 学习任务',
-              meta: '学习主线',
-              isDone: state.env != null || state.finished,
-              isCurrent: state.currentSegmentId == 'intro',
-              hidden: false,
-            ),
-            _PathStep(
-              theme: theme,
-              stepIndex: 1,
-              label: '选择运行环境',
-              meta: state.env != null ? CourseData.labelEnv(state.env) : 'Windows / macOS / Linux',
-              isDone: state.env != null,
-              isCurrent: ['windows', 'macos', 'linux'].contains(state.currentSegmentId),
-              hidden: state.env == null && !state.finished,
-              chip: state.env != null ? CourseData.labelEnv(state.env) : null,
-            ),
-            _PathStep(
-              theme: theme,
-              stepIndex: 2,
-              label: '完成第一次代码运行',
-              meta: '运行 print("Hello, Python!")',
-              isDone: state.runState != null || state.finished,
-              isCurrent: state.currentSegmentId == 'first-program',
-              hidden: state.env == null && !state.finished,
-            ),
-            _PathStep(
-              theme: theme,
-              stepIndex: 3,
-              label: '处理运行反馈',
-              meta: state.runState != null
-                  ? CourseData.labelRunState(state.runState)
-                  : '程序成功运行 / 运行出现问题 / 不确定下一步操作',
-              isDone: state.finished || state.runState != null,
-              isCurrent: ['run-success', 'run-error', 'run-unknown']
-                  .contains(state.currentSegmentId),
-              hidden: !state.finished && state.runState == null && state.env == null,
-              chip: state.runState != null ? CourseData.labelRunState(state.runState) : null,
-            ),
-            _PathStep(
-              theme: theme,
-              stepIndex: 4,
-              label: '解锁第一次成功运行',
-              meta: '课程完成',
-              isDone: state.finished,
-              isCurrent: false,
-              hidden: !state.finished,
-            ),
+            for (var i = 0; i < steps.length; i++)
+              _PathStep(
+                theme: theme,
+                stepIndex: i,
+                stepCount: steps.length,
+                label: steps[i].label,
+                meta: steps[i].meta,
+                isDone:
+                    state.finished ||
+                    (state.visited.contains(steps[i].segmentId) &&
+                        state.currentSegmentId != steps[i].segmentId),
+                isCurrent: state.currentSegmentId == steps[i].segmentId,
+              ),
           ],
         ),
       ),
@@ -121,28 +86,24 @@ class _PathCard extends StatelessWidget {
 class _PathStep extends StatelessWidget {
   final ThemeData theme;
   final int stepIndex;
+  final int stepCount;
   final String label;
   final String meta;
   final bool isDone;
   final bool isCurrent;
-  final bool hidden;
-  final String? chip;
 
   const _PathStep({
     required this.theme,
     required this.stepIndex,
+    required this.stepCount,
     required this.label,
     required this.meta,
     required this.isDone,
     required this.isCurrent,
-    required this.hidden,
-    this.chip,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (hidden) return const SizedBox.shrink();
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0),
       child: Row(
@@ -167,27 +128,30 @@ class _PathStep extends StatelessWidget {
                     color: isDone
                         ? theme.colorScheme.primary
                         : isCurrent
-                            ? theme.colorScheme.primaryContainer
-                            : Colors.transparent,
+                        ? theme.colorScheme.primaryContainer
+                        : Colors.transparent,
                   ),
                   child: Center(
                     child: isDone
-                        ? Icon(Icons.check,
-                            size: 14, color: theme.colorScheme.onPrimary)
+                        ? Icon(
+                            Icons.check,
+                            size: 14,
+                            color: theme.colorScheme.onPrimary,
+                          )
                         : isCurrent
-                            ? Container(
-                                width: 7,
-                                height: 7,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: theme.colorScheme.primary,
-                                ),
-                              )
-                            : null,
+                        ? Container(
+                            width: 7,
+                            height: 7,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: theme.colorScheme.primary,
+                            ),
+                          )
+                        : null,
                   ),
                 ),
                 // 竖线
-                if (stepIndex < 4)
+                if (stepIndex < stepCount - 1)
                   Container(
                     width: 1,
                     height: 28,
@@ -225,28 +189,6 @@ class _PathStep extends StatelessWidget {
                       height: 1.45,
                     ),
                   ),
-                  if (chip != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Text(
-                          chip!,
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),
@@ -319,6 +261,7 @@ class _NodeStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final nodes = CourseData.interactionNodes;
 
     return Card(
       margin: EdgeInsets.zero,
@@ -335,29 +278,28 @@ class _NodeStatusCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            _NodeStatusItem(
-              theme: theme,
-              index: '01',
-              label: '选择运行环境',
-              status: state.env != null
-                  ? '已选择 ${CourseData.labelEnv(state.env)}'
-                  : '待完成',
-              isDone: state.env != null,
-            ),
-            const SizedBox(height: 9),
-            _NodeStatusItem(
-              theme: theme,
-              index: '02',
-              label: '处理运行反馈',
-              status: state.runState != null
-                  ? '已选择 ${CourseData.labelRunState(state.runState)}'
-                  : '待完成',
-              isDone: state.runState != null,
-            ),
+            for (final node in nodes)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 9),
+                child: _NodeStatusItem(
+                  theme: theme,
+                  index: node.index,
+                  label: node.label,
+                  isDone: _isNodeDone(state, node.interactionId),
+                ),
+              ),
           ],
         ),
       ),
     );
+  }
+
+  /// 互动节点完成判定：该互动的任一选项已被选择，或课程已完成
+  bool _isNodeDone(PlayerState state, String interactionId) {
+    if (state.finished) return true;
+    final interaction = CourseData.interactions[interactionId];
+    if (interaction == null) return false;
+    return interaction.options.any((o) => state.triedChoices.contains(o.id));
   }
 }
 
@@ -365,14 +307,12 @@ class _NodeStatusItem extends StatelessWidget {
   final ThemeData theme;
   final String index;
   final String label;
-  final String status;
   final bool isDone;
 
   const _NodeStatusItem({
     required this.theme,
     required this.index,
     required this.label,
-    required this.status,
     required this.isDone,
   });
 
@@ -388,11 +328,9 @@ class _NodeStatusItem extends StatelessWidget {
         children: [
           Text(index, style: const TextStyle(fontWeight: FontWeight.w700)),
           const SizedBox(width: 6),
-          Expanded(
-            child: Text(label, style: const TextStyle(fontSize: 12)),
-          ),
+          Expanded(child: Text(label, style: const TextStyle(fontSize: 12))),
           Text(
-            status,
+            isDone ? '已完成' : '待完成',
             style: TextStyle(
               fontSize: 12,
               color: isDone
@@ -414,13 +352,7 @@ class _KnowledgeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final items = [
-      ('01', '开启 Python 学习任务'),
-      ('02', '选择运行环境'),
-      ('03', '完成第一次代码运行'),
-      ('04', '处理运行反馈与排查'),
-    ];
+    final steps = CourseData.pathSteps;
 
     return Card(
       margin: EdgeInsets.zero,
@@ -437,27 +369,31 @@ class _KnowledgeCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            ...items.map((item) => Padding(
-                  padding: const EdgeInsets.only(bottom: 9),
-                  child: Row(
-                    children: [
-                      Text(
-                        item.$1,
-                        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+            for (var i = 0; i < steps.length; i++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 9),
+                child: Row(
+                  children: [
+                    Text(
+                      '${i + 1}'.padLeft(2, '0'),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          item.$2,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        steps[i].label,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: theme.colorScheme.onSurfaceVariant,
                         ),
                       ),
-                    ],
-                  ),
-                )),
+                    ),
+                  ],
+                ),
+              ),
           ],
         ),
       ),

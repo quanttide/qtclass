@@ -23,126 +23,121 @@ void setLargeScreen(WidgetTester tester) {
 }
 
 void main() {
-  setUp(() {
-    // 每个测试后重置 view
-  });
-
   group('PlayerStage - 场景渲染', () {
-    testWidgets('初始时显示 intro 场景 (scene-kicker + 标题)', (tester) async {
+    testWidgets('初始时显示 intro 场景（课时开场）', (tester) async {
       setLargeScreen(tester);
       await tester.pumpWidget(wrapWithProviders(const PlayerScreen()));
       await tester.pump();
 
-      expect(find.textContaining('开启 Python 学习任务'), findsWidgets);
-      expect(find.textContaining('你的学习路径'), findsWidgets);
+      expect(find.textContaining('课时1 · 开发环境搭建'), findsWidgets);
+      expect(find.textContaining('你的学习路径，将由你的选择展开。'), findsWidgets);
     });
 
-    testWidgets('环境选择后显示分支场景 (environment)', (tester) async {
+    testWidgets('进入 install-zed 显示安装场景', (tester) async {
       setLargeScreen(tester);
       final state = PlayerState();
-      state.restoreProgress(env: 'windows');
+      state.restoreProgress(segmentId: 'install-zed');
 
       await tester.pumpWidget(wrapWithProviders(PlayerScreen(), state: state));
       await tester.pump();
 
-      expect(find.textContaining('选择运行环境'), findsWidgets);
-      expect(find.text('Windows 运行环境'), findsWidgets);
+      expect(find.textContaining('下载安装 Zed 编辑器'), findsWidgets);
 
       state.pause();
     });
 
-    testWidgets('进入 first-program 显示代码场景', (tester) async {
+    testWidgets('进入 e1-site-down 显示分支排查场景', (tester) async {
       setLargeScreen(tester);
       final state = PlayerState();
-      state.restoreProgress(env: 'windows');
-      state.setActiveSegment('first-program');
+      state.restoreProgress(segmentId: 'e1-site-down');
 
       await tester.pumpWidget(wrapWithProviders(PlayerScreen(), state: state));
       await tester.pump();
 
-      expect(find.textContaining('完成第一次代码运行'), findsWidgets);
+      expect(find.textContaining('Zed 官网无法访问'), findsWidgets);
+      expect(find.textContaining('包管理器安装'), findsWidgets);
 
       state.pause();
     });
 
-    testWidgets('run-success 显示成功场景', (tester) async {
+    testWidgets('完成课程后显示完成覆盖层', (tester) async {
       setLargeScreen(tester);
       final state = PlayerState();
-      state.restoreProgress(env: 'windows', runState: 'success', finished: true);
+      state.restoreProgress(finished: true);
 
       await tester.pumpWidget(wrapWithProviders(PlayerScreen(), state: state));
       await tester.pump();
 
-      expect(find.text('程序成功运行'), findsWidgets);
-    });
-
-    testWidgets('run-error 显示错误场景', (tester) async {
-      setLargeScreen(tester);
-      final state = PlayerState();
-      state.restoreProgress(env: 'windows', runState: 'error', finished: true);
-
-      await tester.pumpWidget(wrapWithProviders(PlayerScreen(), state: state));
-      await tester.pump();
-
-      expect(find.text('运行出现问题'), findsWidgets);
+      expect(find.text('你的学习路径已完成'), findsOneWidget);
+      expect(find.text('课时完成'), findsWidgets);
     });
   });
 
-  group('Sidebar - 路径步骤可见性', () {
-    testWidgets('初始状态只有 pathIntro 可见', (tester) async {
+  group('互动节点 - 数据驱动', () {
+    testWidgets('install-zed 结束后弹出安装检查互动', (tester) async {
+      setLargeScreen(tester);
       final state = PlayerState();
-      await tester.pumpWidget(wrapWithProviders(
-        Scaffold(body: Sidebar(onJumpToPath: () {})),
-        state: state,
-      ));
+      state.restoreProgress(segmentId: 'install-zed');
+      state.seek(1.0); // 跳到片段末尾触发互动
+
+      await tester.pumpWidget(wrapWithProviders(PlayerScreen(), state: state));
       await tester.pump();
 
-      // 开启 Python 学习任务 同时出现在场景和侧边栏中
-      // 侧边栏中为 1 个，所以总数为 1（仅侧边栏）
-      // 场景中的文本是 '学习主线 · 开启 Python 学习任务'
-      expect(find.textContaining('开启 Python 学习任务'), findsWidgets);
-      // 后续步骤在 PathCard 中隐藏，但 KnowledgeCard 始终显示完整脉络
-      // 所以在侧边栏中仍能找到这些文本（来自 KnowledgeCard）
-      // 这里只验证 pathStep 独有的特征：解锁第一次成功运行 只在 PathCard 中出现
-      expect(find.text('解锁第一次成功运行'), findsNothing);
-    });
-
-    testWidgets('选择环境后 pathEnvironment 解锁', (tester) async {
-      final state = PlayerState();
-      state.restoreProgress(env: 'windows');
-
-      await tester.pumpWidget(wrapWithProviders(
-        Scaffold(body: Sidebar(onJumpToPath: () {})),
-        state: state,
-      ));
-      await tester.pump();
-
-      // Sidebar 应显示 开启 Python 学习任务
-      expect(find.textContaining('开启 Python 学习任务'), findsWidgets);
+      expect(find.text('Zed 安装是否顺利？'), findsOneWidget);
+      expect(find.text('安装成功'), findsWidgets);
 
       state.pause();
     });
 
-    testWidgets('完成所有步骤后显示解锁成功', (tester) async {
+    testWidgets('选择官网无法访问后跳转 e1-site-down 分支', (tester) async {
+      setLargeScreen(tester);
       final state = PlayerState();
-      state.restoreProgress(env: 'windows', runState: 'success', finished: true);
+      state.restoreProgress(segmentId: 'install-zed');
 
-      await tester.pumpWidget(wrapWithProviders(
-        Scaffold(body: Sidebar(onJumpToPath: () {})),
-        state: state,
-      ));
+      await tester.pumpWidget(wrapWithProviders(PlayerScreen(), state: state));
+      state.seek(1.0);
       await tester.pump();
 
-      expect(find.textContaining('开启 Python 学习任务'), findsWidgets);
-      expect(find.text('解锁第一次成功运行'), findsOneWidget);
+      await tester.tap(find.text('官网无法访问'));
+      await tester.pump();
+      await tester.tap(find.text('进入对应内容'));
+      await tester.pump();
+
+      expect(state.currentSegmentId, 'e1-site-down');
+      state.pause();
+    });
+  });
+
+  group('Sidebar - 路径与节点', () {
+    testWidgets('侧边栏包含 4 张卡片标题', (tester) async {
+      await tester.pumpWidget(
+        wrapWithProviders(Scaffold(body: Sidebar(onJumpToPath: () {}))),
+      );
+      await tester.pump();
+
+      expect(find.text('我的学习路径'), findsOneWidget);
+      expect(find.text('演示控制'), findsOneWidget);
+      expect(find.text('互动节点'), findsOneWidget);
+      expect(find.text('课程脉络'), findsOneWidget);
+    });
+
+    testWidgets('路径步骤来自课程数据（安装 Zed 步骤可见）', (tester) async {
+      await tester.pumpWidget(
+        wrapWithProviders(Scaffold(body: Sidebar(onJumpToPath: () {}))),
+      );
+      await tester.pump();
+
+      expect(find.text('安装 Zed 编辑器'), findsWidgets);
+      expect(find.text('获取 API 密钥'), findsWidgets);
+      expect(find.text('配置 Zed Assistant'), findsWidgets);
     });
   });
 
   group('PlayerControls - 播放控制', () {
     testWidgets('初始显示播放图标', (tester) async {
-      await tester.pumpWidget(wrapWithProviders(
-        const Material(child: PlayerControls()),
-      ));
+      await tester.pumpWidget(
+        wrapWithProviders(const Material(child: PlayerControls())),
+      );
       await tester.pump();
 
       expect(find.byIcon(Icons.play_arrow), findsOneWidget);
@@ -152,29 +147,17 @@ void main() {
       final state = PlayerState();
       state.play();
 
-      await tester.pumpWidget(wrapWithProviders(
-        const Material(child: PlayerControls()),
-        state: state,
-      ));
+      await tester.pumpWidget(
+        wrapWithProviders(
+          const Material(child: PlayerControls()),
+          state: state,
+        ),
+      );
       await tester.pump();
 
       expect(find.byIcon(Icons.pause), findsOneWidget);
 
       state.pause();
-    });
-  });
-
-  group('Sidebar - 侧边栏卡片', () {
-    testWidgets('侧边栏包含 4 张卡片标题', (tester) async {
-      await tester.pumpWidget(wrapWithProviders(
-        Scaffold(body: Sidebar(onJumpToPath: () {})),
-      ));
-      await tester.pump();
-
-      expect(find.text('我的学习路径'), findsOneWidget);
-      expect(find.text('演示控制'), findsOneWidget);
-      expect(find.text('互动节点'), findsOneWidget);
-      expect(find.text('课程脉络'), findsOneWidget);
     });
   });
 
@@ -185,19 +168,7 @@ void main() {
       await tester.pump();
 
       expect(find.text('量潮课堂'), findsWidgets);
-      expect(find.text('完成你的第一次 Python 运行'), findsOneWidget);
-      expect(find.text('互动影游式课程原型'), findsOneWidget);
-    });
-
-    testWidgets('播放完成时显示完成覆盖层', (tester) async {
-      setLargeScreen(tester);
-      final state = PlayerState();
-      state.restoreProgress(env: 'windows', runState: 'success', finished: true);
-
-      await tester.pumpWidget(wrapWithProviders(PlayerScreen(), state: state));
-      await tester.pump();
-
-      expect(find.text('你的学习路径已完成'), findsOneWidget);
+      expect(find.textContaining('开发环境搭建'), findsWidgets);
     });
   });
 }
