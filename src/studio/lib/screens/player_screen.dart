@@ -18,22 +18,36 @@ class PlayerScreen extends StatefulWidget {
 }
 
 class _PlayerScreenState extends State<PlayerScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
+    final isWide = MediaQuery.sizeOf(context).width > 1040;
+
     return Scaffold(
+      key: _scaffoldKey,
+      // 窄屏：侧边栏收进抽屉（手机/平板竖屏），播放器占满整列
+      drawer: isWide
+          ? null
+          : Drawer(
+              child: SafeArea(
+                child: Sidebar(onJumpToPath: () => _showConfirmDialog(context)),
+              ),
+            ),
       body: SafeArea(
         child: Consumer<PlayerState>(
           builder: (context, state, _) {
             return Column(
               children: [
                 // 顶栏
-                _Topbar(state: state),
+                _Topbar(
+                  state: state,
+                  onOpenSidebar: () => _scaffoldKey.currentState?.openDrawer(),
+                ),
                 // 工作区
                 Expanded(
                   child: LayoutBuilder(
                     builder: (context, constraints) {
-                      final isWide = constraints.maxWidth > 1040;
-
                       if (isWide) {
                         return Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,27 +56,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             SizedBox(
                               width: 318,
                               child: Sidebar(
-                                onJumpToPath: () =>
-                                    _showConfirmDialog(context, state),
+                                onJumpToPath: () => _showConfirmDialog(context),
                               ),
                             ),
                           ],
                         );
                       } else {
-                        return Column(
-                          children: [
-                            Expanded(child: _MainColumn(state: state)),
-                            SizedBox(
-                              height: 320,
-                              child: SingleChildScrollView(
-                                child: Sidebar(
-                                  onJumpToPath: () =>
-                                      _showConfirmDialog(context, state),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
+                        return _MainColumn(state: state);
                       }
                     },
                   ),
@@ -75,7 +75,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
     );
   }
 
-  void _showConfirmDialog(BuildContext context, PlayerState state) {
+  void _showConfirmDialog(BuildContext context) {
+    final state = context.read<PlayerState>();
     if (state.visited.length > 1) {
       showDialog(
         context: context,
@@ -99,13 +100,16 @@ class _PlayerScreenState extends State<PlayerScreen> {
 // ============================================================
 class _Topbar extends StatelessWidget {
   final PlayerState state;
+  final VoidCallback onOpenSidebar;
 
-  const _Topbar({required this.state});
+  const _Topbar({required this.state, required this.onOpenSidebar});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isNarrow = MediaQuery.sizeOf(context).width < 600;
+    final width = MediaQuery.sizeOf(context).width;
+    final isNarrow = width < 600;
+    final isCompact = width < 1040; // 侧边栏收进抽屉时显示菜单入口
 
     return Container(
       height: 64,
@@ -116,6 +120,16 @@ class _Topbar extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // 窄屏：侧边栏抽屉入口
+          if (isCompact) ...[
+            IconButton(
+              icon: const Icon(Icons.menu),
+              tooltip: '打开侧边栏',
+              visualDensity: VisualDensity.compact,
+              onPressed: onOpenSidebar,
+            ),
+            const SizedBox(width: 4),
+          ],
           // 品牌
           Container(
             width: 34,
@@ -322,7 +336,10 @@ class _PlayerStage extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isNarrow = constraints.maxWidth < 760;
+        // 宽屏布局需要足够的纵向空间：舞台过矮时回退到可滚动窄布局，
+        // 否则场景文字（kicker+标题+描述）会被压缩溢出（如手机横屏）。
+        final isNarrow =
+            constraints.maxWidth < 760 || constraints.maxHeight < 260;
 
         return Container(
           decoration: BoxDecoration(
@@ -918,7 +935,7 @@ class _FinishOverlay extends StatelessWidget {
     return Container(
       color: theme.colorScheme.surface.withValues(alpha: 0.96),
       child: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(32),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 600),
