@@ -1,13 +1,13 @@
 # 发布 studio：推送 studio/* tag（如 studio/v0.1.0-alpha.1，由 qtcloud-devops release publish 创建）时，
-# 构建 Flutter Linux 客户端并上传产物，供发布流程分发。
+# 构建 Flutter Linux 客户端，打包上传到 OSS 发布分发桶（qtclass-studio，IaC 见 manifests/terraform/studio.tf）。
 #
 # 对齐 qtcloud-delib 的 deploy-studio.yml 模式：
-#   studio/* tag → Actions（flutter build linux + 上传 artifact）→ 发布流程下载分发
+#   studio/* tag → Actions（flutter build linux + ossutil cp）→ OSS 桶（qtclass-studio）→ 用户下载
 #
 # 触发说明：用 tag 精确匹配 studio/ 前缀，避免其他 tag 误触发。
 #
-# 差异说明：qtclass 为桌面客户端（无 Web/OSS 部署目标），故构建 Linux release bundle
-# 上传为 artifact（GitHub Release 资产由 qtcloud-devops release publish 流程挂载）。
+# 所需 GitHub secrets / variables（org / repo 级）：
+#   - ALIYUN_ACCESS_KEY_ID / ALIYUN_ACCESS_KEY_SECRET（secret）：RAM 用户 AccessKey（OSS 上传）
 
 name: Deploy Studio
 
@@ -20,9 +20,13 @@ concurrency:
   group: deploy-studio
   cancel-in-progress: true
 
+env:
+  OSS_BUCKET: qtclass-studio
+  OSS_ENDPOINT: oss-cn-hangzhou.aliyuncs.com
+
 jobs:
-  build-linux:
-    name: Build Linux Client
+  build-and-deploy:
+    name: Build Linux Client & Upload to OSS
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -40,17 +44,22 @@ jobs:
         with:
           flutter-version: '3.44.8'
 
-      - name: Pub get
-        working-directory: src/studio
-        run: flutter pub get
-
       - name: Build Linux Release
         working-directory: src/studio
         run: flutter build linux --release
 
-      - name: Upload bundle artifact
-        uses: actions/upload-artifact@v4
+      # 打包 bundle 为 tar.gz（含可执行文件与依赖库，便于分发下载）
+      - name: Package bundle
+        working-directory: src/studio/build/linux/x64/release
+        run: tar -czf qtclass-linux-x64.tar.gz bundle
+
+      - name: Setup ossutil
+        uses: manyuanrong/setup-ossutil@v3.0
         with:
-          name: qtclass-linux-x64
-          path: src/studio/build/linux/x64/release/bundle
-          if-no-files-found: error
+          endpoint: ${{ env.OSS_ENDPOINT }}
+          access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+
+      - name: Upload to OSS
+        working-directory: src/studio/build/linux/x64/release
+        run: ossutil cp qtclass-linux-x64.tar.gz oss://${{ env.OSS_BUCKET }}/studio/
