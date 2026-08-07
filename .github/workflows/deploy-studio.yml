@@ -61,16 +61,25 @@ jobs:
           access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
           access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
 
-      # 缓存策略：哈希产物（main.dart.js / assets 等）长缓存；
-      # index.html 无内容哈希必须 no-cache，否则发版后用户拿到旧页面
-      # 注：-f 强制覆盖（ossutil 默认跳过已存在对象），保证发版更新
+      # 缓存策略：哈希资源（assets/ canvaskit/ 等）长缓存；
+      # 固定名入口文件（index.html / main.dart.js 等）必须 no-cache，
+      # 否则发版后浏览器/CDN 拿旧 JS（文件名不随内容变化）
       - name: Upload Web to OSS（长缓存）
         working-directory: src/studio
-        run: ossutil cp build/web/ oss://${{ env.OSS_BUCKET }}/ -r -f --exclude "index.html" --meta "Cache-Control:public,max-age=31536000"
+        run: |
+          ossutil cp build/web/ oss://${{ env.OSS_BUCKET }}/ -r -f \
+            --exclude "index.html" --exclude "main.dart.js" \
+            --exclude "flutter_bootstrap.js" --exclude "flutter.js" \
+            --exclude "manifest.json" --exclude "version.json" \
+            --exclude "flutter_service_worker.js" --exclude "favicon.png" \
+            --meta "Cache-Control:public,max-age=31536000"
 
-      - name: Upload index.html（no-cache）
+      - name: Upload entry files（no-cache）
         working-directory: src/studio
-        run: ossutil cp build/web/index.html oss://${{ env.OSS_BUCKET }}/index.html -f --meta "Cache-Control:no-cache"
+        run: |
+          for f in index.html main.dart.js flutter_bootstrap.js flutter.js manifest.json version.json flutter_service_worker.js favicon.png; do
+            ossutil cp build/web/$f oss://${{ env.OSS_BUCKET }}/$f -f --meta "Cache-Control:no-cache"
+          done
 
       # 静态网站托管的错误文档（studio.tf website.error_document 指向）
       - name: Upload 404.html
