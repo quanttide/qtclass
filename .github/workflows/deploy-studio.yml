@@ -1,12 +1,14 @@
 # 发布 studio：推送 studio/* tag（如 studio/v0.1.0-alpha.3，由 qtcloud-devops release publish 创建）时，
-# 构建 Flutter Web 与 Linux 客户端，上传到 OSS 发布桶（qtclass-studio，IaC 见 manifests/terraform/studio.tf），
+# 构建 Flutter Web 版，上传到 OSS 发布桶（qtclass-studio，IaC 见 manifests/terraform/studio.tf），
 # 并刷新 CDN 缓存。
 #
 # 对齐 qtcloud-delib 的 deploy-studio.yml 模式：
-#   studio/* tag → Actions（flutter build web + linux，ossutil cp）→ OSS 桶（qtclass-studio，静态网站托管）
-#   → CDN（class.quanttide.com，泛域名证书 *.quanttide.com）→ 用户浏览器 / 下载
+#   studio/* tag → Actions（flutter build web，ossutil cp）→ OSS 桶（qtclass-studio，静态网站托管）
+#   → CDN（class.quanttide.com，泛域名证书 *.quanttide.com）→ 用户浏览器
 #
 # 触发说明：用 tag 精确匹配 studio/ 前缀，避免其他 tag 误触发。
+#
+# 注：桌面 Linux 安装包暂不上线（已从 OSS 移除），如需恢复桌面分发，补回 Linux 构建与上传步骤。
 #
 # 所需 GitHub secrets / variables（org / repo 级）：
 #   - ALIYUN_ACCESS_KEY_ID / ALIYUN_ACCESS_KEY_SECRET（secret）：RAM 用户 AccessKey（OSS 上传 + CDN 刷新）
@@ -29,16 +31,11 @@ env:
 
 jobs:
   build-and-deploy:
-    name: Build Flutter Web/Linux & Deploy to OSS
+    name: Build Flutter Web & Deploy to OSS
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install Linux build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
 
       # 锁版本 3.44.8（与本地开发环境一致，参考 qtcloud-delib 部署模板）：
       # 项目要求 SDK ^3.11.5，旧版 Flutter 构建会失败
@@ -55,15 +52,6 @@ jobs:
         working-directory: src/studio
         run: flutter build web --release
 
-      - name: Build Linux Release
-        working-directory: src/studio
-        run: flutter build linux --release
-
-      # 打包 Linux bundle 为 tar.gz（含可执行文件与依赖库，便于分发下载）
-      - name: Package Linux bundle
-        working-directory: src/studio/build/linux/x64/release
-        run: tar -czf qtclass-linux-x64.tar.gz bundle
-
       - name: Setup ossutil
         uses: manyuanrong/setup-ossutil@v3.0
         with:
@@ -75,10 +63,6 @@ jobs:
       - name: Upload Web to OSS
         working-directory: src/studio
         run: ossutil cp build/web/ oss://${{ env.OSS_BUCKET }}/ -r -f --meta=Cache-Control:public,max-age=31536000
-
-      - name: Upload Linux bundle to OSS
-        working-directory: src/studio/build/linux/x64/release
-        run: ossutil cp qtclass-linux-x64.tar.gz oss://${{ env.OSS_BUCKET }}/studio/
 
       - name: Refresh CDN
         run: |
