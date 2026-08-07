@@ -19,7 +19,6 @@ on:
   push:
     tags:
       - 'studio/**'
-  workflow_dispatch: # 手动重跑（如修复部署后重新发布）
 
 concurrency:
   group: deploy-studio
