@@ -14,6 +14,7 @@ import '../models/segment.dart';
 class CourseData {
   final String _title;
   final String _description;
+  final List<String> _objectives;
   final Map<String, Segment> _segments;
   final Map<String, Interaction> _interactions;
   final List<PathStep> _pathSteps;
@@ -22,12 +23,14 @@ class CourseData {
   const CourseData({
     String title = '',
     String description = '',
+    List<String> objectives = const [],
     required Map<String, Segment> segments,
     required Map<String, Interaction> interactions,
     required List<PathStep> pathSteps,
     required List<InteractionNode> interactionNodes,
   }) : _title = title,
        _description = description,
+       _objectives = objectives,
        _segments = segments,
        _interactions = interactions,
        _pathSteps = pathSteps,
@@ -49,6 +52,9 @@ class CourseData {
     return CourseData(
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
+      objectives: (json['objectives'] as List<dynamic>? ?? [])
+          .map((e) => e as String)
+          .toList(),
       segments: segments,
       interactions: interactions,
       pathSteps: (json['pathSteps'] as List<dynamic>? ?? [])
@@ -87,12 +93,18 @@ class CourseData {
       current._interactionNodes;
   static String get title => current._title;
   static String get description => current._description;
+  static List<String> get objectives => current._objectives;
 
   /// 内置默认数据（fallback / 测试默认，与 `assets/course.json` 一致）
   static Map<String, dynamic> get defaultJson => {
     'title': '氛围编程 — 课时1：开发环境搭建',
     'description':
         '完成 Zed 编辑器的下载安装与基础配置，注册 DeepSeek 账号并获取 API 密钥，最后在 Zed 的 Assistant 面板中填入密钥并验证连接。',
+    'objectives': [
+      '完成 Zed 编辑器的下载、安装与基础配置',
+      '注册 DeepSeek 账号并获取 API 密钥',
+      '在 Zed Assistant 中接入 DeepSeek 并验证连接可用',
+    ],
     'segments': {
       'intro': {
         'id': 'intro',
@@ -108,12 +120,13 @@ class CourseData {
       'install-zed': {
         'id': 'install-zed',
         'sceneKey': 'main',
-        'duration': 28,
+        'duration': 136.6,
         'title': '下载安装 Zed 编辑器',
         'caption':
             '从 Zed 官网（zed.dev）下载对应操作系统的安装包（Windows 的 .exe / macOS 的 .dmg），双击运行完成安装。安装完成后启动 Zed。',
         'chapter': '主线 · 安装 Zed',
         'pathStepId': 'pathInstall',
+        'video': 'assets/videos/lesson1-sence1.mp4',
         'interaction': 'install-check',
       },
       'e1-site-down': {
@@ -130,12 +143,13 @@ class CourseData {
       'getting-api-key': {
         'id': 'getting-api-key',
         'sceneKey': 'main',
-        'duration': 26,
+        'duration': 48.5,
         'title': '获取 DeepSeek API 密钥',
         'caption':
             '注册 DeepSeek 账号（deepseek.com），登录后进入「API 管理」创建新密钥，复制保存。注意：密钥只在创建时可见，需立即妥善保存。',
         'chapter': '主线 · 获取 API 密钥',
         'pathStepId': 'pathApiKey',
+        'video': 'assets/videos/lesson1-sence2.mp4',
         'interaction': 'api-check',
       },
       'e1-auth-failure': {
@@ -152,12 +166,13 @@ class CourseData {
       'configure-zed': {
         'id': 'configure-zed',
         'sceneKey': 'main',
-        'duration': 26,
+        'duration': 22.7,
         'title': '配置 Zed Assistant',
         'caption':
             '打开 Zed，通过 Ctrl+Shift+A 打开 Assistant 面板，在「API Key」输入框粘贴 DeepSeek 密钥并点击 Apply 保存。若找不到面板，确认 Zed 版本 ≥ 0.10.0。',
         'chapter': '主线 · 配置 Zed',
         'pathStepId': 'pathConfigure',
+        'video': 'assets/videos/lesson1-sence3.mp4',
         'interaction': 'config-check',
       },
       'e1-old-version': {

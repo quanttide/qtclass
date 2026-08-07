@@ -28,6 +28,9 @@ class PlayerState extends ChangeNotifier {
   // 已访问片段（侧边栏路径完成状态）
   final Set<String> _visited = {'intro'};
 
+  // 视频片段动态时长（视频就绪后覆盖 JSON 中的 duration）
+  double? _durationOverride;
+
   // ============================================================
   // Getters
   // ============================================================
@@ -45,18 +48,28 @@ class PlayerState extends ChangeNotifier {
 
   Segment? get currentSegment => CourseData.segments[_currentSegmentId];
 
-  /// 当前片段剩余秒数
-  double get remaining {
+  /// 当前片段时长（视频片段用视频实际时长）
+  double get currentDuration {
     final seg = currentSegment;
     if (seg == null) return 0;
-    return (seg.duration - _elapsed).clamp(0, seg.duration);
+    return _durationOverride ?? seg.duration;
+  }
+
+  /// 设置/清除动态时长（视频就绪后调用；片段切换时清除）
+  void setDurationOverride(double? duration) {
+    _durationOverride = duration;
+    notifyListeners();
+  }
+
+  /// 当前片段剩余秒数
+  double get remaining {
+    return (currentDuration - _elapsed).clamp(0, currentDuration);
   }
 
   /// 当前播放进度（0.0 ~ 1.0）
   double get progress {
-    final seg = currentSegment;
-    if (seg == null || seg.duration <= 0) return 0;
-    return (_elapsed / seg.duration).clamp(0, 1);
+    if (currentDuration <= 0) return 0;
+    return (_elapsed / currentDuration).clamp(0, 1);
   }
 
   // ============================================================
@@ -86,7 +99,7 @@ class PlayerState extends ChangeNotifier {
     notifyListeners();
 
     final seg = currentSegment;
-    if (seg != null && _elapsed >= seg.duration) {
+    if (seg != null && _elapsed >= currentDuration) {
       pause();
       _handleSegmentEnd();
     }
@@ -96,10 +109,10 @@ class PlayerState extends ChangeNotifier {
   void seek(double ratio) {
     final seg = currentSegment;
     if (seg == null) return;
-    _elapsed = (ratio * seg.duration).clamp(0, seg.duration);
-    if (_elapsed < seg.duration - 0.2) {
+    _elapsed = (ratio * currentDuration).clamp(0, currentDuration);
+    if (_elapsed < currentDuration - 0.2) {
       _endHandled = false;
-    } else if (_elapsed >= seg.duration) {
+    } else if (_elapsed >= currentDuration) {
       // 跳到末尾时直接触发片段结束，不等待 timer
       pause();
       _handleSegmentEnd();
@@ -133,6 +146,7 @@ class PlayerState extends ChangeNotifier {
     _currentSegmentId = segmentId;
     _elapsed = 0;
     _endHandled = false;
+    _durationOverride = null; // 片段切换清除视频动态时长
     _visited.add(segmentId);
     notifyListeners();
     play();

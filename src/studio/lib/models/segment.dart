@@ -13,6 +13,7 @@ class Segment {
   final String caption; // 底部字幕文案
   final String chapter; // 章节标签
   final String pathStepId; // 关联侧边栏路径步骤 ID
+  final String? video; // 关联视频资产路径（assets/videos/...），无则文本场景
   final String? next; // 结束后的下一片段 ID
   final String? interaction; // 结束后弹出的互动节点 ID
   final String? action; // 结束动作：'finish'
@@ -25,6 +26,7 @@ class Segment {
     required this.caption,
     required this.chapter,
     required this.pathStepId,
+    this.video,
     this.next,
     this.interaction,
     this.action,
@@ -39,6 +41,7 @@ class Segment {
     caption: json['caption'] as String,
     chapter: json['chapter'] as String,
     pathStepId: json['pathStepId'] as String,
+    video: json['video'] as String?,
     next: json['next'] as String?,
     interaction: json['interaction'] as String?,
     action: json['action'] as String?,

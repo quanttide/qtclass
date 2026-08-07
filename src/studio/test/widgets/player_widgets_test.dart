@@ -33,7 +33,7 @@ void main() {
       expect(find.textContaining('你的学习路径，将由你的选择展开。'), findsWidgets);
     });
 
-    testWidgets('进入 install-zed 显示安装场景', (tester) async {
+    testWidgets('进入 install-zed 显示视频场景', (tester) async {
       setLargeScreen(tester);
       final state = PlayerState();
       state.restoreProgress(segmentId: 'install-zed');
@@ -41,7 +41,13 @@ void main() {
       await tester.pumpWidget(wrapWithProviders(PlayerScreen(), state: state));
       await tester.pump();
 
-      expect(find.textContaining('下载安装 Zed 编辑器'), findsWidgets);
+      // 视频片段：显示视频加载（测试环境无视频实现则降级提示）
+      expect(
+        find.byType(CircularProgressIndicator).evaluate().isNotEmpty ||
+            find.textContaining('视频').evaluate().isNotEmpty,
+        isTrue,
+        reason: 'install-zed 应渲染视频场景',
+      );
 
       state.pause();
     });
