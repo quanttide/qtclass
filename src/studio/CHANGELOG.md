@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.0-alpha.4] - 2026-08-07
+
+### Added
+- Web 版部署上线：`class.quanttide.com`（CDN + OSS 静态网站托管 + HTTPS 强制跳转）
+- 部署 CI 对齐手动流程：index.html no-cache、404 页、CDN 刷新（`deploy-studio.yml`）
+- IaC 固化"阻止公共访问"关闭（`block_public_access = false`）
+
+### Changed
+- `deploy-studio` workflow 改为仅部署 Web（桌面 Linux 安装包暂缓上线，已从 OSS 移除）
+
+### Fixed
+- 修复 Web 版资源缺失（`assets/AssetManifest.bin` 等）导致的白屏
+
 ## [0.1.0-alpha.3] - 2026-08-07
 
 > 自 alpha.1 以来的累计变更（alpha.2 未发布，合并计入本版本）。
