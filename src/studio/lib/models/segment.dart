@@ -19,6 +19,16 @@ class Segment {
     required this.pathStepId,
   });
 
+  /// 从 JSON 构造（数据源：assets/course.json）
+  factory Segment.fromJson(Map<String, dynamic> json) => Segment(
+    id: json['id'] as String,
+    sceneKey: json['sceneKey'] as String,
+    duration: (json['duration'] as num).toDouble(),
+    caption: json['caption'] as String,
+    chapter: json['chapter'] as String,
+    pathStepId: json['pathStepId'] as String,
+  );
+
   /// 片段类型
   SegmentType get type {
     if (id == 'intro' || id == 'first-program') return SegmentType.mainLine;

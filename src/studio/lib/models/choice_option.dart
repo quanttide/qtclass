@@ -15,4 +15,13 @@ class ChoiceOption {
     required this.note,
     this.feedback = '',
   });
+
+  /// 从 JSON 构造（数据源：assets/course.json）
+  factory ChoiceOption.fromJson(Map<String, dynamic> json) => ChoiceOption(
+    id: json['id'] as String,
+    symbol: json['symbol'] as String,
+    title: json['title'] as String,
+    note: json['note'] as String,
+    feedback: json['feedback'] as String? ?? '',
+  );
 }

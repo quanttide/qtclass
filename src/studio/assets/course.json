@@ -1,0 +1,108 @@
+{
+  "segments": {
+    "intro": {
+      "id": "intro",
+      "sceneKey": "intro",
+      "duration": 14,
+      "caption": "学习过程不止一种路径。互动节点帮助识别你的当前状态，并提供对应学习内容。",
+      "chapter": "学习主线 · 开启 Python 学习任务",
+      "pathStepId": "pathIntro"
+    },
+    "windows": {
+      "id": "windows",
+      "sceneKey": "environment",
+      "duration": 10,
+      "caption": "Windows 运行环境：了解该环境下运行 Python 程序时需要注意的问题。",
+      "chapter": "分支内容 · Windows 运行环境",
+      "pathStepId": "pathEnvironment"
+    },
+    "macos": {
+      "id": "macos",
+      "sceneKey": "environment",
+      "duration": 10,
+      "caption": "macOS 运行环境：了解该环境下运行 Python 程序时需要注意的问题。",
+      "chapter": "分支内容 · macOS 运行环境",
+      "pathStepId": "pathEnvironment"
+    },
+    "linux": {
+      "id": "linux",
+      "sceneKey": "environment",
+      "duration": 10,
+      "caption": "Linux 运行环境：了解该环境下运行 Python 程序时需要注意的问题。",
+      "chapter": "分支内容 · Linux 运行环境",
+      "pathStepId": "pathEnvironment"
+    },
+    "first-program": {
+      "id": "first-program",
+      "sceneKey": "first-program",
+      "duration": 12,
+      "caption": "输入代码并尝试运行：print(\"Hello, Python!\")，根据实际结果选择下一步路径。",
+      "chapter": "学习主线 · 完成第一次代码运行",
+      "pathStepId": "pathProgram"
+    },
+    "run-success": {
+      "id": "run-success",
+      "sceneKey": "run-state",
+      "duration": 8,
+      "caption": "程序成功运行！输出 Hello, Python!，环境配置正确，可以继续后续学习内容。",
+      "chapter": "分支内容 · 程序成功运行",
+      "pathStepId": "pathRunState"
+    },
+    "run-error": {
+      "id": "run-error",
+      "sceneKey": "run-state",
+      "duration": 8,
+      "caption": "程序没有按照预期运行，常见原因包括缩进问题、语法错误或环境未就绪。",
+      "chapter": "分支内容 · 运行出现问题",
+      "pathStepId": "pathRunState"
+    },
+    "run-unknown": {
+      "id": "run-unknown",
+      "sceneKey": "run-state",
+      "duration": 8,
+      "caption": "代码已经完成但不确定如何执行？我们从零开始指导你完成第一次运行。",
+      "chapter": "分支内容 · 不确定下一步操作",
+      "pathStepId": "pathRunState"
+    }
+  },
+  "environmentOptions": [
+    {
+      "id": "windows",
+      "symbol": "▣",
+      "title": "Windows 电脑",
+      "note": "使用 VS Code 与运行按钮完成第一次执行。"
+    },
+    {
+      "id": "macos",
+      "symbol": "◉",
+      "title": "Mac 电脑",
+      "note": "确认 Python 命令与终端运行方式。"
+    },
+    {
+      "id": "linux",
+      "symbol": "◆",
+      "title": "Linux 环境",
+      "note": "通过终端确认环境并运行 .py 文件。"
+    }
+  ],
+  "runStateOptions": [
+    {
+      "id": "success",
+      "symbol": "✓",
+      "title": "程序成功运行",
+      "note": "已经看到 Hello, Python! 输出。"
+    },
+    {
+      "id": "error",
+      "symbol": "✕",
+      "title": "运行出现问题",
+      "note": "程序没有按照预期运行，需要进一步排查。"
+    },
+    {
+      "id": "unknown",
+      "symbol": "？",
+      "title": "不确定下一步操作",
+      "note": "代码已经完成，但不知道如何执行。"
+    }
+  ]
+}
