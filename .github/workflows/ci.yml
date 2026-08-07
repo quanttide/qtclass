@@ -1,0 +1,46 @@
+# 测试 CI：Flutter 静态检查与单元测试。
+#
+# 对齐 qtcloud-delib 的 ci.yml 模式（paths 限定触发范围 + 锁 Flutter 版本）。
+# qtclass 为独立仓库，Flutter 项目在 src/studio（仓库根即 checkout 根，无需域仓库布局）。
+#
+# 触发：push main / PR，仅涉及 src/studio 与本 workflow 时。
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/studio/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    paths:
+      - 'src/studio/**'
+      - '.github/workflows/ci.yml'
+
+jobs:
+  analyze-test:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/studio
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 锁版本 3.44.8（与本地开发环境一致，参考 qtcloud-delib 部署模板）：
+      # 项目要求 SDK ^3.11.5，旧版 Flutter 可能构建/分析失败
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.8'
+
+      - name: Pub get
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test

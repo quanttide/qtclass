@@ -1,0 +1,51 @@
+# 构建 Linux 客户端：推送 studio/* tag（如 studio/v0.1.0-alpha.1，由 qtcloud-devops release publish 创建）时，
+# 构建 Linux release bundle 并上传为 artifact，供发布流程下载分发。
+#
+# 对齐 qtcloud-delib 的 deploy-studio.yml 模式：tag 精确匹配 studio/ 前缀，
+# 避免其他 tag 误触发；桌面客户端无 Web/OSS 部署，故构建产物以 artifact 交付。
+#
+# 前置：ubuntu-latest 需安装 GTK3 等 Linux 桌面构建依赖（Flutter Linux 构建要求）。
+
+name: Build Linux
+
+on:
+  push:
+    tags:
+      - 'studio/**'
+
+concurrency:
+  group: build-linux
+  cancel-in-progress: true
+
+jobs:
+  build-linux:
+    name: Build Linux Release Bundle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.8'
+
+      - name: Pub get
+        working-directory: src/studio
+        run: flutter pub get
+
+      - name: Build Linux Release
+        working-directory: src/studio
+        run: flutter build linux --release
+
+      - name: Upload bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: qtclass-linux-x64
+          path: src/studio/build/linux/x64/release/bundle
+          if-no-files-found: error
