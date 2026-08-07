@@ -18,41 +18,44 @@
 | `nextName` | `string` | 下一门课程的显示名称 |
 | `desc` | `string` | 课程描述（1-2 句） |
 | `meta` | `string` | 元信息字符串（"📚 4 个阶段 · ⏱ 预计 1 周 · 👤 56 人在学"） |
-| `stages` | `Stage[]` | 阶段列表 |
+| `lessons` | `Lesson[]` | 课时列表 |
 
 ### 课程阶梯
 
-| ID | 课程名 | 阶段数 | 课时数 | 下一门 |
-|----|--------|--------|--------|--------|
-| `knowledge-work` | 知识工作 | 4 | 12 | `vibe-coding` |
-| `vibe-coding` | 氛围编程 | 4 | 12 | `big-data` |
-| `big-data` | 大数据导论 | 4 | 12 | `data-engineering` |
-| `data-engineering` | 数据工程 | 4 | 12 | `prod` |
-| `prod` | 生产实习 | 5 | 20 | - |
+| ID | 课程名 | 课时数 | 下一门 |
+|----|--------|--------|--------|
+| `knowledge-work` | 知识工作 | 12 | `vibe-coding` |
+| `vibe-coding` | 氛围编程 | 12 | `big-data` |
+| `big-data` | 大数据导论 | 12 | `data-engineering` |
+| `data-engineering` | 数据工程 | 12 | `prod` |
+| `prod` | 生产实习 | 20 | - |
 
 ---
 
-## 2. Stage — 阶段
+## 2. Lesson — 课时
 
-课程中的一个学习阶段，包含课时列表。步骤条上每个节点对应一个阶段。
-
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `name` | `string` | 阶段名称（步骤条显示文字，如"信息检索基础"） |
-| `desc` | `string` | 阶段描述（模块卡片副标题） |
-| `lessons` | `Lesson[]` | 课时列表 |
-
----
-
-## 3. Lesson — 课时
-
-阶段中的一个具体课时条目。
+课程中的直接子单元。步骤条上每个节点对应一个课时。
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | `t` | `string` | 课时标题（如"搜索引擎高级技巧"） |
 | `d` | `string` | 资源类型 + 时长（如"阅读 10 min"） |
+| `desc` | `string` | 课时描述（模块卡片副标题） |
 | `done` | `boolean` | 是否已完成（当前全部为 `false`，内容待建设） |
+
+---
+
+## 3. Scene — 场景（嵌套在课时内）
+
+互动式学习场景，是课时页面的核心播放单元。一个课时可包含多个场景，场景间通过分支选项串联。
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `key` | `string` | 场景渲染标识（如 `intro` / `lecture` / `quiz` / `summary`） |
+| `type` | `string` | 场景类型（主线 / 分支） |
+| `duration` | `number` | 播放时长（秒） |
+| `caption` | `string` | 底部字幕文案 |
+| `nextScene` | `string\|null` | 下一场景 ID，`null` 表示课时结束 |
 
 ---
 
@@ -62,8 +65,8 @@
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| `max` | `number` | `0` | 已完成的最大模块/阶段序号 |
-| `last` | `string` | `undefined` | 最后访问的模块/阶段 ID（如 `"m3"` 或 `"s2"`） |
+| `max` | `number` | `0` | 已完成的最大课时序号 |
+| `last` | `string` | `undefined` | 最后访问的课时 ID（如 `"m3"` 或 `"s2"`） |
 
 ### 存储键
 
@@ -77,7 +80,7 @@
 
 **关键规则**：
 - `last` 为 `undefined` 时认为用户是首次访问，显示课程首页
-- `max` 只增不减——用户回到之前的模块不会降低 max
+- `max` 只增不减——用户回到之前的课时不会降低 max
 - 每门课独立存储，互不干扰
 
 ---
@@ -90,7 +93,7 @@
 |------|------|--------|------|
 | `currentView` | `string` | `'courses'` | 当前显示的视图（`courses`/`front`/`generic`/`back`） |
 | `currentCourse` | `string` | `null` | 课程 1-4 的 ID（`knowledge-work` 等），`null` 表示不在课程内页 |
-| `currentModule` | `string` | `null` | 当前激活的模块/阶段 ID（`m1`-`m5` 或 `s1`-`s4`），`'overview'` 表示课程首页 |
+| `currentLesson` | `string` | `null` | 当前课时 ID（`m1`-`m5` 或 `s1`-`s4`），`'overview'` 表示课程首页 |
 | `genCourseId` | `string` | `null` | 通用课程视图的课程 ID，用于 `continueGen()` 和步骤条渲染 |
 | `sidebarFolded` | `object` | `{lms:false,form:false,rel:false}` | 后台侧边栏各分组的折叠状态 |
 
@@ -114,14 +117,14 @@
 **关键规则**：
 - `currentView === 'generic'` 时 `genCourseId` 必须非空
 - 切换到后台时清除所有菜单高亮，切换到前台时恢复
-- 模块切换时自动调用 `saveProgress()`，下次进入时恢复进度
+- 课时切换时自动调用 `saveProgress()`，下次进入时恢复进度
 - 课程首页通过 `overview` 面板显示，此时步骤条隐藏
 
 ---
 
 ## 6. StepBar — 步骤条 (DOM)
 
-横向步骤导航组件，显示课程阶段列表和当前进度。两个实例：`#stepbar`（生产实习）和 `#gen-stepbar`（课程 1-4）。
+横向步骤导航组件，显示课程课时列表和当前进度。两个实例：`#stepbar`（生产实习）和 `#gen-stepbar`（课程 1-4）。
 
 | 属性 | 说明 |
 |------|------|
@@ -144,29 +147,29 @@
 
 ```
 课程首页 (overview)
-   └── 模块1 (m1/s1) ──conn──→ 模块2 (m2/s2) ──conn──→ ... ──→ 最后模块
+   └── 课时1 (m1/s1) ──conn──→ 课时2 (m2/s2) ──conn──→ ... ──→ 最后课时
 ```
 
-每个节点可点击跳转，最后模块底部显示"→ 进入下一课程"（课程 1-4）或"✓ 提交申报"（生产实习）。
+每个节点可点击跳转，最后课时底部显示"→ 进入下一课程"（课程 1-4）或"✓ 提交申报"（生产实习）。
 
 ---
 
-## 7. ModulePanel — 模块面板 (DOM)
+## 7. LessonPanel — 课时面板 (DOM)
 
-模块内容容器，一次仅显示一个面板。通过 `.module-panel` + `.show` 切换。
+课时内容容器，一次仅显示一个面板。通过 `.module-panel` + `.show` 切换。
 
 | 属性 | 说明 |
 |------|------|
 | CSS `.module-panel` | `display:none`，默认隐藏 |
 | CSS `.module-panel.show` | `display:block`，当前激活面板 |
 | 课程首页 | `#mod-overview` / `#gen-mod-overview`，显示课程 Hero |
-| 模块内容 | `#mod-m1` ~ `#mod-m5` / `#gen-mod-s1` ~ `#gen-mod-s4` |
+| 课时内容 | `#mod-m1` ~ `#mod-m5` / `#gen-mod-s1` ~ `#gen-mod-s4` |
 | 咨询表单 | `#mod-consult`，特殊面板，不触发步骤条 |
 
 **关键规则**：
 - 同一时刻只有一个 `.module-panel.show`
 - 切换到 `overview` 或 `consult` 时隐藏步骤条
-- 切换到模块面板时显示步骤条并调用 `updateStepBar()` / `genUpdateStepBar()`
+- 切换到课时面板时显示步骤条并调用 `updateStepBar()` / `genUpdateStepBar()`
 
 ---
 
