@@ -8,6 +8,10 @@
 resource "alicloud_oss_bucket" "studio" {
   bucket = "qtclass-studio"
 
+  # 2023 后新桶默认开启"阻止公共访问"，会使 public-read 失效（AccessDenied），
+  # 需显式关闭（手动部署时曾遇此问题，见 README）
+  block_public_access = false
+
   # 静态网站托管（Web 版入口 index.html）
   website {
     index_document = "index.html"
