@@ -171,4 +171,48 @@ void main() {
       expect(find.textContaining('开发环境搭建'), findsWidgets);
     });
   });
+
+  group('手机端布局 - 窄屏渲染', () {
+    /// iPhone 15 尺寸（390 x 844）
+    void setPhoneScreen(WidgetTester tester) {
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1.0;
+    }
+
+    testWidgets('手机尺寸下各场景渲染无溢出异常', (tester) async {
+      setPhoneScreen(tester);
+      final state = PlayerState();
+
+      await tester.pumpWidget(wrapWithProviders(PlayerScreen(), state: state));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(find.textContaining('课时1 · 开发环境搭建'), findsWidgets);
+      state.pause();
+    });
+
+    testWidgets('手机尺寸下进入分支场景无溢出异常', (tester) async {
+      setPhoneScreen(tester);
+      final state = PlayerState();
+      state.restoreProgress(segmentId: 'e1-site-down');
+
+      await tester.pumpWidget(wrapWithProviders(PlayerScreen(), state: state));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(find.textContaining('Zed 官网无法访问'), findsWidgets);
+      state.pause();
+    });
+
+    testWidgets('手机尺寸下互动节点弹层可用', (tester) async {
+      setPhoneScreen(tester);
+      final state = PlayerState();
+      state.restoreProgress(segmentId: 'install-zed');
+      state.seek(1.0); // 触发互动
+
+      await tester.pumpWidget(wrapWithProviders(PlayerScreen(), state: state));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(find.text('Zed 安装是否顺利？'), findsOneWidget);
+      state.pause();
+    });
+  });
 }

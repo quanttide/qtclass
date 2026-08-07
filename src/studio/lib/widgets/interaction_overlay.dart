@@ -120,16 +120,18 @@ class _InteractionCardContent extends StatelessWidget {
           ),
         ],
         const SizedBox(height: 20),
-        // 选项网格
+        // 选项网格（窄屏自适应列数）
         LayoutBuilder(
           builder: (context, constraints) {
+            final cols = constraints.maxWidth < 480 ? 1 : 3;
+            final cardWidth = (constraints.maxWidth - 12 * (cols - 1)) / cols;
             return Wrap(
               spacing: 12,
               runSpacing: 12,
               children: available.map((option) {
                 final isSelected = state.selectedChoice == option.id;
                 return SizedBox(
-                  width: (constraints.maxWidth - 24) / 3,
+                  width: cardWidth,
                   child: _OptionCard(
                     option: option,
                     isSelected: isSelected,

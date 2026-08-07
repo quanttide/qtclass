@@ -34,12 +34,16 @@ class PlayerControls extends StatelessWidget {
                 children: [
                   _PlayButton(state: state),
                   const SizedBox(width: 13),
-                  Text(
-                    '${_formatTime(state.elapsed)} / ${_formatTime(total)}',
-                    style: TextStyle(
-                      fontFamily: 'monospace',
-                      fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  Flexible(
+                    child: Text(
+                      '${_formatTime(state.elapsed)} / ${_formatTime(total)}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -103,7 +107,9 @@ class _Timeline extends StatelessWidget {
                   height: 5,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(999),
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
                   ),
                 ),
                 // 填充
@@ -119,7 +125,10 @@ class _Timeline extends StatelessWidget {
                 ),
                 // 滑块
                 Positioned(
-                  left: (state.finished ? 1 : state.progress) * constraints.maxWidth - 6.5,
+                  left:
+                      (state.finished ? 1 : state.progress) *
+                          constraints.maxWidth -
+                      6.5,
                   top: 2.5,
                   child: Container(
                     width: 13,
@@ -170,10 +179,7 @@ class _PlayButton extends StatelessWidget {
           customBorder: const CircleBorder(),
           onTap: () => context.read<PlayerState>().togglePlay(),
           child: Center(
-            child: Icon(
-              isPlaying ? Icons.pause : Icons.play_arrow,
-              size: 20,
-            ),
+            child: Icon(isPlaying ? Icons.pause : Icons.play_arrow, size: 20),
           ),
         ),
       ),
