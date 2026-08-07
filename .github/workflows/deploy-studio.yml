@@ -1,13 +1,15 @@
-# 发布 studio：推送 studio/* tag（如 studio/v0.1.0-alpha.1，由 qtcloud-devops release publish 创建）时，
-# 构建 Flutter Linux 客户端，打包上传到 OSS 发布分发桶（qtclass-studio，IaC 见 manifests/terraform/studio.tf）。
+# 发布 studio：推送 studio/* tag（如 studio/v0.1.0-alpha.3，由 qtcloud-devops release publish 创建）时，
+# 构建 Flutter Web 与 Linux 客户端，上传到 OSS 发布桶（qtclass-studio，IaC 见 manifests/terraform/studio.tf），
+# 并刷新 CDN 缓存。
 #
 # 对齐 qtcloud-delib 的 deploy-studio.yml 模式：
-#   studio/* tag → Actions（flutter build linux + ossutil cp）→ OSS 桶（qtclass-studio）→ 用户下载
+#   studio/* tag → Actions（flutter build web + linux，ossutil cp）→ OSS 桶（qtclass-studio，静态网站托管）
+#   → CDN（class.quanttide.com，泛域名证书 *.quanttide.com）→ 用户浏览器 / 下载
 #
 # 触发说明：用 tag 精确匹配 studio/ 前缀，避免其他 tag 误触发。
 #
 # 所需 GitHub secrets / variables（org / repo 级）：
-#   - ALIYUN_ACCESS_KEY_ID / ALIYUN_ACCESS_KEY_SECRET（secret）：RAM 用户 AccessKey（OSS 上传）
+#   - ALIYUN_ACCESS_KEY_ID / ALIYUN_ACCESS_KEY_SECRET（secret）：RAM 用户 AccessKey（OSS 上传 + CDN 刷新）
 
 name: Deploy Studio
 
@@ -23,10 +25,11 @@ concurrency:
 env:
   OSS_BUCKET: qtclass-studio
   OSS_ENDPOINT: oss-cn-hangzhou.aliyuncs.com
+  CDN_DOMAIN: class.quanttide.com
 
 jobs:
   build-and-deploy:
-    name: Build Linux Client & Upload to OSS
+    name: Build Flutter Web/Linux & Deploy to OSS
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,12 +47,20 @@ jobs:
         with:
           flutter-version: '3.44.8'
 
+      - name: Pub get
+        working-directory: src/studio
+        run: flutter pub get
+
+      - name: Build Web
+        working-directory: src/studio
+        run: flutter build web --release
+
       - name: Build Linux Release
         working-directory: src/studio
         run: flutter build linux --release
 
-      # 打包 bundle 为 tar.gz（含可执行文件与依赖库，便于分发下载）
-      - name: Package bundle
+      # 打包 Linux bundle 为 tar.gz（含可执行文件与依赖库，便于分发下载）
+      - name: Package Linux bundle
         working-directory: src/studio/build/linux/x64/release
         run: tar -czf qtclass-linux-x64.tar.gz bundle
 
@@ -60,6 +71,28 @@ jobs:
           access-key-id: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
           access-key-secret: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
 
-      - name: Upload to OSS
+      # 长缓存：Flutter 产物文件名含内容哈希，可放心 max-age=31536000
+      - name: Upload Web to OSS
+        working-directory: src/studio
+        run: ossutil cp build/web/ oss://${{ env.OSS_BUCKET }}/ -r -f --meta=Cache-Control:public,max-age=31536000
+
+      - name: Upload Linux bundle to OSS
         working-directory: src/studio/build/linux/x64/release
         run: ossutil cp qtclass-linux-x64.tar.gz oss://${{ env.OSS_BUCKET }}/studio/
+
+      - name: Refresh CDN
+        run: |
+          pip install aliyun-python-sdk-cdn
+          python -c "
+          from aliyunsdkcore.client import AcsClient
+          from aliyunsdkcdn.request.v20180510.RefreshObjectCachesRequest import RefreshObjectCachesRequest
+          import os
+          cli = AcsClient(os.environ['ALIYUN_ACCESS_KEY_ID'], os.environ['ALIYUN_ACCESS_KEY_SECRET'], 'cn-hangzhou')
+          req = RefreshObjectCachesRequest()
+          req.set_ObjectPath('https://${{ env.CDN_DOMAIN }}/')
+          req.set_ObjectType('Directory')
+          cli.do_action_with_exception(req)
+          "
+        env:
+          ALIYUN_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
+          ALIYUN_ACCESS_KEY_SECRET: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
