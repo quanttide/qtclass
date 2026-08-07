@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.0-beta.2] - 2026-08-07
+
+### Fixed
+- **部署视频失效**：CI checkout 未拉取 LFS 内容，视频以 LFS 指针上传导致无法播放——`actions/checkout` 增加 `lfs: true`
+- **发版后仍显示旧版本**：固定名入口文件（`main.dart.js` / `flutter_service_worker.js` / `flutter_bootstrap.js` 等）被一年长缓存，Service Worker 不更新——入口文件改为 `no-cache`，仅哈希资源长缓存
+
+### Changed
+- 移除 `deploy-studio` 的手动触发（`workflow_dispatch`）：部署问题一律通过发新版本解决
+
 ## [0.1.0-beta.1] - 2026-08-07
 
 ### Added
