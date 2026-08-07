@@ -40,16 +40,13 @@ Course（课程）
 
 ---
 
-## 组件规格（Widgets）— 6 类 30 组件
+## 组件规格（Widgets）
 
-| 分类 | 文件 | 包含组件 |
-|------|------|----------|
-| 🔹 Atoms 原子 | [atoms.md](widgets/atoms.md) | Button、Badge、Dot、Icon、Avatar、Connector、Divider |
-| 🔸 Items 条目 | [items.md](widgets/items.md) | CourseCard、LessonItem、NavItem、StatCard、TimelineItem、PipelineStage |
-| 🔷 Containers 容器 | [containers.md](widgets/containers.md) | Card、Section、TwoCol、CourseHero、ModulePanel、PageHeader、Workspace、FormRow |
-| 🧭 Navigation 导航 | [navigation.md](widgets/navigation.md) | AppBar、SideNav、StepBar、BackLink、Pipeline |
-| 📝 Forms 表单 | [forms.md](widgets/forms.md) | FormGroup、Input、Textarea、Select、Radio |
-| 🔔 Feedback 反馈 | [feedback.md](widgets/feedback.md) | Toast、ProgressBar、Overlay（待实现）、Dialog（待实现） |
+| 组件 | 文件 | 说明 |
+|------|------|------|
+| Item | [item.md](widgets/item.md) | 通用列表条目：课程卡片、课时条目、导航项、时间线节点 |
+| ListView | [list-view.md](widgets/list-view.md) | 通用列表容器：纵向/横向/网格变体 |
+| GridView | [grid-view.md](widgets/grid-view.md) | 网格布局容器（待建设） |
 
 ---
 
