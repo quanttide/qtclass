@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.1.0-beta.4] - 2026-08-08
+
+### Refactor
+- studio widgets 按粒度分组，对齐 qtdata 组件划分：
+  - `widgets/` 拆分为 `cards/`（8 个卡片组件）、`common/`（sidebar/topbar/字幕等通用组件）、`dialogs/`（互动/完成覆盖层）、`stage/`（播放舞台/视频/控制栏）
+  - `player_screen.dart` 从 1079 行精简至 ~230 行骨架，内嵌组件全部公开化拆分
+  - 测试镜像 lib 结构：`helpers/seed` + `screens/` + `widgets/` 组件级测试（36 项全过）
+
+### Removed
+- 移除仓库根目录遗留文件（不属于应用资源）：`assets/videos/studio.mp4`、`assets/articles/refactor-as-first-class-citizen.md`
+
 ## [0.1.0-beta.3] - 2026-08-07
 
 ### Fixed
