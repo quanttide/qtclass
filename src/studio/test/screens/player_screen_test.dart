@@ -1,29 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
-import 'package:qtclass_studio/services/player_state.dart';
-import 'package:qtclass_studio/widgets/sidebar.dart';
-import 'package:qtclass_studio/widgets/player_controls.dart';
 import 'package:qtclass_studio/screens/player_screen.dart';
+import 'package:qtclass_studio/services/player_state.dart';
 
-/// 辅助方法：创建测试用的 Provider 包裹
-Widget wrapWithProviders(Widget child, {PlayerState? state}) {
-  return MaterialApp(
-    home: ChangeNotifierProvider.value(
-      value: state ?? PlayerState(),
-      child: child,
-    ),
-  );
-}
+import '../helpers/seed.dart';
 
-/// 设置大测试窗口（1280x800）避免播放器布局溢出
-void setLargeScreen(WidgetTester tester) {
-  tester.view.physicalSize = const Size(1280, 800);
-  tester.view.devicePixelRatio = 1.0;
-}
-
+/// 播放器页面测试 — 场景渲染、互动流程、手机端布局
 void main() {
-  group('PlayerStage - 场景渲染', () {
+  group('PlayerScreen - 场景渲染', () {
     testWidgets('初始时显示 intro 场景（课时开场）', (tester) async {
       setLargeScreen(tester);
       await tester.pumpWidget(wrapWithProviders(const PlayerScreen()));
@@ -114,59 +98,6 @@ void main() {
     });
   });
 
-  group('Sidebar - 路径与节点', () {
-    testWidgets('侧边栏包含 4 张卡片标题', (tester) async {
-      await tester.pumpWidget(
-        wrapWithProviders(Scaffold(body: Sidebar(onJumpToPath: () {}))),
-      );
-      await tester.pump();
-
-      expect(find.text('我的学习路径'), findsOneWidget);
-      expect(find.text('演示控制'), findsOneWidget);
-      expect(find.text('互动节点'), findsOneWidget);
-      expect(find.text('课程脉络'), findsOneWidget);
-    });
-
-    testWidgets('路径步骤来自课程数据（安装 Zed 步骤可见）', (tester) async {
-      await tester.pumpWidget(
-        wrapWithProviders(Scaffold(body: Sidebar(onJumpToPath: () {}))),
-      );
-      await tester.pump();
-
-      expect(find.text('安装 Zed 编辑器'), findsWidgets);
-      expect(find.text('获取 API 密钥'), findsWidgets);
-      expect(find.text('配置 Zed Assistant'), findsWidgets);
-    });
-  });
-
-  group('PlayerControls - 播放控制', () {
-    testWidgets('初始显示播放图标', (tester) async {
-      await tester.pumpWidget(
-        wrapWithProviders(const Material(child: PlayerControls())),
-      );
-      await tester.pump();
-
-      expect(find.byIcon(Icons.play_arrow), findsOneWidget);
-    });
-
-    testWidgets('播放中显示暂停图标', (tester) async {
-      final state = PlayerState();
-      state.play();
-
-      await tester.pumpWidget(
-        wrapWithProviders(
-          const Material(child: PlayerControls()),
-          state: state,
-        ),
-      );
-      await tester.pump();
-
-      expect(find.byIcon(Icons.pause), findsOneWidget);
-
-      state.pause();
-    });
-  });
-
   group('PlayerScreen - 完整页面', () {
     testWidgets('播放器页面关键元素不崩溃', (tester) async {
       setLargeScreen(tester);
@@ -179,12 +110,6 @@ void main() {
   });
 
   group('手机端布局 - 窄屏渲染', () {
-    /// iPhone 15 尺寸（390 x 844）
-    void setPhoneScreen(WidgetTester tester) {
-      tester.view.physicalSize = const Size(390, 844);
-      tester.view.devicePixelRatio = 1.0;
-    }
-
     testWidgets('手机尺寸下各场景渲染无溢出异常', (tester) async {
       setPhoneScreen(tester);
       final state = PlayerState();

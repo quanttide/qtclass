@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../services/player_state.dart';
-import '../services/course_data.dart';
-import '../models/choice_option.dart';
+import '../../models/choice_option.dart';
+import '../../services/course_data.dart';
+import '../../services/player_state.dart';
+import '../cards/option_card.dart';
 
 /// 互动覆盖层 — 决策节点弹层
 ///
@@ -132,7 +133,7 @@ class _InteractionCardContent extends StatelessWidget {
                 final isSelected = state.selectedChoice == option.id;
                 return SizedBox(
                   width: cardWidth,
-                  child: _OptionCard(
+                  child: OptionCard(
                     option: option,
                     isSelected: isSelected,
                     onTap: () =>
@@ -190,78 +191,5 @@ class _InteractionCardContent extends StatelessWidget {
     final matched = options.where((o) => o.id == choiceId);
     if (matched.isEmpty) return '';
     return matched.first.feedback;
-  }
-}
-
-class _OptionCard extends StatelessWidget {
-  final ChoiceOption option;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _OptionCard({
-    required this.option,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Material(
-      color: isSelected
-          ? theme.colorScheme.primaryContainer
-          : theme.colorScheme.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: BorderSide(
-          color: isSelected ? theme.colorScheme.primary : theme.dividerColor,
-          width: isSelected ? 1.5 : 1,
-        ),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: Padding(
-          padding: const EdgeInsets.all(17),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 34,
-                height: 34,
-                decoration: BoxDecoration(
-                  border: Border.all(color: theme.dividerColor),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Center(
-                  child: Text(
-                    option.symbol,
-                    style: const TextStyle(fontSize: 17),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                option.title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 15,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                option.note,
-                style: TextStyle(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontSize: 12,
-                  height: 1.55,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

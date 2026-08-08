@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/player_state.dart';
+import '../../services/player_state.dart';
 import 'package:provider/provider.dart';
 
 /// 播放控制栏
