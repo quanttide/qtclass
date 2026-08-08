@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 import '../services/player_state.dart';
 import '../services/course_data.dart';
 import '../widgets/player_controls.dart';
@@ -17,53 +18,51 @@ class PlayerScreen extends StatefulWidget {
 }
 
 class _PlayerScreenState extends State<PlayerScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
+    final isWide = MediaQuery.sizeOf(context).width > 1040;
+
     return Scaffold(
+      key: _scaffoldKey,
+      // 窄屏：侧边栏收进抽屉（手机/平板竖屏），播放器占满整列
+      drawer: isWide
+          ? null
+          : Drawer(
+              child: SafeArea(
+                child: Sidebar(onJumpToPath: () => _showConfirmDialog(context)),
+              ),
+            ),
       body: SafeArea(
         child: Consumer<PlayerState>(
           builder: (context, state, _) {
             return Column(
               children: [
                 // 顶栏
-                _Topbar(state: state),
+                _Topbar(
+                  state: state,
+                  onOpenSidebar: () => _scaffoldKey.currentState?.openDrawer(),
+                ),
                 // 工作区
                 Expanded(
                   child: LayoutBuilder(
                     builder: (context, constraints) {
-                      final isWide = constraints.maxWidth > 1040;
-
                       if (isWide) {
                         return Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: _MainColumn(state: state),
-                            ),
+                            Expanded(child: _MainColumn(state: state)),
                             SizedBox(
                               width: 318,
                               child: Sidebar(
-                                onJumpToPath: () => _showConfirmDialog(context, state),
+                                onJumpToPath: () => _showConfirmDialog(context),
                               ),
                             ),
                           ],
                         );
                       } else {
-                        return Column(
-                          children: [
-                            Expanded(
-                              child: _MainColumn(state: state),
-                            ),
-                            SizedBox(
-                              height: 320,
-                              child: SingleChildScrollView(
-                                child: Sidebar(
-                                  onJumpToPath: () => _showConfirmDialog(context, state),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
+                        return _MainColumn(state: state);
                       }
                     },
                   ),
@@ -76,8 +75,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
     );
   }
 
-  void _showConfirmDialog(BuildContext context, PlayerState state) {
-    if (state.env != null || state.runState != null) {
+  void _showConfirmDialog(BuildContext context) {
+    final state = context.read<PlayerState>();
+    if (state.visited.length > 1) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -100,22 +100,36 @@ class _PlayerScreenState extends State<PlayerScreen> {
 // ============================================================
 class _Topbar extends StatelessWidget {
   final PlayerState state;
+  final VoidCallback onOpenSidebar;
 
-  const _Topbar({required this.state});
+  const _Topbar({required this.state, required this.onOpenSidebar});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isNarrow = width < 600;
+    final isCompact = width < 1040; // 侧边栏收进抽屉时显示菜单入口
 
     return Container(
       height: 64,
-      padding: const EdgeInsets.symmetric(horizontal: 28),
+      padding: EdgeInsets.symmetric(horizontal: isNarrow ? 14 : 28),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface.withValues(alpha: 0.94),
         border: Border(bottom: BorderSide(color: theme.dividerColor)),
       ),
       child: Row(
         children: [
+          // 窄屏：侧边栏抽屉入口
+          if (isCompact) ...[
+            IconButton(
+              icon: const Icon(Icons.menu),
+              tooltip: '打开侧边栏',
+              visualDensity: VisualDensity.compact,
+              onPressed: onOpenSidebar,
+            ),
+            const SizedBox(width: 4),
+          ],
           // 品牌
           Container(
             width: 34,
@@ -136,44 +150,53 @@ class _Topbar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '量潮课堂',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.4,
-                  color: theme.colorScheme.onSurface,
+          // 标题（窄屏收缩 + 省略号）
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '量潮课堂',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.4,
+                    color: theme.colorScheme.onSurface,
+                  ),
                 ),
+                Text(
+                  CourseData.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // 次要标签（窄屏隐藏）
+          if (!isNarrow) const SizedBox(width: 20),
+          if (!isNarrow)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+              decoration: BoxDecoration(
+                border: Border.all(color: theme.dividerColor),
+                borderRadius: BorderRadius.circular(999),
               ),
-              Text(
-                'Python 基础 · 第1课',
+              child: Text(
+                '互动影游式课程原型',
                 style: TextStyle(
                   fontSize: 12,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-            ],
-          ),
-          const SizedBox(width: 20),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
-            decoration: BoxDecoration(
-              border: Border.all(color: theme.dividerColor),
-              borderRadius: BorderRadius.circular(999),
             ),
-            child: Text(
-              '互动影游式课程原型',
-              style: TextStyle(
-                fontSize: 12,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-          const Spacer(),
+          const SizedBox(width: 8),
           // 操作按钮
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -209,7 +232,7 @@ class _MainColumn extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'CHAPTER 01 · 第一次运行',
+                      '课时1 · 开发环境搭建',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
@@ -219,7 +242,7 @@ class _MainColumn extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '完成你的第一次 Python 运行',
+                      CourseData.title,
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w700,
                         height: 1.25,
@@ -227,7 +250,7 @@ class _MainColumn extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '通过互动节点识别学习状态，根据用户选择进入不同学习路径。',
+                      CourseData.description,
                       style: TextStyle(
                         fontSize: 13,
                         color: theme.colorScheme.onSurfaceVariant,
@@ -239,7 +262,10 @@ class _MainColumn extends StatelessWidget {
               ),
               // 状态标签
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 11,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(999),
@@ -260,10 +286,10 @@ class _MainColumn extends StatelessWidget {
                       state.finished
                           ? '学习任务完成'
                           : state.playing
-                              ? '正在播放'
-                              : state.interactionType != null
-                                  ? '等待选择'
-                                  : '等待播放',
+                          ? '正在播放'
+                          : state.interactionId != null
+                          ? '等待选择'
+                          : '等待播放',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
@@ -283,9 +309,7 @@ class _MainColumn extends StatelessWidget {
             child: Column(
               children: [
                 // 播放舞台
-                Expanded(
-                  child: _PlayerStage(state: state),
-                ),
+                Expanded(child: _PlayerStage(state: state)),
                 const SizedBox(height: 0),
                 // 控制栏
                 const PlayerControls(),
@@ -312,7 +336,10 @@ class _PlayerStage extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isNarrow = constraints.maxWidth < 760;
+        // 宽屏布局需要足够的纵向空间：舞台过矮时回退到可滚动窄布局，
+        // 否则场景文字（kicker+标题+描述）会被压缩溢出（如手机横屏）。
+        final isNarrow =
+            constraints.maxWidth < 760 || constraints.maxHeight < 260;
 
         return Container(
           decoration: BoxDecoration(
@@ -350,10 +377,7 @@ class _PlayerStage extends StatelessWidget {
                       onTap: () => context.read<PlayerState>().cycleSpeed(),
                     ),
                     const SizedBox(width: 8),
-                    _FloatButton(
-                      label: '⛶',
-                      onTap: () {},
-                    ),
+                    _FloatButton(label: '⛶', onTap: () {}),
                   ],
                 ),
               ),
@@ -368,9 +392,20 @@ class _PlayerStage extends StatelessWidget {
     final theme = Theme.of(context);
     final seg = state.currentSegment;
     final sceneKey = seg?.sceneKey ?? 'intro';
+    final caption = seg?.caption ?? '';
+
+    // 视频片段：全区域播放视频
+    if (seg?.video != null) {
+      return Padding(
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: _VideoScene(assetPath: seg!.video!, state: state),
+        ),
+      );
+    }
 
     if (isNarrow) {
-      return Padding(
+      return SingleChildScrollView(
         padding: const EdgeInsets.all(28),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -378,7 +413,13 @@ class _PlayerStage extends StatelessWidget {
           children: [
             _SceneText(sceneKey: sceneKey, state: state, theme: theme),
             const SizedBox(height: 20),
-            Center(child: _SceneVisual(sceneKey: sceneKey, theme: theme)),
+            Center(
+              child: _SceneVisual(
+                sceneKey: sceneKey,
+                caption: caption,
+                theme: theme,
+              ),
+            ),
           ],
         ),
       );
@@ -396,7 +437,11 @@ class _PlayerStage extends StatelessWidget {
           Expanded(
             flex: 9,
             child: Center(
-              child: _SceneVisual(sceneKey: sceneKey, theme: theme),
+              child: _SceneVisual(
+                sceneKey: sceneKey,
+                caption: caption,
+                theme: theme,
+              ),
             ),
           ),
         ],
@@ -458,54 +503,13 @@ class _SceneText extends StatelessWidget {
   }
 
   _SceneTextData _sceneTextData(String key, PlayerState state) {
-    switch (key) {
-      case 'intro':
-        return const _SceneTextData(
-          kicker: '学习主线 · 开启 Python 学习任务',
-          title: '你的学习路径，将由你的选择展开。',
-          desc: '不同学习者的设备环境和遇到的卡点各不相同。互动节点帮助系统理解你的状态，提供更适合你的学习路径。',
-        );
-      case 'environment':
-        final isWindows = state.currentSegmentId == 'windows';
-        final isMacos = state.currentSegmentId == 'macos';
-        return _SceneTextData(
-          kicker: '个性化分支 · 选择运行环境',
-          title: isWindows
-              ? 'Windows 运行环境'
-              : isMacos
-                  ? 'macOS 运行环境'
-                  : 'Linux 运行环境',
-          desc: isWindows
-              ? '了解该环境下运行 Python 程序时需要注意的问题。确认 Python 解释器后，可通过 VS Code 运行按钮执行 .py 文件。'
-              : isMacos
-                  ? '了解该环境下运行 Python 程序时需要注意的问题。可在 Terminal 使用 python3 命令，也可在 VS Code 中选择对应解释器。'
-                  : '了解该环境下运行 Python 程序时需要注意的问题。先确认 python3 --version，再通过 python3 文件名.py 运行程序。',
-        );
-      case 'first-program':
-        return const _SceneTextData(
-          kicker: '学习主线 · 完成第一次代码运行',
-          title: '完成第一次代码运行任务',
-          desc: '无论使用什么系统，Python 代码是通用的。下面我们编写一个简单的 print 语句，然后尝试运行它。',
-        );
-      case 'run-state':
-        final isSuccess = state.currentSegmentId == 'run-success';
-        final isError = state.currentSegmentId == 'run-error';
-        return _SceneTextData(
-          kicker: '个性化分支 · 处理运行反馈',
-          title: isSuccess
-              ? '程序成功运行'
-              : isError
-                  ? '运行出现问题'
-                  : '不确定下一步操作',
-          desc: isSuccess
-              ? '你的环境配置正确，程序已顺利输出结果。可以继续学习后续内容。'
-              : isError
-                  ? '程序没有按照预期运行，常见原因：缩进不对、拼写错误或环境变量未配置。'
-                  : '代码已完成，但不确定如何执行。运行 Python 程序只需几个简单步骤。',
-        );
-      default:
-        return const _SceneTextData(title: '');
-    }
+    final seg = state.currentSegment;
+    if (seg == null) return const _SceneTextData(title: '');
+    return _SceneTextData(
+      kicker: seg.chapter,
+      title: seg.title.isNotEmpty ? seg.title : seg.caption,
+      desc: seg.caption,
+    );
   }
 }
 
@@ -519,24 +523,170 @@ class _SceneTextData {
 
 class _SceneVisual extends StatelessWidget {
   final String sceneKey;
+  final String caption;
   final ThemeData theme;
 
-  const _SceneVisual({required this.sceneKey, required this.theme});
+  const _SceneVisual({
+    required this.sceneKey,
+    required this.caption,
+    required this.theme,
+  });
 
   @override
   Widget build(BuildContext context) {
     switch (sceneKey) {
       case 'intro':
         return _OrbitVisual(theme: theme);
-      case 'environment':
-        return _SystemCard(theme: theme);
-      case 'first-program':
-        return _CodeCard();
-      case 'run-state':
-        return _TerminalCard(theme: theme);
+      case 'main':
+        return _TaskCard(caption: caption);
+      case 'error':
+      case 'success':
+        return _TerminalCard(caption: caption, theme: theme);
       default:
         return const SizedBox.shrink();
     }
+  }
+}
+
+/// 视频场景 — 片段关联视频时全区域播放
+///
+/// 与 [PlayerState] 联动：播放/暂停同步；视频结束时触发片段结束。
+/// 平台不支持 video_player 时（如 Linux 桌面）降级显示提示。
+class _VideoScene extends StatefulWidget {
+  final String assetPath;
+  final PlayerState state;
+
+  const _VideoScene({required this.assetPath, required this.state});
+
+  @override
+  State<_VideoScene> createState() => _VideoSceneState();
+}
+
+class _VideoSceneState extends State<_VideoScene> {
+  VideoPlayerController? _controller;
+  bool _failed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initVideo();
+  }
+
+  @override
+  void didUpdateWidget(_VideoScene oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.assetPath != widget.assetPath) {
+      _disposeVideo();
+      _initVideo();
+    }
+  }
+
+  Future<void> _initVideo() async {
+    debugPrint('VIDEO: init start ${widget.assetPath}');
+    final controller = VideoPlayerController.asset(widget.assetPath);
+    try {
+      await controller.initialize().timeout(const Duration(seconds: 30));
+      if (!mounted) {
+        await controller.dispose();
+        return;
+      }
+      debugPrint('VIDEO: init ok duration=${controller.value.duration}');
+      setState(() => _controller = controller);
+      // 同步视频实际时长到播放器状态
+      final duration = controller.value.duration.inMilliseconds / 1000;
+      widget.state.setDurationOverride(duration);
+      if (widget.state.playing) controller.play();
+      controller.addListener(_onVideoTick);
+    } catch (e) {
+      debugPrint('VIDEO: init FAILED: $e');
+      await controller.dispose();
+      if (mounted) {
+        setState(() {
+          _failed = true;
+          _controller = null;
+        });
+      }
+    }
+  }
+
+  void _onVideoTick() {
+    final controller = _controller;
+    if (controller == null) return;
+    if (controller.value.isCompleted && !widget.state.finished) {
+      widget.state.seek(1.0); // 视频播放完 → 触发片段结束
+    }
+  }
+
+  void _syncPlayback() {
+    final controller = _controller;
+    if (controller == null) return;
+    if (widget.state.playing && !controller.value.isPlaying) {
+      controller.play();
+    } else if (!widget.state.playing && controller.value.isPlaying) {
+      controller.pause();
+    }
+  }
+
+  void _disposeVideo() {
+    _controller?.removeListener(_onVideoTick);
+    _controller?.dispose();
+    _controller = null;
+    // 不在此通知：dispose 期间 notifyListeners 会触发 markNeedsBuild 异常；
+    // 片段切换时 PlayerState.setActiveSegment 已清除动态时长
+  }
+
+  @override
+  void dispose() {
+    _disposeVideo();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    // 播放状态联动
+    widget.state.addListener(_syncPlayback);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _syncPlayback());
+
+    if (_failed) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.videocam_off,
+              size: 40,
+              color: theme.colorScheme.outline,
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              '当前平台暂不支持视频播放，请在 Web 端查看课时视频。',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+
+    final controller = _controller;
+    if (controller == null || !controller.value.isInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return AspectRatio(
+      aspectRatio: controller.value.aspectRatio,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: VideoPlayer(controller),
+      ),
+    );
   }
 }
 
@@ -557,7 +707,7 @@ class _OrbitVisual extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Text(
-            'Python',
+            'Zed',
             style: TextStyle(
               fontFamily: 'monospace',
               fontWeight: FontWeight.w900,
@@ -571,86 +721,15 @@ class _OrbitVisual extends StatelessWidget {
   }
 }
 
-class _SystemCard extends StatelessWidget {
-  final ThemeData theme;
-  const _SystemCard({required this.theme});
+class _TaskCard extends StatelessWidget {
+  final String caption;
+
+  const _TaskCard({required this.caption});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 220,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        border: Border.all(color: theme.colorScheme.onSurface, width: 2),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          // 顶部小条
-          Container(
-            width: 55,
-            height: 7,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.onSurface,
-              borderRadius: BorderRadius.circular(999),
-            ),
-          ),
-          const SizedBox(height: 10),
-          // 模拟屏幕
-          Container(
-            width: double.infinity,
-            height: 120,
-            decoration: BoxDecoration(
-              border: Border.all(color: theme.dividerColor),
-              borderRadius: BorderRadius.circular(10),
-              color: theme.colorScheme.surfaceContainerLow,
-            ),
-            padding: const EdgeInsets.all(14),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _Bar(width: 0.82, color: theme.colorScheme.primary),
-                const SizedBox(height: 8),
-                _Bar(width: 0.66, color: null),
-                const SizedBox(height: 8),
-                _Bar(width: 0.48, color: null),
-                const SizedBox(height: 8),
-                _Bar(width: 0.74, color: null),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Bar extends StatelessWidget {
-  final double width;
-  final Color? color;
-
-  const _Bar({required this.width, this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      widthFactor: width,
-      child: Container(
-        height: 10,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(999),
-          color: color ?? Colors.grey.shade300,
-        ),
-      ),
-    );
-  }
-}
-
-class _CodeCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 260,
+      width: 300,
       padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
         color: const Color(0xFF171717),
@@ -666,32 +745,27 @@ class _CodeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '# 完成第一次代码运行',
-            style: TextStyle(fontFamily: 'monospace', color: Colors.grey.shade500, fontSize: 14),
+          Row(
+            children: List.generate(
+              3,
+              (_) => Container(
+                width: 9,
+                height: 9,
+                margin: const EdgeInsets.only(right: 7),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFF6B6B6B),
+                ),
+              ),
+            ),
           ),
-          const SizedBox(height: 4),
-          RichText(
-            text: TextSpan(
-              style: const TextStyle(fontFamily: 'monospace', fontSize: 14, height: 1.75),
-              children: [
-                TextSpan(
-                  text: 'print',
-                  style: TextStyle(color: Colors.green.shade300),
-                ),
-                const TextSpan(
-                  text: '(',
-                  style: TextStyle(color: Colors.white70),
-                ),
-                TextSpan(
-                  text: '"Hello, Python!"',
-                  style: TextStyle(color: Colors.orange.shade200),
-                ),
-                const TextSpan(
-                  text: ')',
-                  style: TextStyle(color: Colors.white70),
-                ),
-              ],
+          const SizedBox(height: 16),
+          Text(
+            caption,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 13,
+              height: 1.7,
             ),
           ),
         ],
@@ -702,16 +776,13 @@ class _CodeCard extends StatelessWidget {
 
 class _TerminalCard extends StatelessWidget {
   final ThemeData theme;
-  const _TerminalCard({required this.theme});
+  final String caption;
+  const _TerminalCard({required this.theme, required this.caption});
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<PlayerState>();
-    final isSuccess = state.currentSegmentId == 'run-success';
-    final isError = state.currentSegmentId == 'run-error';
-
     return Container(
-      width: 260,
+      width: 300,
       decoration: BoxDecoration(
         color: const Color(0xFF171717),
         borderRadius: BorderRadius.circular(15),
@@ -735,77 +806,30 @@ class _TerminalCard extends StatelessWidget {
               border: Border(bottom: BorderSide(color: Color(0xFF383838))),
             ),
             child: Row(
-              children: List.generate(3, (_) => Container(
-                width: 9,
-                height: 9,
-                margin: const EdgeInsets.only(right: 7),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFF6B6B6B),
+              children: List.generate(
+                3,
+                (_) => Container(
+                  width: 9,
+                  height: 9,
+                  margin: const EdgeInsets.only(right: 7),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xFF6B6B6B),
+                  ),
                 ),
-              )),
+              ),
             ),
           ),
           // 终端内容
           Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (isSuccess) ...[
-                  Text.rich(
-                    TextSpan(
-                      style: const TextStyle(fontFamily: 'monospace', fontSize: 14, height: 1.8),
-                      children: [
-                        const TextSpan(
-                          text: '\$ python3 hello.py',
-                          style: TextStyle(color: Color(0xFF9CC6AD)),
-                        ),
-                        TextSpan(
-                          text: '\nHello, Python!',
-                          style: TextStyle(color: Colors.green.shade300),
-                        ),
-                      ],
-                    ),
-                  ),
-                ] else if (isError) ...[
-                  Text.rich(
-                    TextSpan(
-                      style: const TextStyle(fontFamily: 'monospace', fontSize: 14, height: 1.8),
-                      children: [
-                        const TextSpan(
-                          text: '\$ python3 hello.py',
-                          style: TextStyle(color: Color(0xFF9CC6AD)),
-                        ),
-                        TextSpan(
-                          text: '\nSyntaxError: invalid syntax',
-                          style: TextStyle(color: Colors.red.shade300),
-                        ),
-                      ],
-                    ),
-                  ),
-                ] else ...[
-                  Text.rich(
-                    TextSpan(
-                      style: const TextStyle(fontFamily: 'monospace', fontSize: 14, height: 1.8),
-                      children: [
-                        const TextSpan(
-                          text: '\$ which python3',
-                          style: TextStyle(color: Color(0xFF9CC6AD)),
-                        ),
-                        const TextSpan(
-                          text: '\n/usr/bin/python3',
-                          style: TextStyle(color: Color(0xFFBCE7C8)),
-                        ),
-                        const TextSpan(
-                          text: '\n\$ python3 hello.py',
-                          style: TextStyle(color: Color(0xFF9CC6AD)),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ],
+            child: Text(
+              caption,
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 13,
+                height: 1.7,
+              ),
             ),
           ),
         ],
@@ -904,13 +928,14 @@ class _FinishOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final env = state.env ?? 'windows';
-    final envDisplay = CourseData.labelEnv(env);
+    final doneCount = CourseData.pathSteps
+        .where((s) => state.visited.contains(s.segmentId))
+        .length;
 
     return Container(
       color: theme.colorScheme.surface.withValues(alpha: 0.96),
       child: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(32),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 600),
@@ -960,8 +985,9 @@ class _FinishOverlay extends StatelessWidget {
                     Expanded(
                       child: _ResultInfoCard(
                         theme: theme,
-                        title: '你的学习路线',
-                        value: '$envDisplay 运行环境',
+                        title: '学习进度',
+                        value:
+                            '已完成 $doneCount/${CourseData.pathSteps.length} 步',
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -969,7 +995,7 @@ class _FinishOverlay extends StatelessWidget {
                       child: _ResultInfoCard(
                         theme: theme,
                         title: '当前阶段',
-                        value: '解锁第一次成功运行',
+                        value: '课时完成',
                       ),
                     ),
                   ],
@@ -986,9 +1012,7 @@ class _FinishOverlay extends StatelessWidget {
                     FilledButton(
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('下一课程即将上线，敬请期待'),
-                          ),
+                          const SnackBar(content: Text('下一课程即将上线，敬请期待')),
                         );
                       },
                       child: const Text('继续学习'),

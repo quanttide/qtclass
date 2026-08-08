@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/course_data.dart';
 import 'player_screen.dart';
 
 /// 课程首页
@@ -15,10 +16,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void _startLearning() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => const PlayerScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const PlayerScreen()),
     );
+  }
+
+  /// 课程预计时长（视频片段总秒数换算分钟，向上取整）
+  int _totalMinutes() {
+    final totalSeconds = CourseData.segments.values
+        .where((s) => s.video != null)
+        .fold<double>(0, (sum, s) => sum + s.duration);
+    return (totalSeconds / 60).ceil().clamp(1, 999);
   }
 
   @override
@@ -35,7 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 64),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 64,
+                  ),
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 680),
                     child: Column(
@@ -43,13 +53,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         // 课程标签
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
-                            'Python 入门 · 互动课程',
+                            '氛围编程 · Vibe Coding',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -61,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 16),
                         // 标题
                         Text(
-                          'Python 基础：第一个 Python 程序',
+                          CourseData.title,
                           style: theme.textTheme.headlineLarge?.copyWith(
                             fontWeight: FontWeight.w700,
                             height: 1.2,
@@ -70,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          '通过互动式课程体验，在关键节点做出选择，根据你的学习状态进入不同路径。借鉴互动影游中的剧情结构与剧情选择机制，让学习过程更加清晰可追踪。',
+                          CourseData.description,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                             height: 1.65,
@@ -80,11 +93,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         // 元信息行
                         Row(
                           children: [
-                            _MetaItem(label: '适合人群', value: '零基础'),
+                            _MetaItem(label: '适合人群', value: '开发者'),
                             const SizedBox(width: 28),
-                            _MetaItem(label: '预计时间', value: '约 5 分钟'),
+                            _MetaItem(
+                              label: '预计时间',
+                              value: '约 ${_totalMinutes()} 分钟',
+                            ),
                             const SizedBox(width: 28),
-                            _MetaItem(label: '选择节点', value: '2 个'),
+                            _MetaItem(
+                              label: '选择节点',
+                              value: '${CourseData.interactionNodes.length} 个',
+                            ),
                             const SizedBox(width: 28),
                             _MetaItem(label: '难度', value: '入门'),
                           ],
@@ -92,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 16),
                         // 方法标签
                         Text(
-                          '互动节点 · 状态反馈 · 分支路径 · 学习追踪',
+                          '互动节点 · 状态反馈 · 分支路径 · 视频演示',
                           style: TextStyle(
                             fontSize: 13,
                             color: theme.colorScheme.onSurfaceVariant,
@@ -108,9 +127,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         const SizedBox(height: 14),
-                        _ObjectiveItem(text: '理解 Python 程序的基本运行流程'),
-                        _ObjectiveItem(text: '完成第一个 print 程序'),
-                        _ObjectiveItem(text: '学会处理常见的运行问题'),
+                        ...CourseData.objectives.map(
+                          (o) => _ObjectiveItem(text: o),
+                        ),
                         const SizedBox(height: 36),
                         // 按钮
                         SizedBox(
@@ -200,10 +219,7 @@ class _MetaItem extends StatelessWidget {
         const SizedBox(height: 3),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
       ],
     );

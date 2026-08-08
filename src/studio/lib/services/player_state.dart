@@ -3,11 +3,10 @@ import 'package:flutter/foundation.dart';
 import '../models/segment.dart';
 import 'course_data.dart';
 
-/// 播放器运行时状态枚举
-enum InteractionType { env, runState }
-
 /// 播放器状态机 — 驱动所有 UI 变化
 ///
+/// 流程完全由课程数据驱动（`assets/course.json`）：
+/// 片段结束 → 读 `Segment.interaction`（弹互动）→ 读 `Segment.next`（跳转）→ 读 `Segment.action`（完成）。
 /// 映射自 `doc/models/scene.md → State` 对象。
 class PlayerState extends ChangeNotifier {
   // ============================================================
@@ -20,13 +19,17 @@ class PlayerState extends ChangeNotifier {
   double _playbackRate = 1;
   bool _endHandled = false;
 
-  // 用户选择
-  String? _env;
-  String? _runState;
-  InteractionType? _interactionType;
+  // 互动状态
+  String? _interactionId;
   String? _selectedChoice;
   bool _finished = false;
-  final List<String> _triedRunStates = [];
+  final List<String> _triedChoices = [];
+
+  // 已访问片段（侧边栏路径完成状态）
+  final Set<String> _visited = {'intro'};
+
+  // 视频片段动态时长（视频就绪后覆盖 JSON 中的 duration）
+  double? _durationOverride;
 
   // ============================================================
   // Getters
@@ -37,34 +40,43 @@ class PlayerState extends ChangeNotifier {
   double get playbackRate => _playbackRate;
   bool get endHandled => _endHandled;
 
-  String? get env => _env;
-  String? get runState => _runState;
-  InteractionType? get interactionType => _interactionType;
+  String? get interactionId => _interactionId;
   String? get selectedChoice => _selectedChoice;
   bool get finished => _finished;
-  List<String> get triedRunStates => List.unmodifiable(_triedRunStates);
+  List<String> get triedChoices => List.unmodifiable(_triedChoices);
+  Set<String> get visited => Set.unmodifiable(_visited);
 
   Segment? get currentSegment => CourseData.segments[_currentSegmentId];
 
-  /// 当前片段剩余秒数
-  double get remaining {
+  /// 当前片段时长（视频片段用视频实际时长）
+  double get currentDuration {
     final seg = currentSegment;
     if (seg == null) return 0;
-    return (seg.duration - _elapsed).clamp(0, seg.duration);
+    return _durationOverride ?? seg.duration;
+  }
+
+  /// 设置/清除动态时长（视频就绪后调用；片段切换时清除）
+  void setDurationOverride(double? duration) {
+    _durationOverride = duration;
+    notifyListeners();
+  }
+
+  /// 当前片段剩余秒数
+  double get remaining {
+    return (currentDuration - _elapsed).clamp(0, currentDuration);
   }
 
   /// 当前播放进度（0.0 ~ 1.0）
   double get progress {
-    final seg = currentSegment;
-    if (seg == null || seg.duration <= 0) return 0;
-    return (_elapsed / seg.duration).clamp(0, 1);
+    if (currentDuration <= 0) return 0;
+    return (_elapsed / currentDuration).clamp(0, 1);
   }
 
   // ============================================================
   // 播放控制
   // ============================================================
   void play() {
-    if (_finished || _interactionType != null) return;
+    if (_finished || _interactionId != null) return;
     _playing = true;
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(milliseconds: 100), _tick);
@@ -87,7 +99,7 @@ class PlayerState extends ChangeNotifier {
     notifyListeners();
 
     final seg = currentSegment;
-    if (seg != null && _elapsed >= seg.duration) {
+    if (seg != null && _elapsed >= currentDuration) {
       pause();
       _handleSegmentEnd();
     }
@@ -97,10 +109,10 @@ class PlayerState extends ChangeNotifier {
   void seek(double ratio) {
     final seg = currentSegment;
     if (seg == null) return;
-    _elapsed = (ratio * seg.duration).clamp(0, seg.duration);
-    if (_elapsed < seg.duration - 0.2) {
+    _elapsed = (ratio * currentDuration).clamp(0, currentDuration);
+    if (_elapsed < currentDuration - 0.2) {
       _endHandled = false;
-    } else if (_elapsed >= seg.duration) {
+    } else if (_elapsed >= currentDuration) {
       // 跳到末尾时直接触发片段结束，不等待 timer
       pause();
       _handleSegmentEnd();
@@ -126,7 +138,7 @@ class PlayerState extends ChangeNotifier {
   }
 
   // ============================================================
-  // 片段切换
+  // 片段切换（数据驱动）
   // ============================================================
   void setActiveSegment(String segmentId) {
     if (!CourseData.segments.containsKey(segmentId)) return;
@@ -134,6 +146,8 @@ class PlayerState extends ChangeNotifier {
     _currentSegmentId = segmentId;
     _elapsed = 0;
     _endHandled = false;
+    _durationOverride = null; // 片段切换清除视频动态时长
+    _visited.add(segmentId);
     notifyListeners();
     play();
   }
@@ -143,28 +157,27 @@ class PlayerState extends ChangeNotifier {
     _endHandled = true;
     notifyListeners();
 
+    final seg = currentSegment;
+    if (seg == null) return;
+
     // 使用微任务延迟执行，确保 UI 已完成状态更新
     Future.microtask(() {
-      if (_currentSegmentId == 'intro') {
-        _openInteraction(InteractionType.env);
-      } else if (['windows', 'macos', 'linux'].contains(_currentSegmentId)) {
-        setActiveSegment('first-program');
-      } else if (_currentSegmentId == 'first-program') {
-        _openInteraction(InteractionType.runState);
-      } else if (_currentSegmentId == 'run-success') {
+      if (seg.interaction != null) {
+        _openInteraction(seg.interaction!);
+      } else if (seg.next != null) {
+        setActiveSegment(seg.next!);
+      } else if (seg.action == 'finish') {
         _finishLesson();
-      } else if (['run-error', 'run-unknown'].contains(_currentSegmentId)) {
-        _openInteraction(InteractionType.runState);
       }
     });
   }
 
   // ============================================================
-  // 互动节点
+  // 互动节点（数据驱动）
   // ============================================================
-  void _openInteraction(InteractionType type) {
+  void _openInteraction(String interactionId) {
     pause();
-    _interactionType = type;
+    _interactionId = interactionId;
     _selectedChoice = null;
     notifyListeners();
   }
@@ -176,39 +189,31 @@ class PlayerState extends ChangeNotifier {
 
   void confirmChoice() {
     final choice = _selectedChoice;
-    final type = _interactionType;
-    if (choice == null || type == null) return;
+    final interactionId = _interactionId;
+    if (choice == null || interactionId == null) return;
+    final interaction = CourseData.interactions[interactionId];
+    if (interaction == null) return;
 
-    if (type == InteractionType.env) {
-      _env = choice;
-      _interactionType = null;
-      _selectedChoice = null;
-      notifyListeners();
-      setActiveSegment(choice); // windows / macos / linux
-    } else if (type == InteractionType.runState) {
-      _runState = choice;
-      if (!_triedRunStates.contains(choice)) {
-        _triedRunStates.add(choice);
-      }
-      _interactionType = null;
-      _selectedChoice = null;
-      notifyListeners();
-      setActiveSegment('run-$choice');
+    final matched = interaction.options.where((o) => o.id == choice);
+    final option = matched.isEmpty ? null : matched.first;
+    if (option == null) return;
+
+    if (!_triedChoices.contains(choice)) {
+      _triedChoices.add(choice);
+    }
+    _interactionId = null;
+    _selectedChoice = null;
+    notifyListeners();
+
+    if (option.next != null) {
+      setActiveSegment(option.next!);
     }
   }
 
   void closeInteraction() {
-    _interactionType = null;
+    _interactionId = null;
     _selectedChoice = null;
     notifyListeners();
-  }
-
-  /// 过滤已尝试过的运行状态选项
-  List<String> get availableRunStateIds {
-    return CourseData.runStateOptions
-        .map((o) => o.id)
-        .where((id) => !_triedRunStates.contains(id))
-        .toList();
   }
 
   // ============================================================
@@ -227,36 +232,28 @@ class PlayerState extends ChangeNotifier {
     pause();
     _currentSegmentId = 'intro';
     _elapsed = 0;
-    _env = null;
-    _runState = null;
     _selectedChoice = null;
-    _interactionType = null;
+    _interactionId = null;
     _finished = false;
     _endHandled = false;
     _playbackRate = 1;
-    _triedRunStates.clear();
+    _triedChoices.clear();
+    _visited
+      ..clear()
+      ..add('intro');
     notifyListeners();
   }
 
   // ============================================================
   // 进度恢复
   // ============================================================
-  void restoreProgress({
-    String? env,
-    String? runState,
-    bool finished = false,
-  }) {
-    _env = env;
-    _runState = runState;
+  void restoreProgress({String? segmentId, bool finished = false}) {
     _finished = finished;
-
     if (finished) {
-      _currentSegmentId = 'run-success';
+      _currentSegmentId = 'verify';
       notifyListeners();
-    } else if (runState != null) {
-      setActiveSegment('run-$runState');
-    } else if (env != null) {
-      setActiveSegment(env);
+    } else if (segmentId != null) {
+      setActiveSegment(segmentId);
     } else {
       setActiveSegment('intro');
     }

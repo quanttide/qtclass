@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>量潮课堂 · LMS</title>
+<style>
+/* ============================================================
+   DESIGN TOKENS — 海岸主题 · Material Design
+   ============================================================ */
+:root {
+  --brand: #1677ff;
+  --brand-soft: #e8f4ff;
+  --brand-muted: #b8d8ff;
+  --bg: #f8fafe;
+  --surface: #f5f9fc;
+  --text: #1a2332;
+  --text-2: #556678;
+  --text-3: #8899aa;
+  --line: #e8ecf2;
+  --line-light: #f2f5f8;
+  --success: #22c55e;
+  --success-soft: #f0fdf4;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;
+  --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+}
+* { box-sizing:border-box;margin:0;padding:0; }
+body {
+  font-family:var(--font);font-size:14px;line-height:1.6;
+  background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--line);border-radius:3px; }
+
+/* ====== 海浪背景 ====== */
+.bg-atmo { position:fixed;inset:0;pointer-events:none;z-index:0; }
+.bg-atmo .glow {
+  position:absolute;top:-120px;left:50%;transform:translateX(-50%);
+  width:900px;height:400px;
+  background:radial-gradient(ellipse 50% 50% at 50% 40%, rgba(22,119,255,.07) 0%, transparent 70%);
+}
+.bg-atmo .wave { position:absolute;top:0;left:0;width:100%;height:220px;opacity:.10; }
+.bg-atmo .wave svg { width:100%;height:100%; }
+
+/* ====== AppBar ====== */
+.appbar {
+  position:sticky;top:0;z-index:100;height:56px;
+  background:rgba(255,255,255,.85);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;padding:0 32px;
+}
+.appbar .logo { display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:700;font-size:18px;color:var(--text); }
+.appbar .logo .icon {
+  width:30px;height:30px;border-radius:8px;
+  background:linear-gradient(135deg,#1677ff,#5b9fff);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:700;
+}
+.appbar .switch-group { display:flex;margin-left:40px; }
+.appbar .switch-group button {
+  padding:7px 20px;border:1px solid #d9d9d9;background:#fff;color:#666;
+  font-size:13px;cursor:pointer;font-family:inherit;font-weight:500;transition:all .15s;
+}
+.appbar .switch-group button:first-child { border-radius:6px 0 0 6px; }
+.appbar .switch-group button:last-child { border-radius:0 6px 6px 0;margin-left:-1px; }
+.appbar .switch-group button.active { background:var(--brand);color:#fff;border-color:var(--brand);position:relative;z-index:1; }
+.appbar .meta { margin-left:auto;display:flex;align-items:center;gap:18px;font-size:13px;color:#999; }
+.appbar .avatar {
+  width:32px;height:32px;border-radius:50%;background:var(--brand-soft);
+  color:var(--brand);display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:600;cursor:pointer;
+}
+
+/* ====== 面包屑 ====== */
+.crumb, .back-link {
+  display:inline-flex;align-items:center;gap:5px;color:var(--brand);
+  font-size:13px;cursor:pointer;margin:16px 0 12px;padding:7px 14px;
+  border-radius:6px;transition:all .15s;font-weight:500;
+}
+.crumb:hover, .back-link:hover { background:var(--brand-soft); }
+
+/* ====== 步骤条 ====== */
+.steps, .stepbar {
+  background:var(--surface);border-radius:var(--radius);border:1px solid var(--line);
+  padding:18px 32px;margin-bottom:20px;
+  box-shadow:0 1px 3px rgba(0,0,0,.03);
+  display:flex;align-items:center;justify-content:center;
+}
+.steps .bs, .stepbar .bs { font-size:13px;color:var(--text-3);margin-right:18px;cursor:pointer;flex-shrink:0; }
+.steps .bs:hover, .stepbar .bs:hover { color:var(--brand); }
+.steps .row, .stepbar .row { display:flex;align-items:center;gap:0; }
+.step { display:flex;align-items:center;gap:0;cursor:pointer; }
+.step .dot {
+  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;flex-shrink:0;
+  background:#f1f5f9;color:#b0bec5;transition:all .2s;
+}
+.step .dot.ok, .step .dot.done { background:var(--success-soft);color:var(--success); }
+.step .dot.on, .step .dot.current { background:var(--brand);color:#fff;box-shadow:0 0 0 6px rgba(22,119,255,.08); }
+.step .lbl, .step .label { font-size:13px;font-weight:600;margin:0 10px;color:#b0bec5;white-space:nowrap; }
+.step .lbl.ok, .step .label.done { color:var(--success); }
+.step .lbl.on, .step .label.current { color:var(--brand); }
+.step .conn, .step .line { width:24px;height:2px;background:#e8ecf2;flex-shrink:0;border-radius:1px; }
+.step .conn.ok, .step .line.done { background:#bbf7d0; }
+
+/* ====== 卡片 ====== */
+.card {
+  background:#f5f9fc;border-radius:var(--radius);border:1px solid var(--line);
+  padding:36px 40px;box-shadow:0 1px 3px rgba(0,0,0,.03);
+  position:relative;overflow:hidden;margin-bottom:20px;
+}
+.card h2, .card .deck { font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px;letter-spacing:-.2px; }
+.card .subtitle, .card .desc { font-size:13px;color:var(--text-2);margin-bottom:28px; }
+
+/* 条目行 */
+.lrow, .lesson-item {
+  display:flex;align-items:center;gap:11px;
+  padding:14px 16px;border-bottom:1px solid var(--line-light);
+  font-size:14px;cursor:pointer;transition:background .12s;border-radius:6px;
+}
+.lrow:last-child, .lesson-item:last-child { border-bottom:none; }
+.lrow:hover, .lesson-item:hover { background:#f8fafc; }
+.lrow .bdot, .lesson-item .ldot {
+  width:7px;height:7px;border-radius:50%;background:var(--brand);flex-shrink:0;opacity:.5;
+}
+.lrow .tag, .lesson-item .duration { color:var(--text-3);margin-left:auto;font-size:12px;white-space:nowrap; }
+
+/* 按钮 */
+.btn {
+  display:inline-flex;align-items:center;gap:5px;
+  padding:10px 28px;border-radius:var(--radius-sm);border:none;
+  font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;
+}
+.btn-filled { background:linear-gradient(135deg,#1677ff,#4096ff);color:#fff;box-shadow:0 2px 8px rgba(22,119,255,.18); }
+.btn-filled:hover { box-shadow:0 4px 14px rgba(22,119,255,.26);transform:translateY(-1px); }
+.btn-outlined { background:transparent;color:var(--brand);border:1.5px solid var(--line); }
+.btn-outlined:hover { background:var(--brand-soft); }
+.btn-text { background:transparent;color:var(--brand);padding:8px 16px; }
+.btn-text:hover { background:var(--brand-soft); }
+.btn-sm { padding:6px 14px;font-size:12px; }
+.btn-lg { padding:14px 32px;font-size:16px; }
+.acts { display:flex;align-items:center;gap:16px;margin-top:30px; }
+
+/* 点阵 */
+.dots {
+  position:absolute;right:32px;bottom:32px;
+  width:72px;height:72px;pointer-events:none;
+  background-image:radial-gradient(circle, rgba(22,119,255,.08) 1.6px, transparent 1.6px);
+  background-size:10px 10px;
+}
+
+/* ====== 课程列表 ====== */
+.courses-page { padding:60px 48px;max-width:900px;margin:0 auto; }
+.page-header { text-align:center;margin-bottom:56px; }
+.page-header h1 { font-size:30px;font-weight:600;color:var(--text);margin-bottom:10px; }
+.page-header .desc { font-size:16px;color:var(--text-2);max-width:560px;margin:0 auto;line-height:1.7; }
+.card-grid { display:flex;flex-direction:column;gap:12px;max-width:700px;margin:0 auto; }
+.course-card {
+  display:flex;align-items:center;gap:20px;padding:22px 28px;
+  background:var(--surface);border-radius:var(--radius);border:1px solid var(--line);
+  cursor:pointer;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.03);
+}
+.course-card:hover { border-color:var(--brand);box-shadow:0 2px 8px rgba(22,119,255,.08);transform:translateX(4px); }
+.course-card .cc-num {
+  width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:18px;flex-shrink:0;background:#f1f5f9;color:var(--text-3);border:2px solid var(--line);
+}
+.course-card.active-card .cc-num { background:var(--brand);color:#fff;border-color:var(--brand); }
+.course-card .cc-info { flex:1; }
+.course-card .cc-name { font-weight:600;font-size:16px;color:var(--text);margin-bottom:2px; }
+.course-card .cc-desc { font-size:13px;color:var(--text-2);line-height:1.6; }
+
+/* ====== Badge ====== */
+.badge { display:inline-block;padding:3px 12px;border-radius:var(--radius-full);font-size:11px;font-weight:600;white-space:nowrap; }
+.badge.beginner { background:#e8f4ff;color:var(--brand); }
+.badge.intermediate { background:#ede9fe;color:#5b21b6; }
+.badge.advanced { background:#fff3e0;color:#e65100; }
+.badge.capstone { background:#ffeaea;color:#c62828; }
+.badge.review { background:#e8f4ff;color:var(--brand); }
+.badge.active-status { background:#f0fdf4;color:var(--success); }
+.badge.done { background:#f5f0ff;color:#6a1b9a; }
+.badge.draft { background:#fff3e0;color:#e65100; }
+
+/* ====== 侧边栏 ====== */
+.sidenav {
+  width:220px;background:var(--surface);border-right:1px solid var(--line);
+  padding:16px 0;flex-shrink:0;overflow-y:auto;
+}
+.sidenav .nav-group { padding:0 16px;margin-bottom:16px; }
+.sidenav .nav-label {
+  font-size:11px;color:var(--text-3);letter-spacing:1px;margin-bottom:8px;padding:4px 0;
+  display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;
+}
+.sidenav .nav-label .arr { font-size:10px;transition:transform .15s;display:inline-block; }
+.sidenav .nav-label .arr.folded { transform:rotate(-90deg); }
+.sidenav .nav-label:hover { color:var(--text); }
+.sidenav .nav-kids { overflow:hidden;transition:max-height .25s; }
+.sidenav .nav-kids.folded { max-height:0!important; }
+.sidenav .nav-item {
+  padding:9px 14px;border-radius:6px;cursor:pointer;
+  font-size:13px;color:var(--text);transition:all .15s;margin-bottom:1px;display:block;
+}
+.sidenav .nav-item:hover { background:var(--brand-soft); }
+.sidenav .nav-item.active { background:var(--brand-soft);color:var(--brand);font-weight:600; }
+.sidenav .nav-item.sub { padding-left:32px; }
+.sidenav .nav-item.placeholder { color:var(--text-3);opacity:.6;cursor:default; }
+.sidenav .nav-item.placeholder:hover { background:transparent; }
+
+/* ====== 统计卡片 ====== */
+.stat-row { display:flex;gap:16px;margin-bottom:20px; }
+.stat-card {
+  flex:1;background:var(--surface);border-radius:var(--radius);border:1px solid var(--line);
+  padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.03);
+}
+.stat-card .num { font-size:30px;font-weight:700;color:var(--text); }
+.stat-card .label { font-size:13px;color:var(--text-2);margin-top:2px; }
+
+/* ====== 表格 ====== */
+.datatable { width:100%;border-collapse:collapse;font-size:13px; }
+.datatable th { text-align:left;padding:12px 16px;color:var(--text-2);font-weight:500;border-bottom:2px solid var(--line); }
+.datatable td { padding:13px 16px;border-bottom:1px solid var(--line-light); }
+.datatable tr:hover td { background:#f8fafc; }
+
+/* ====== 课程 Hero ====== */
+.course-hero {
+  background:linear-gradient(135deg,#E3F2FD 0%,#BBDEFB 50%,#E8F5FF 100%);
+  border-radius:var(--radius-lg);padding:40px 48px;margin-bottom:20px;
+  color:var(--text);position:relative;overflow:hidden;
+}
+.course-hero .badge-course { display:inline-block;padding:3px 12px;border-radius:var(--radius-full);background:rgba(22,119,255,.12);color:var(--brand);font-size:12px;font-weight:600;margin-bottom:12px; }
+.course-hero h2 { font-size:28px;margin-bottom:8px;color:var(--text); }
+.course-hero .hero-desc { font-size:14px;color:var(--text-2);line-height:1.7;max-width:680px; }
+.course-hero .hero-meta { display:flex;gap:20px;margin-top:14px;font-size:12px;color:var(--text-3); }
+.course-hero .progress-bar { margin-top:14px;height:5px;background:rgba(22,119,255,.12);border-radius:3px;max-width:400px; }
+.course-hero .progress-bar .fill { height:100%;border-radius:3px;background:var(--brand); }
+
+/* ====== 模块卡片 ====== */
+.module-card {
+  display:flex;align-items:center;gap:20px;padding:20px;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  cursor:pointer;transition:all .15s;
+}
+.module-card:hover { border-color:var(--brand);box-shadow:0 2px 8px rgba(22,119,255,.06); }
+.module-card.done { border-left:4px solid var(--success); }
+.module-card.current { border-color:var(--brand);background:var(--brand-soft); }
+.module-card .mod-num {
+  width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:16px;flex-shrink:0;background:#f1f5f9;color:var(--text-3);
+}
+.module-card.done .mod-num { background:var(--success-soft);color:var(--success); }
+.module-card.current .mod-num { background:var(--brand);color:#fff; }
+.module-card .mod-info { flex:1; }
+.module-card .mod-title { font-weight:600;font-size:14px; }
+.module-card .mod-desc { font-size:12px;color:var(--text-2);margin-top:2px; }
+
+/* ====== Pipeline ====== */
+.pipeline { display:flex;gap:0;align-items:flex-start;padding:16px 0; }
+.pipeline .stage { flex:1;text-align:center;position:relative;padding:16px 8px; }
+.pipeline .stage::after { content:'→';position:absolute;right:-6px;top:28px;font-size:18px;color:var(--line); }
+.pipeline .stage:last-child::after { display:none; }
+.pipeline .stage .icon {
+  width:44px;height:44px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:8px;background:#f1f5f9;
+}
+.pipeline .stage .name { font-size:13px;font-weight:600; }
+.pipeline .stage .hint { font-size:11px;color:var(--text-3);margin-top:2px;line-height:1.5; }
+
+/* ====== Timeline ====== */
+.timeline { padding-left:20px;border-left:2px solid var(--line-light); }
+.timeline-item { margin-bottom:16px;position:relative; }
+.timeline-item::before {
+  content:'';position:absolute;left:-28px;top:4px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--brand);border:3px solid var(--surface);
+  box-shadow:0 0 0 2px var(--line);
+}
+.timeline-item .ts { font-size:11px;color:var(--text-3); }
+.timeline-item .event { font-size:14px;margin-top:2px; }
+
+/* ====== 表单 ====== */
+.form-group { margin-bottom:16px; }
+.form-group label { display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text); }
+.form-group input,.form-group textarea,.form-group select {
+  width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:var(--radius-sm);
+  font-size:14px;font-family:inherit;background:var(--surface);color:var(--text);
+  transition:border .15s;
+}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus { border-color:var(--brand);outline:none; }
+.form-group textarea { min-height:90px;resize:vertical; }
+.form-row { display:flex;gap:16px; }
+.form-row>* { flex:1; }
+
+/* ====== 布局工具 ====== */
+.workspace { display:flex;height:calc(100vh - 56px); }
+.main { flex:1;overflow-y:auto;padding:0 32px 60px;position:relative;z-index:1; }
+.main-inner { max-width:860px;margin:0 auto; }
+.view { display:none; }
+.view.show { display:flex; }
+.module-panel { display:none; }
+.module-panel.show { display:block; }
+.section { margin-bottom:24px; }
+.section-hd { display:flex;align-items:center;justify-content:space-between;margin-bottom:16px; }
+.section-hd h3 { font-size:16px;font-weight:600;color:var(--text); }
+.twocol { display:flex;gap:24px; }
+.twocol>* { flex:1; }
+.twocol .side { flex:0 0 280px; }
+hr.divider { border:none;border-top:1px solid var(--line-light);margin:20px 0; }
+
+/* ====== 表单页 ====== */
+.form-page { width:100%;height:100vh;background:var(--bg);overflow:hidden;display:flex;flex-direction:column; }
+.form-header { height:50px;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 24px;flex-shrink:0; }
+.form-body { flex:1;display:flex;overflow:hidden;margin:12px 24px;border-radius:18px;background:linear-gradient(135deg,#fdfaf6,#f0f4ff);box-shadow:0 1px 3px rgba(0,0,0,.03);position:relative; }
+.form-left { width:60%;padding:24px 0 0 80px;overflow-y:auto;z-index:1; }
+.form-left h1 { font-size:26px;color:var(--text);font-weight:700;margin-bottom:4px; }
+.form-left .fdesc { font-size:13px;color:var(--text-2);margin-bottom:18px; }
+.form-right { flex:1;position:relative;overflow:hidden;z-index:0; }
+.form-back { position:absolute;top:14px;left:80px;font-size:13px;color:var(--text-2);cursor:pointer;z-index:2; }
+.form-back:hover { color:var(--brand); }
+
+/* ====== Material Design 视觉细节 ====== */
+
+/* —— Ripple 涟漪 —— */
+.ripple { position:relative;overflow:hidden; }
+.ripple::after {
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle, rgba(22,119,255,.2) 10%, transparent 10%);
+  background-position:center;background-repeat:no-repeat;
+  opacity:0;transition:opacity .3s, transform .5s;transform:scale(10);
+}
+.ripple:active::after { opacity:1;transform:scale(0);transition:transform 0s, opacity .15s; }
+
+/* —— 按钮 Ripple —— */
+.btn { position:relative;overflow:hidden; }
+.btn::after {
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle, rgba(255,255,255,.3) 10%, transparent 10%);
+  background-position:center;background-repeat:no-repeat;
+  opacity:0;transform:scale(10);
+}
+.btn:active::after { opacity:1;transform:scale(0);transition:transform 0s, opacity .2s; }
+.btn-text::after { background:radial-gradient(circle, rgba(22,119,255,.2) 10%, transparent 10%); }
+.btn-outlined::after { background:radial-gradient(circle, rgba(22,119,255,.15) 10%, transparent 10%); }
+
+/* —— Card Elevation（hover 浮起） —— */
+.card { transition:box-shadow .25s; }
+.card:hover { box-shadow:0 2px 8px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04); }
+.course-card { transition:all .25s; }
+.course-card:hover { box-shadow:0 4px 12px rgba(22,119,255,.08), 0 2px 4px rgba(0,0,0,.06); }
+.stat-card { transition:all .25s; }
+.stat-card:hover { box-shadow:0 2px 8px rgba(0,0,0,.06);transform:translateY(-1px); }
+.module-card { transition:all .25s; }
+.module-card:hover { box-shadow:0 2px 8px rgba(22,119,255,.08); }
+
+/* —— 步骤圆点 Elevation —— */
+.step .dot { transition:all .25s; }
+.step .dot.on { box-shadow:0 0 0 6px rgba(22,119,255,.10), 0 2px 8px rgba(22,119,255,.15); }
+.step .dot.ok { box-shadow:0 0 0 4px rgba(34,197,94,.08); }
+
+/* —— 条目 hover 左移 —— */
+.lesson-item, .lrow { transition:all .15s; }
+.lesson-item:hover, .lrow:hover { padding-left:20px; }
+
+/* —— Focus 环 —— */
+input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible {
+  outline:2px solid rgba(22,119,255,.4);outline-offset:2px;
+}
+
+/* —— 侧边栏 State Layer —— */
+.sidenav .nav-item { position:relative;overflow:hidden; }
+.sidenav .nav-item::after { content:'';position:absolute;inset:0;pointer-events:none;transition:background .2s; }
+.sidenav .nav-item:hover::after { background:rgba(22,119,255,.04); }
+.sidenav .nav-item:active::after { background:rgba(22,119,255,.08); }
+
+</style>
+</head>
+<body>
+
+<!-- ============================== AppBar ============================== -->
+<header class="appbar" id="appbar">
+  <div class="logo" onclick="showCourseList()"><span class="icon">~</span>量潮课堂 · LMS</div>
+  <div class="switch-group" id="switch-btns">
+    <button onclick="showCourseList()" id="btn-front" class="active">🏠 学习前台</button>
+    <button onclick="switchView('back')" id="btn-back">⚙ LMS 管理后台</button>
+  </div>
+  <div class="meta">v0.12 · MD <span class="avatar">Z</span></div>
+</header>
+
+<!-- ====== 海浪背景 ====== -->
+<div class="bg-atmo">
+  <div class="glow"></div>
+  <div class="wave">
+    <svg viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,70 C220,140 440,20 660,75 C880,130 1100,30 1320,70 C1380,85 1420,65 1440,55 L1440,0 L0,0 Z" fill="rgba(22,119,255,0.5)"/>
+      <path d="M0,100 C280,160 560,40 840,90 C1060,130 1240,80 1440,65 L1440,0 L0,0 Z" fill="rgba(64,150,255,0.3)"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ============================== Workspace ============================== -->
+<div class="workspace" id="workspace">
+
+  <!-- ==================== 课程列表页 ==================== -->
+  <div class="view show" id="view-courses" style="flex:1;">
+    <div class="courses-page">
+      <div class="page-header">
+        <h1>量潮课堂 · 实训基地</h1>
+        <p class="desc">从基础到实战，五门课程形成一条完整的成长阶梯。每一级都是下一级的前置——学完一门，解锁下一门。</p>
+        <p style="margin-top:12px"><a href="javascript:switchView('front');showModule('consult')" style="color:var(--brand);font-size:14px;font-weight:500;text-decoration:none">💬 一对一咨询</a></p>
+      </div>
+      <div class="card-grid">
+
+        <!-- 课程1 -->
+        <div class="course-card active-card" onclick="enterCourse('knowledge-work')">
+          <div class="cc-num">1</div>
+          <div class="cc-info"><div class="cc-name">知识工作</div><div class="cc-desc">纯基础新手小白教程——从整理文档开始，学会用工具管理信息，建立个人知识体系。</div></div>
+          <span class="badge beginner">入门</span>
+          <span style="font-size:var(--fs-body2);color:var(--primary);font-weight:600">→ 进入课程</span>
+        </div>
+
+        <!-- 课程2 -->
+        <div class="course-card active-card" onclick="enterCourse('vibe-coding')">
+          <div class="cc-num">2</div>
+          <div class="cc-info"><div class="cc-name">氛围编程</div><div class="cc-desc">面向非技术岗位——从安装软件到写出第一个页面，用 AI 辅助编程做出自己的作品。</div></div>
+          <span class="badge beginner">入门</span>
+          <span style="font-size:var(--fs-body2);color:var(--primary);font-weight:600">→ 进入课程</span>
+        </div>
+
+        <!-- 课程3 -->
+        <div class="course-card active-card" onclick="enterCourse('big-data')">
+          <div class="cc-num">3</div>
+          <div class="cc-info"><div class="cc-name">大数据导论</div><div class="cc-desc">培养数据思维——从看懂数据到会用数据，建立基本的分析框架和可视化能力。</div></div>
+          <span class="badge intermediate">进阶</span>
+          <span style="font-size:var(--fs-body2);color:var(--primary);font-weight:600">→ 进入课程</span>
+        </div>
+
+        <!-- 课程4 -->
+        <div class="course-card active-card" onclick="enterCourse('data-engineering')">
+          <div class="cc-num">4</div>
+          <div class="cc-info"><div class="cc-name">数据工程</div><div class="cc-desc">从数据到工程——搭建数据处理管道，掌握工程化的工作方法和 Python 数据处理能力。</div></div>
+          <span class="badge advanced">实战</span>
+          <span style="font-size:var(--fs-body2);color:var(--primary);font-weight:600">→ 进入课程</span>
+        </div>
+
+        <!-- 课程5：生产实习 -->
+        <div class="course-card active-card" onclick="enterCourse('prod')">
+          <div class="cc-num">5</div>
+          <div class="cc-info"><div class="cc-name">生产实习</div><div class="cc-desc">扮演"分公司"、量潮为"总部"。2 周内找到公司盲区，自主选题，做一个 demo sale 给总部。同一套评分，不同分数线——课堂 60 分及格，招聘 90 分录用。</div></div>
+          <span class="badge capstone">微型创业</span>
+          <span style="font-size:var(--fs-body2);color:var(--primary);font-weight:600">→ 进入课程</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 通用课程内页（课程 1-4 复用） ==================== -->
+  <div class="view" id="view-generic" style="flex:1;">
+    <div class="main"><div class="main-inner">
+
+      <div class="back-link" onclick="showCourseList()">← 返回课程列表</div>
+
+      <!-- 步骤条 -->
+      <div class="steps" id="gen-stepbar" style="display:none">
+        <a class="bs" href="javascript:genShowModule('overview')">← 课程首页</a>
+        <div class="row" id="gen-steprow"></div>
+      </div>
+
+      <!-- 课程首页 -->
+      <div class="module-panel show" id="gen-mod-overview">
+        <div class="course-hero" id="gen-hero">
+          <div class="badge-course" id="gen-badge"></div>
+          <h2 id="gen-title"></h2>
+          <p class="hero-desc" id="gen-desc"></p>
+          <div class="hero-meta" id="gen-meta"></div>
+          <div class="progress-bar"><div class="fill" style="width:0%"></div></div>
+          <div style="margin-top:20px;display:flex;gap:12px;justify-content:center">
+            <button class="btn btn-filled btn-lg" onclick="continueGen()">▶ 继续学习</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 阶段面板（动态生成） -->
+      <div id="gen-panels"></div>
+
+    </div><!-- .main-inner -->
+    </div><!-- .main -->
+  </div><!-- #view-generic -->
+
+  <!-- ==================== 前台：课程内页 ==================== -->
+  <div class="view" id="view-front" style="flex:1;">
+    <div class="main"><div class="main-inner">
+
+      <div class="back-link" onclick="showCourseList()">← 返回课程列表</div>
+
+      <!-- StepBar -->
+      <div class="steps" id="stepbar" style="display:none">
+        <a class="bs" href="javascript:showModule('overview')">← 课程首页</a>
+        <div class="row">
+          <div class="step" onclick="showModule('m1')"><div class="dot ok" id="sn1">✓</div><span class="lbl ok" id="sl1">量潮是谁</span></div>
+          <div class="conn ok" id="sline1"></div>
+          <div class="step" onclick="showModule('m2')"><div class="dot" id="sn2">2</div><span class="lbl" id="sl2">业务与市场</span></div>
+          <div class="conn" id="sline2"></div>
+          <div class="step" onclick="showModule('m3')"><div class="dot on" id="sn3">3</div><span class="lbl on" id="sl3">工作方法论</span></div>
+          <div class="conn" id="sline3"></div>
+          <div class="step" onclick="showModule('m4')"><div class="dot" id="sn4">4</div><span class="lbl" id="sl4">最新方向</span></div>
+          <div class="conn" id="sline4"></div>
+          <div class="step" onclick="showModule('m5')"><div class="dot" id="sn5">5</div><span class="lbl" id="sl5">微型创业</span></div>
+        </div>
+      </div>
+
+      <!-- 课程首页 -->
+      <div class="module-panel show" id="mod-overview">
+        <div class="course-hero">
+          <div class="badge-course">🏭 生产实习 · 微型创业</div>
+          <h2>量潮课堂 · 实训基地</h2>
+          <p class="hero-desc">量潮是"总部"，你是"分公司"——我们不给你出题，你<strong>自己给自己出题</strong>。用前 4 个模块了解公司，找到盲区，做一个微型创业 demo <strong>sale 给总部</strong>。同一套评分，不同分数线：课程 60 分及格，招聘 90 分录用。</p>
+          <div class="hero-meta"><span>📚 5 个模块</span><span>⏱ 预计 2 周</span><span>👤 38 人在学</span><span>🎯 同一套卷子，不同分数线</span></div>
+          <div class="progress-bar"><div class="fill" style="width:20%"></div></div>
+          <div style="margin-top:20px;display:flex;gap:12px;justify-content:center">
+            <button class="btn btn-filled btn-lg" onclick="continueProd()">▶ 继续学习</button>
+            <button class="btn btn-outlined">👥 组队广场</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 模块1 -->
+      <div class="module-panel" id="mod-m1">
+        <div class="card"><h2>📖 一、量潮是谁</h2><p class="subtitle">了解你所在的组织——它的起源、结构与核心业务</p>
+          <div class="lesson-item" style="cursor:pointer" onclick="alert('课程内容将在平台上线后开放。\n\n届时将包含：量潮的创立故事、创始团队背景、公司发展历程中的关键决策。')"><span class="ldot done"></span>1.1 量潮的创立故事<span class="duration">阅读 10 min</span></div>
+          <div class="lesson-item" style="cursor:pointer" onclick="alert('课程内容将在平台上线后开放。\n\n届时将包含：组织架构图、各团队职责、协作模式介绍。')"><span class="ldot done"></span>1.2 组织架构与团队分工<span class="duration">阅读 8 min</span></div>
+          <div class="lesson-item" style="cursor:pointer" onclick="alert('课程内容将在平台上线后开放。\n\n届时将包含：量潮云 vs 量潮课堂的定位差异、技术架构概览。')"><span class="ldot"></span>1.3 量潮云 + 量潮课堂：两大产品线<span class="duration">视频 15 min</span></div>
+          <div class="lesson-item" style="cursor:pointer" onclick="alert('课程内容将在平台上线后开放。\n\n届时将包含：与浙理工的合作模式、产教融合的具体案例。')"><span class="ldot"></span>1.4 我们服务谁：浙理工合作案例<span class="duration">阅读 10 min</span></div>
+          <div style="margin-top:var(--sp-5);display:flex;gap:var(--sp-3)"><button class="btn btn-filled" onclick="showModule('m2')">→ 下一模块</button></div>
+        </div>
+      </div>
+
+      <!-- 模块2 -->
+      <div class="module-panel" id="mod-m2">
+        <div class="card"><h2>🏢 二、业务与市场</h2><p class="subtitle">理解量潮课堂的商业模式、目标用户与竞争定位</p>
+          <div class="lesson-item" style="cursor:pointer"><span class="ldot"></span>2.1 产教融合：我们的核心模式<span class="duration">阅读 15 min</span></div>
+          <div class="lesson-item" style="cursor:pointer"><span class="ldot"></span>2.2 课程收入的背后：创新成果的系统性收集<span class="duration">阅读 12 min</span></div>
+          <div class="lesson-item" style="cursor:pointer"><span class="ldot"></span>2.3 用户画像：招聘候选人 / 在校学生 / 付费学员<span class="duration">阅读 10 min</span></div>
+          <div class="lesson-item" style="cursor:pointer"><span class="ldot"></span>2.4 规模化路径：从实训基地到开放平台<span class="duration">阅读 8 min</span></div>
+          <div style="margin-top:var(--sp-5);display:flex;gap:var(--sp-3)"><button class="btn btn-filled" onclick="showModule('m3')">→ 下一模块</button></div>
+        </div>
+      </div>
+
+      <!-- 模块3 -->
+      <div class="module-panel" id="mod-m3">
+        <div class="card"><h2>🔧 三、工作方法论</h2><p class="subtitle">量潮是怎么做事的——你可以直接复用这些方法</p>
+          <div class="lesson-item" style="cursor:pointer"><span class="ldot"></span>3.1 从原型到成品：快速开发流程<span class="duration">视频 20 min</span></div>
+          <div class="lesson-item" style="cursor:pointer"><span class="ldot"></span>3.2 知识工程入门（Baby 版教程）<span class="duration">阅读 15 min</span></div>
+          <div class="lesson-item" style="cursor:pointer"><span class="ldot"></span>3.3 Web Coding 基础入门<span class="duration">阅读 12 min</span></div>
+          <div class="lesson-item" style="cursor:pointer"><span class="ldot"></span>3.4 工作日志 + 复盘方法论<span class="duration">阅读 8 min</span></div>
+          <div style="margin-top:var(--sp-5);display:flex;gap:var(--sp-3)"><button class="btn btn-filled" onclick="showModule('m4')">→ 下一模块</button></div>
+        </div>
+      </div>
+
+      <!-- 模块4 -->
+      <div class="module-panel" id="mod-m4">
+        <div class="card"><h2>💡 四、最新探索方向</h2><p class="subtitle">公司当前在想什么、往哪走——理解这些，你才能找到自己的切入点</p>
+          <div class="lesson-item" style="cursor:pointer" onclick="alert('课程内容将在平台上线后开放。\n\n届时将包含：\n• Build in Public 战略——为什么我们把所有仓库、日记、章程全部公开\n• 公开不是放弃护城河，是把信任成本砍掉\n• 一个循环（需求→处理→交付→记录→传播）所有业务通用')"><span class="ldot"></span>4.1 Build in Public：为什么要全部公开<span class="duration">阅读 15 min</span></div>
+          <div class="lesson-item" style="cursor:pointer" onclick="alert('课程内容将在平台上线后开放。\n\n届时将包含：\n• 同一个内核（数据工程能力）× 四个投射方向（数据/课堂/咨询/云）\n• 四条业务线之间的传动链条\n• 管理层怎么用"互搏"检验内核标准化程度')"><span class="ldot"></span>4.2 多业务平衡：一个内核，四个方向<span class="duration">阅读 18 min</span></div>
+          <div class="lesson-item" style="cursor:pointer" onclick="alert('课程内容将在平台上线后开放。\n\n届时将包含：\n• 核心竞争力不是你宣称的优势，是客户对比后发现只有你能解决的问题\n• 如何找到它：同行调研 → 客户痛点 → 交叉对比')"><span class="ldot"></span>4.3 发现核心竞争力<span class="duration">阅读 12 min</span></div>
+          <div class="lesson-item" style="cursor:pointer" onclick="alert('课程内容将在平台上线后开放。\n\n届时将包含：\n• 公司从"人治"向"法治"转变\n• 矩阵式组织架构、公司代表大会制度、透明化经营\n• 制度的最终目的是保护温情')"><span class="ldot"></span>4.4 制度创新实验室：规则保护温情<span class="duration">阅读 10 min</span></div>
+          <div style="margin-top:var(--sp-5);display:flex;gap:var(--sp-3)"><button class="btn btn-filled" onclick="showModule('m5')">→ 下一模块</button></div>
+        </div>
+      </div>
+
+      <!-- 模块5：微型创业 -->
+      <div class="module-panel" id="mod-m5">
+        <div class="card" style="border-color:var(--secondary)">
+          <h2>📝 五、微型创业：Sell Your Demo</h2>
+          <p class="subtitle">你已经了解了量潮的业务体系。现在找到公司可能感兴趣但还没做的方向，做一个 demo sale 给总部。</p>
+          <p style="font-size:var(--fs-body2);color:var(--on-surface-variant);margin-bottom:var(--sp-4)">ⓘ 这不是"交作业"——这是<strong>微型创业</strong>。你扮演分公司 CEO，总部扮演投资人。我们不给你出题，你<strong>自己选题</strong>。</p>
+          <div class="form-group"><label>你的"公司"叫什么？（项目名称）</label><input type="text" placeholder="给你的微型创业项目起一个名字"></div>
+          <div class="form-group"><label>你发现了公司的什么盲区或机会？</label><textarea placeholder="基于前四个模块的上下文，描述你发现的公司可能感兴趣但还没做的方向..."></textarea></div>
+          <div class="form-group"><label>你的 Demo 打算怎么做？</label><textarea placeholder="2 周内你能做出什么来 sale 给我们？..."></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>方向类型</label><select><option>技术探索</option><option>产品构建</option><option>商务拓展</option><option>组织创新</option></select></div>
+            <div class="form-group"><label>组队方式</label><select><option>个人独立</option><option>已找好搭档</option><option>希望在组队广场招募</option></select></div>
+          </div>
+          <div style="margin-top:var(--sp-4);display:flex;gap:var(--sp-3)"><button class="btn btn-filled btn-lg">✓ 提交申报</button><button class="btn btn-text">保存草稿</button><button class="btn btn-text" onclick="showModule('overview')">← 返回课程首页</button></div>
+        </div>
+      </div>
+
+      <!-- 咨询表单 -->
+      <div class="module-panel" id="mod-consult">
+        <div class="card" style="border-color:var(--secondary-light)">
+          <h2>💬 一对一咨询</h2><p class="subtitle">遇到个性化问题？提交咨询请求，我们会根据你的问题类型路由到合适的处理流程。</p>
+          <div class="form-group"><label>咨询主题</label><input type="text" placeholder="简要描述你的问题..."></div>
+          <div class="form-group"><label>详细描述</label><textarea placeholder="尽可能详细地描述你遇到的问题或需求..."></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>问题类型</label><select><option>技术问题</option><option>产品/业务问题</option><option>职业发展建议</option><option>课程内容疑问</option><option>其他</option></select></div>
+            <div class="form-group"><label>紧急程度</label><select><option>一般</option><option>较急</option></select></div>
+          </div>
+          <div style="margin-top:var(--sp-4);display:flex;gap:var(--sp-3)"><button class="btn btn-filled">✓ 提交咨询</button><button class="btn btn-text" onclick="showModule('overview')">← 返回课程首页</button></div>
+        </div>
+      </div>
+
+    </div><!-- .main-inner -->
+    </div><!-- .main -->
+  </div><!-- #view-front -->
+
+  <!-- ==================== 后台：LMS ==================== -->
+  <div class="view" id="view-back" style="flex:1;">
+    <div class="sidenav">
+      <div class="nav-group">
+        <div class="nav-label" onclick="toggleNav('lms')"><span class="arr" id="arr-lms">▼</span>LMS · 学习管理</div>
+        <div class="nav-kids" id="kids-lms" style="max-height:500px">
+          <div class="nav-item" onclick="scrollToCard('topic-table')">📋 课题管理</div>
+          <div class="nav-item" onclick="scrollToCard('approval-card')">🔍 审批中心</div>
+          <div class="nav-item" onclick="scrollToCard('sc-card')">🎓 双创项目管理</div>
+          <div class="nav-item" onclick="scrollToCard('archive-card')">📁 成果仓库</div>
+          <div class="nav-item" onclick="scrollToCard('member-card')">👥 成员管理</div>
+          <div class="nav-item" onclick="scrollToCard('course-mgmt-card')">📖 课程管理</div>
+          <div class="nav-item" onclick="scrollToCard('student-card')">👤 学员管理</div>
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label" onclick="toggleNav('form')"><span class="arr" id="arr-form">▼</span>表单配置</div>
+        <div class="nav-kids" id="kids-form" style="max-height:300px">
+          <div class="nav-item sub" onclick="scrollToCard('apply-card')">📝 立项申请表</div>
+          <div class="nav-item sub" onclick="scrollToCard('stage-report-card')">📋 阶段报告模板</div>
+          <div class="nav-item sub" onclick="scrollToCard('review-card')">✅ 验收评审表</div>
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label" onclick="toggleNav('rel')"><span class="arr" id="arr-rel">▼</span>关联系统</div>
+        <div class="nav-kids" id="kids-rel" style="max-height:200px">
+          <div class="nav-item sub" onclick="scrollToCard('course-dev-card')">📚 课程研发</div>
+          <div class="nav-item sub" onclick="scrollToCard('consult-card')">💬 咨询/工单</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+
+      <div class="section">
+        <div class="section-hd"><h3>概览</h3></div>
+        <div class="section-body">
+          <div class="stat-row">
+            <div class="stat-card"><div class="num">5</div><div class="label">待审批</div></div>
+            <div class="stat-card"><div class="num">12</div><div class="label">执行中</div></div>
+            <div class="stat-card"><div class="num">8</div><div class="label">已完成</div></div>
+            <div class="stat-card"><div class="num">3</div><div class="label">已否决</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-hd"><h3>课题管理</h3><span style="font-size:13px;color:var(--text-2)">所有课题的状态、负责人、阶段审批</span></div>
+        <div class="section-body">
+          <div class="card" id="topic-table" style="padding:0">
+            <table class="datatable">
+              <thead><tr><th>课题名称</th><th>申请人</th><th>角色</th><th>阶段</th><th>状态</th><th>时间</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr><td><strong>AI 课程内容生产流水线</strong></td><td>李明</td><td>技术</td><td>执行中</td><td><span class="badge active-status">进行中</span></td><td>08-03</td><td><button class="btn btn-text btn-sm">详情</button><button class="btn btn-outlined btn-sm">审批</button></td></tr>
+                <tr><td><strong>实训基地数据看板</strong></td><td>王芳</td><td>产品</td><td>申报审批</td><td><span class="badge review">待审批</span></td><td>08-04</td><td><button class="btn btn-text btn-sm">详情</button><button class="btn btn-filled btn-sm">审批</button></td></tr>
+                <tr><td><strong>校企渠道拓展方案</strong></td><td>陈强</td><td>商务</td><td>执行中</td><td><span class="badge active-status">进行中</span></td><td>08-02</td><td><button class="btn btn-text btn-sm">详情</button></td></tr>
+                <tr><td><strong>课程内容"左移"标准制定</strong></td><td>赵子奕</td><td>产品</td><td>已完成</td><td><span class="badge done">已验收</span></td><td>07-28</td><td><button class="btn btn-text btn-sm">查看</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-hd"><h3>审批中心</h3><span style="font-size:13px;color:var(--text-2)">申报人：王芳 · 产品 · 2026-08-04</span></div>
+        <div class="section-body">
+          <div class="card" id="approval-card">
+            <div class="twocol">
+              <div>
+                <div class="timeline">
+                  <div class="timeline-item"><div class="ts">08-04 14:30</div><div class="event">王芳 提交立项申请</div></div>
+                  <div class="timeline-item"><div class="ts">08-04 15:00</div><div class="event">系统自动分配审阅人：张果</div></div>
+                  <div class="timeline-item"><div class="ts">当前节点 →</div><div class="event"><strong>等待张果审批</strong></div></div>
+                  <div class="timeline-item"><div class="ts">待触发</div><div class="event">资源分配 · 进入执行</div></div>
+                </div>
+              </div>
+              <div class="side">
+                <div class="form-group"><label>审批意见</label><textarea placeholder="填写审批意见..."></textarea></div>
+                <div class="form-group"><label>资源支持等级</label><select><option>基础级</option><option>支持级</option><option>重点级</option></select></div>
+                <div style="display:flex;gap:8px"><button class="btn btn-filled btn-sm">✓ 通过</button><button class="btn btn-text btn-sm" style="color:#F25F5C">✗ 驳回</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-hd"><h3>双创项目管理</h3></div>
+        <div class="section-body">
+          <div class="card" id="sc-card">
+            <p class="subtitle" style="margin-bottom:0">LMS 核心子系统——学员自主选题、自由组队，2 周内做一个 demo sale 给总部。我们不给你出题，你自己给自己出题。同一套评分标准，不同分数线——课堂模式 60 分及格，招聘模式 90 分录用。</p>
+            <hr class="divider">
+            <p style="font-size:13px;color:var(--text-2);margin-bottom:0">从"找到盲区"到"sale 给总部"——一个微型创业项目的完整生命周期</p>
+            <div class="pipeline">
+              <div class="stage"><div class="icon">💡</div><div class="name">发现盲区</div><div class="hint">学员基于课程上下文<br>找到公司可能感兴趣<br>但还没做的方向</div></div>
+              <div class="stage"><div class="icon">📝</div><div class="name">提交立项</div><div class="hint">填写立项申请表<br>说清楚：发现了什么<br>打算怎么做</div></div>
+              <div class="stage"><div class="icon">🔍</div><div class="name">总部审批</div><div class="hint">评估方向匹配度<br>分配资源支持等级<br>基础级/支持级/重点级</div></div>
+              <div class="stage"><div class="icon">🚀</div><div class="name">2 周执行</div><div class="hint">自由组队或个人<br>做出最小可行 demo<br>过程中自我驱动</div></div>
+              <div class="stage"><div class="icon">🎤</div><div class="name">Sale 给总部</div><div class="hint">向管理层展示成果<br>同一套标准打分<br>60 分及格/90 分录用</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 成果仓库 -->
+      <div class="section">
+        <div class="section-hd"><h3>成果仓库</h3><span style="font-size:13px;color:var(--text-3)">已验收项目的归档与检索</span></div>
+        <div class="section-body">
+          <div class="card" id="archive-card">
+            <div style="display:flex;gap:16px;flex-wrap:wrap">
+              <div style="flex:1;min-width:200px;padding:16px;background:#f8fafc;border-radius:8px;border:1px solid var(--line-light)">
+                <div style="font-size:24px;margin-bottom:8px">📊</div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">实训基地数据看板</div>
+                <div style="font-size:12px;color:var(--text-3);margin-bottom:8px">王芳 · 2026-07-15 验收</div>
+                <span class="badge done">已验收</span>
+              </div>
+              <div style="flex:1;min-width:200px;padding:16px;background:#f8fafc;border-radius:8px;border:1px solid var(--line-light)">
+                <div style="font-size:24px;margin-bottom:8px">📝</div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">课程内容"左移"标准</div>
+                <div style="font-size:12px;color:var(--text-3);margin-bottom:8px">赵子奕 · 2026-07-28 验收</div>
+                <span class="badge done">已验收</span>
+              </div>
+              <div style="flex:1;min-width:200px;padding:16px;background:#f8fafc;border-radius:8px;border:1px solid var(--line-light)">
+                <div style="font-size:24px;margin-bottom:8px">🤖</div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">AI 面试模拟器原型</div>
+                <div style="font-size:12px;color:var(--text-3);margin-bottom:8px">张伟 · 2026-06-20 验收</div>
+                <span class="badge done">已验收</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 成员管理 -->
+      <div class="section">
+        <div class="section-hd"><h3>成员管理</h3><span style="font-size:13px;color:var(--text-3)">双创项目成员与角色分配</span></div>
+        <div class="section-body">
+          <div class="card" id="member-card" style="padding:0">
+            <table class="datatable">
+              <thead><tr><th>姓名</th><th>角色</th><th>所属项目</th><th>加入时间</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td><strong>李明</strong></td><td>技术负责人</td><td>AI 课程内容生产流水线</td><td>2026-08-03</td><td><span class="badge active-status">活跃</span></td></tr>
+                <tr><td><strong>王芳</strong></td><td>产品负责人</td><td>实训基地数据看板</td><td>2026-08-04</td><td><span class="badge active-status">活跃</span></td></tr>
+                <tr><td><strong>陈强</strong></td><td>商务拓展</td><td>校企渠道拓展方案</td><td>2026-08-02</td><td><span class="badge active-status">活跃</span></td></tr>
+                <tr><td><strong>赵子奕</strong></td><td>产品经理</td><td>课程内容"左移"标准</td><td>2026-07-20</td><td><span class="badge done">已结项</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 课程管理 -->
+      <div class="section">
+        <div class="section-hd"><h3>课程管理</h3><span style="font-size:13px;color:var(--text-3)">课程配置、阶段编排与课时管理</span></div>
+        <div class="section-body">
+          <div class="card" id="course-mgmt-card" style="padding:0">
+            <table class="datatable">
+              <thead><tr><th>课程名称</th><th>阶段数</th><th>课时数</th><th>难度</th><th>状态</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr><td><strong>📝 知识工作</strong></td><td>4</td><td>12</td><td><span class="badge beginner">入门</span></td><td><span class="badge active-status">已发布</span></td><td><button class="btn btn-text btn-sm">编辑</button></td></tr>
+                <tr><td><strong>💻 氛围编程</strong></td><td>4</td><td>12</td><td><span class="badge beginner">入门</span></td><td><span class="badge active-status">已发布</span></td><td><button class="btn btn-text btn-sm">编辑</button></td></tr>
+                <tr><td><strong>📊 大数据导论</strong></td><td>4</td><td>12</td><td><span class="badge intermediate">进阶</span></td><td><span class="badge review">待审核</span></td><td><button class="btn btn-text btn-sm">编辑</button></td></tr>
+                <tr><td><strong>⚙️ 数据工程</strong></td><td>4</td><td>12</td><td><span class="badge advanced">实战</span></td><td><span class="badge draft">草稿</span></td><td><button class="btn btn-text btn-sm">编辑</button></td></tr>
+                <tr><td><strong>🏭 生产实习</strong></td><td>5</td><td>20</td><td><span class="badge capstone">微型创业</span></td><td><span class="badge active-status">已发布</span></td><td><button class="btn btn-text btn-sm">编辑</button></td></tr>
+              </tbody>
+            </table>
+            <div style="padding:14px 16px;border-top:1px solid var(--line-light)"><button class="btn btn-outlined btn-sm">+ 新建课程</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 学员管理 -->
+      <div class="section">
+        <div class="section-hd"><h3>学员管理</h3><span style="font-size:13px;color:var(--text-3)">在读学员与学习进度</span></div>
+        <div class="section-body">
+          <div class="card" id="student-card" style="padding:0">
+            <table class="datatable">
+              <thead><tr><th>学员</th><th>当前课程</th><th>进度</th><th>最近活跃</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td><strong>张同学</strong></td><td>生产实习</td><td>3/5 模块</td><td>2026-08-06</td><td><span class="badge active-status">在读</span></td></tr>
+                <tr><td><strong>李同学</strong></td><td>知识工作</td><td>2/4 阶段</td><td>2026-08-05</td><td><span class="badge active-status">在读</span></td></tr>
+                <tr><td><strong>王同学</strong></td><td>氛围编程</td><td>4/4 阶段</td><td>2026-08-04</td><td><span class="badge review">待晋升</span></td></tr>
+                <tr><td><strong>陈同学</strong></td><td>大数据导论</td><td>1/4 阶段</td><td>2026-08-06</td><td><span class="badge active-status">在读</span></td></tr>
+                <tr><td><strong>刘同学</strong></td><td>生产实习</td><td>5/5 模块</td><td>2026-08-03</td><td><span class="badge done">已完成</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 立项申请表 -->
+      <div class="section">
+        <div class="section-hd"><h3>立项申请表</h3><span style="font-size:13px;color:var(--text-3)">双创项目申报表单——学员自主选题、自由组队</span></div>
+        <div class="section-body">
+          <div class="card" id="apply-card">
+            <div class="form-group"><label>项目名称</label><input type="text" placeholder="给你的微型创业项目起一个名字"></div>
+            <div class="form-group"><label>你发现了公司的什么盲区或机会？</label><textarea placeholder="基于课程上下文，描述你发现的公司可能感兴趣但还没做的方向..."></textarea></div>
+            <div class="form-group"><label>你的 Demo 打算怎么做？</label><textarea placeholder="2 周内你能做出什么来 sale 给总部？..."></textarea></div>
+            <div class="form-row">
+              <div class="form-group"><label>方向类型</label><select><option>技术探索</option><option>产品构建</option><option>商务拓展</option><option>组织创新</option></select></div>
+              <div class="form-group"><label>组队方式</label><select><option>个人独立</option><option>已找好搭档</option><option>希望在组队广场招募</option></select></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-filled btn-sm">✓ 提交申报</button><button class="btn btn-text btn-sm">保存草稿</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 阶段报告模板 -->
+      <div class="section">
+        <div class="section-hd"><h3>阶段报告模板</h3><span style="font-size:13px;color:var(--text-3)">双创项目执行过程中的阶段汇报表单</span></div>
+        <div class="section-body">
+          <div class="card" id="stage-report-card">
+            <div class="form-group"><label>报告阶段</label><select><option>阶段一：立项启动</option><option>阶段二：中期检查</option><option>阶段三：成果验收</option></select></div>
+            <div class="form-group"><label>本周完成了什么？</label><textarea placeholder="描述本周完成的具体工作..."></textarea></div>
+            <div class="form-group"><label>遇到了什么困难？</label><textarea placeholder="描述遇到的问题和尝试的解决方案..."></textarea></div>
+            <div class="form-group"><label>下周计划</label><textarea placeholder="下周的工作计划..."></textarea></div>
+            <div class="form-row">
+              <div class="form-group"><label>是否需要帮助</label><select><option>无需帮助</option><option>需要导师指导</option><option>需要资源支持</option></select></div>
+              <div class="form-group"><label>整体进度评估</label><select><option>超前</option><option>正常</option><option>滞后</option></select></div>
+            </div>
+            <div style="display:flex;gap:8px"><button class="btn btn-filled btn-sm">✓ 提交报告</button><button class="btn btn-text btn-sm">保存草稿</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 验收评审表 -->
+      <div class="section">
+        <div class="section-hd"><h3>验收评审表</h3><span style="font-size:13px;color:var(--text-3)">双创项目结项验收与评分</span></div>
+        <div class="section-body">
+          <div class="card" id="review-card">
+            <div class="form-group"><label>项目名称</label><input type="text" placeholder="待验收项目名称"></div>
+            <div class="form-row">
+              <div class="form-group"><label>完成度评分</label><select><option>1-5 分</option></select></div>
+              <div class="form-group"><label>创新性评分</label><select><option>1-5 分</option></select></div>
+              <div class="form-group"><label>可复用性评分</label><select><option>1-5 分</option></select></div>
+            </div>
+            <div class="form-group"><label>评审意见</label><textarea placeholder="对项目的整体评价和改进建议..."></textarea></div>
+            <div class="form-group"><label>验收结论</label><select><option>✅ 通过验收 · 归档至成果仓库</option><option>⚠️ 有条件通过 · 需补充材料</option><option>❌ 不通过 · 退回修改</option></select></div>
+            <div style="display:flex;gap:8px"><button class="btn btn-filled btn-sm">✓ 提交评审</button><button class="btn btn-text btn-sm">保存草稿</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 课程研发 -->
+      <div class="section">
+        <div class="section-hd"><h3>课程研发</h3><span style="font-size:13px;color:var(--text-3)">内容逻辑、学习路径整理——核心特点：内容"左移"</span></div>
+        <div class="section-body">
+          <div class="card" id="course-dev-card">
+            <div style="display:flex;gap:20px">
+              <div style="flex:1;padding:16px;background:#f8fafc;border-radius:8px;border:1px solid var(--line-light)">
+                <div style="font-weight:600;font-size:14px;margin-bottom:8px">📐 内容"左移"标准</div>
+                <div style="font-size:13px;color:var(--text-2);line-height:1.7">当前实践课标准 = 之前生产实习标准<br>当前理论课标准 = 之前实践课标准<br>课程内容不断前置和降级，保持业界领先</div>
+                <span class="badge active-status" style="margin-top:8px">进行中</span>
+              </div>
+              <div style="flex:1;padding:16px;background:#f8fafc;border-radius:8px;border:1px solid var(--line-light)">
+                <div style="font-weight:600;font-size:14px;margin-bottom:8px">📖 知识工程教程</div>
+                <div style="font-size:13px;color:var(--text-2);line-height:1.7">《欢迎入职浪潮科技》Baby 版<br>面向非技术岗位的 Web Coding 入门<br>工作日志 + 复盘方法论标准模板</div>
+                <span class="badge review" style="margin-top:8px">待审核</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 咨询/工单 -->
+      <div class="section">
+        <div class="section-hd"><h3>咨询/工单</h3><span style="font-size:13px;color:var(--text-3)">学员咨询与工单处理</span></div>
+        <div class="section-body">
+          <div class="card" id="consult-card" style="padding:0">
+            <table class="datatable">
+              <thead><tr><th>主题</th><th>提交人</th><th>类型</th><th>紧急程度</th><th>时间</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td><strong>如何选择课题方向？</strong></td><td>张同学</td><td>职业发展</td><td>一般</td><td>08-06</td><td><span class="badge review">待处理</span></td></tr>
+                <tr><td><strong>Python 环境安装报错</strong></td><td>李同学</td><td>技术问题</td><td>较急</td><td>08-05</td><td><span class="badge active-status">处理中</span></td></tr>
+                <tr><td><strong>课程内容疑问</strong></td><td>王同学</td><td>课程内容</td><td>一般</td><td>08-04</td><td><span class="badge done">已关闭</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================== 立项申请表 · 问卷预览页 ============================== -->
+<div class="form-page" id="form-page" style="display:none;">
+  <header class="form-header">
+    <div style="font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px"><span style="color:var(--brand);font-size:16px">🟧</span> 量潮课堂生产实习立项申请表</div>
+    <div style="margin-left:auto;display:flex;gap:8px"><button class="btn btn-text btn-sm">◷ 结果分析</button><button class="btn btn-filled btn-sm">➤ 发布</button></div>
+  </header>
+  <div class="form-body">
+    <div class="form-back" onclick="closeFormPage()">← 返回后台</div>
+    <div class="form-left">
+      <h1>量潮课堂生产实习立项申请表</h1><p class="fdesc">请输入描述</p>
+      <div style="margin-bottom:16px"><div style="font-size:17px;color:var(--text-2);margin-bottom:2px">1 → 文本</div><div style="font-size:13px;color:var(--text-2);margin-bottom:6px">问题描述</div><textarea style="width:500px;height:72px;border:1.5px solid var(--line);border-radius:8px;padding:10px 14px;font-size:14px;font-family:inherit;resize:vertical;background:var(--surface)">待填写者输入</textarea></div>
+      <div style="margin-bottom:16px"><div style="font-size:17px;color:var(--text-2)">2 → 单选</div><div style="font-size:13px;color:var(--text-2);margin-bottom:6px">问题描述</div><div style="width:500px;height:40px;border:1.5px solid var(--line);border-radius:8px;margin-bottom:6px;display:flex;align-items:center;padding:0 16px;background:var(--surface)"><input type="radio" style="accent-color:var(--brand)"><span style="margin-left:10px;color:var(--text-2);font-size:13px">请输入选项</span></div><div style="width:500px;height:40px;border:1.5px solid var(--line);border-radius:8px;margin-bottom:6px;display:flex;align-items:center;padding:0 16px;background:var(--surface)"><input type="radio"><span style="margin-left:10px;color:var(--text-2);font-size:13px">请输入选项</span></div></div>
+      <button class="btn btn-filled" style="width:150px;margin-top:16px">✓ 提交</button>
+    </div>
+    <div class="form-right">
+      <div style="position:absolute;border-radius:50%;width:420px;height:420px;right:40px;top:60px;background:var(--brand-soft);opacity:.5"></div>
+      <div style="position:absolute;border-radius:50%;width:315px;height:315px;right:92px;top:112px;background:var(--brand);opacity:.3"></div>
+      <div style="position:absolute;border-radius:50%;width:210px;height:210px;right:145px;top:165px;background:var(--surface)"></div>
+      <div style="position:absolute;right:227px;top:247px;font-size:56px;color:#FFA726">★</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====== 进度持久化 ======
+function saveProgress(courseId, moduleId) {
+  var key = 'qt-progress-' + courseId;
+  var data = JSON.parse(localStorage.getItem(key) || '{}');
+  // moduleId: 'm1'~'m5' for 生产实习, 's1'~'s4' for generic courses
+  var num = parseInt(moduleId.replace(/[ms]/,'')) || 0;
+  if (num > (data.max || 0)) { data.max = num; }
+  data.last = moduleId;
+  localStorage.setItem(key, JSON.stringify(data));
+}
+function getProgress(courseId) {
+  return JSON.parse(localStorage.getItem('qt-progress-' + courseId) || '{}');
+}
+
+// ====== 视图切换 ======
+function switchView(view) {
+  document.querySelectorAll('#workspace .view').forEach(function(v){v.classList.remove('show')});
+  if(view==='courses'){ document.getElementById('view-courses').classList.add('show'); }
+  else { document.getElementById('view-'+view).classList.add('show'); }
+  document.querySelectorAll('#switch-btns button').forEach(function(b){b.classList.remove('active')});
+  if(view==='courses'){}
+  else { document.getElementById('btn-'+view).classList.add('active'); }
+  if(view==='back'){ document.querySelectorAll('#view-back .nav-item').forEach(function(m){m.classList.remove('active')}); }
+  document.getElementById('appbar').style.display='flex';
+  document.getElementById('workspace').style.display='flex';
+  document.getElementById('form-page').style.display='none';
+}
+
+// ====== 课程数据 ======
+var COURSES = {
+  'knowledge-work': {
+    name:'知识工作',icon:'📝',badge:'入门',badgeClass:'beginner',next:'vibe-coding',nextName:'氛围编程',
+    desc:'纯基础新手小白教程——从整理文档开始，学会用工具管理信息，建立个人知识体系。核心假设：在 AI 时代，知识工作者的第一竞争力不是"知道多少"，而是"能不能快速找到、整理、输出"。',
+    meta:'📚 4 个阶段 · ⏱ 预计 1 周 · 👤 56 人在学',
+    stages:[
+      {name:'信息检索基础',desc:'学会高效搜索和筛选信息',lessons:[
+        {t:'搜索引擎高级技巧',d:'阅读 10 min'},{t:'AI 辅助信息检索入门',d:'实操 15 min'},{t:'信息源可信度评估',d:'阅读 8 min'}
+      ]},
+      {name:'文档整理规范',desc:'建立个人知识管理系统',lessons:[
+        {t:'文件命名与分类原则',d:'阅读 10 min'},{t:'Markdown 写作入门',d:'实操 20 min'},{t:'搭建个人知识库',d:'实操 15 min'}
+      ]},
+      {name:'知识管理工具',desc:'Notion / Obsidian 等工具链',lessons:[
+        {t:'Notion 基础操作',d:'实操 20 min'},{t:'Obsidian 双向链接',d:'实操 15 min'},{t:'选型对比与决策',d:'阅读 10 min'}
+      ]},
+      {name:'AI 辅助写作',desc:'用 AI 提升专业写作效率',lessons:[
+        {t:'Prompt 工程入门',d:'阅读 10 min'},{t:'AI 辅助写工作报告',d:'实操 20 min'},{t:'AI 辅助整理会议纪要',d:'实操 15 min'}
+      ]}
+    ]
+  },
+  'vibe-coding': {
+    name:'氛围编程',icon:'💻',badge:'入门',badgeClass:'beginner',next:'big-data',nextName:'大数据导论',
+    desc:'面向非技术岗位——从安装软件到写出第一个页面，用 AI 辅助编程做出自己的作品。不需要任何编程基础，只需要愿意动手试。',
+    meta:'📚 4 个阶段 · ⏱ 预计 1 周 · 👤 42 人在学',
+    stages:[
+      {name:'安装开发环境',desc:'从零搭建编程工具链',lessons:[
+        {t:'VS Code 安装与配置',d:'实操 15 min'},{t:'Git 安装与首次提交',d:'实操 15 min'},{t:'终端命令行入门',d:'阅读 10 min'}
+      ]},
+      {name:'第一个页面',desc:'用 HTML/CSS 做出你的第一个网页',lessons:[
+        {t:'HTML 骨架结构',d:'阅读 10 min'},{t:'CSS 美化你的页面',d:'实操 15 min'},{t:'部署到 GitHub Pages',d:'实操 10 min'}
+      ]},
+      {name:'AI 辅助编程',desc:'用 Claude/Cursor 帮你写代码',lessons:[
+        {t:'如何向 AI 描述你的需求',d:'阅读 10 min'},{t:'AI 辅助修改页面样式',d:'实操 20 min'},{t:'AI 辅助添加交互功能',d:'实操 20 min'}
+      ]},
+      {name:'独立小作品',desc:'综合运用所学，做一个完整项目',lessons:[
+        {t:'项目选题与规划',d:'阅读 10 min'},{t:'迭代开发与调试',d:'实操 30 min'},{t:'作品展示与复盘',d:'实操 15 min'}
+      ]}
+    ]
+  },
+  'big-data': {
+    name:'大数据导论',icon:'📊',badge:'进阶',badgeClass:'intermediate',next:'data-engineering',nextName:'数据工程',
+    desc:'培养数据思维——从看懂数据到会用数据，建立基本的分析框架和可视化能力。这是一门思维课，不是工具课。',
+    meta:'📚 4 个阶段 · ⏱ 预计 1.5 周 · 👤 35 人在学',
+    stages:[
+      {name:'数据意识培养',desc:'学会用数据视角看问题',lessons:[
+        {t:'什么是数据思维',d:'阅读 12 min'},{t:'生活中的数据案例',d:'阅读 10 min'},{t:'数据 vs 直觉决策',d:'阅读 8 min'}
+      ]},
+      {name:'基本分析方法',desc:'掌握描述性统计和对比分析',lessons:[
+        {t:'描述性统计入门',d:'阅读 15 min'},{t:'对比分析的常见陷阱',d:'阅读 10 min'},{t:'Excel 数据分析实操',d:'实操 20 min'}
+      ]},
+      {name:'可视化入门',desc:'用图表讲故事',lessons:[
+        {t:'图表类型选择指南',d:'阅读 10 min'},{t:'用 Datawrapper 做图表',d:'实操 15 min'},{t:'数据叙事技巧',d:'阅读 12 min'}
+      ]},
+      {name:'数据驱动决策',desc:'从数据到行动',lessons:[
+        {t:'如何用数据支撑一个提案',d:'阅读 10 min'},{t:'A/B 测试思维',d:'阅读 8 min'},{t:'综合案例：用数据说服老板',d:'实操 20 min'}
+      ]}
+    ]
+  },
+  'data-engineering': {
+    name:'数据工程',icon:'⚙️',badge:'实战',badgeClass:'advanced',next:'prod',nextName:'生产实习',
+    desc:'从数据到工程——搭建数据处理管道，掌握工程化的工作方法和 Python 数据处理能力。是一门动手课，需要跟着写代码。',
+    meta:'📚 4 个阶段 · ⏱ 预计 2 周 · 👤 28 人在学',
+    stages:[
+      {name:'数据管道概念',desc:'理解数据从哪来、到哪去',lessons:[
+        {t:'ETL 是什么',d:'阅读 10 min'},{t:'数据管道的常见架构',d:'阅读 12 min'},{t:'量潮的数据工程实践',d:'阅读 8 min'}
+      ]},
+      {name:'Python 数据处理基础',desc:'用 Pandas 处理表格数据',lessons:[
+        {t:'Python 环境搭建',d:'实操 15 min'},{t:'Pandas 读取与清洗数据',d:'实操 20 min'},{t:'Pandas 数据变换与聚合',d:'实操 20 min'}
+      ]},
+      {name:'工程化实践',desc:'让代码可维护、可复用',lessons:[
+        {t:'函数与模块化',d:'阅读 10 min'},{t:'Git 版本管理进阶',d:'实操 15 min'},{t:'代码审查与重构',d:'实操 15 min'}
+      ]},
+      {name:'综合项目',desc:'从原始数据到可视化报告',lessons:[
+        {t:'项目需求分析',d:'阅读 10 min'},{t:'数据清洗与处理',d:'实操 30 min'},{t:'生成分析报告',d:'实操 20 min'}
+      ]}
+    ]
+  }
+};
+
+// ====== 跨课程导航 ======
+function goNextCourse(nextId) {
+  if (nextId === 'prod') {
+    switchView('front'); showModule('overview');
+  } else {
+    document.querySelectorAll('#workspace .view').forEach(function(v){v.classList.remove('show')});
+    document.getElementById('view-generic').classList.add('show');
+    document.querySelectorAll('#switch-btns button').forEach(function(b){b.classList.remove('active')});
+    document.getElementById('btn-front').classList.add('active');
+    renderGenericCourse(nextId);
+  }
+}
+
+// ====== 渲染通用课程内页 ======
+var GEN_COURSE = null;
+var GEN_COURSE_ID = null;
+function renderGenericCourse(courseId) {
+  GEN_COURSE = COURSES[courseId];
+  GEN_COURSE_ID = courseId;
+  if (!GEN_COURSE) return;
+  var c = GEN_COURSE;
+  var p = getProgress(courseId);
+  document.getElementById('gen-badge').textContent = c.icon + ' ' + c.name + ' · ' + c.badge;
+  document.getElementById('gen-title').textContent = c.name;
+  document.getElementById('gen-desc').textContent = c.desc;
+  document.getElementById('gen-meta').textContent = c.meta;
+  // 更新进度条
+  var fill = document.querySelector('#view-generic .progress-bar .fill');
+  if (fill) fill.style.width = (p.max ? Math.round((p.max / c.stages.length) * 100) : 0) + '%';
+
+  // 构建步骤条
+  var stepHtml = '';
+  c.stages.forEach(function(s, i) {
+    var num = i + 1;
+    if (i > 0) stepHtml += '<div class="conn" id="gsline' + i + '"></div>';
+    stepHtml += '<div class="step" onclick="genShowModule(\'s' + num + '\')">';
+    stepHtml += '<div class="dot" id="gsn' + num + '">' + num + '</div>';
+    stepHtml += '<span class="lbl" id="gsl' + num + '">' + s.name + '</span>';
+    stepHtml += '</div>';
+  });
+  document.getElementById('gen-steprow').innerHTML = stepHtml;
+
+  // 构建阶段面板
+  var panelsHtml = '';
+  c.stages.forEach(function(s, i) {
+    var num = i + 1;
+    panelsHtml += '<div class="module-panel" id="gen-mod-s' + num + '">';
+    panelsHtml += '<div class="card">';
+    panelsHtml += '<h2>' + s.name + '</h2>';
+    panelsHtml += '<p class="subtitle">' + s.desc + '</p>';
+    s.lessons.forEach(function(l) {
+      panelsHtml += '<div class="lesson-item" style="cursor:default"><span class="ldot"></span>' + l.t + '<span class="duration">' + l.d + '</span></div>';
+    });
+    panelsHtml += '<div class="acts">';
+    if (i < c.stages.length - 1) {
+      panelsHtml += '<button class="btn btn-filled" onclick="genShowModule(\'s' + (num + 1) + '\')">→ 下一阶段</button>';
+    } else {
+      // 最后一步：进入下一课程
+      if (c.next) {
+        panelsHtml += '<button class="btn btn-filled" onclick="goNextCourse(\'' + c.next + '\')">→ 进入下一课程：' + c.nextName + '</button>';
+      }
+      panelsHtml += '<button class="btn btn-text" onclick="genShowModule(\'overview\')">← 返回课程首页</button>';
+    }
+    panelsHtml += '</div></div></div>';
+  });
+  document.getElementById('gen-panels').innerHTML = panelsHtml;
+
+  // 显示首页
+  genShowModule('overview');
+}
+
+// ====== 通用课程模块切换 ======
+function genShowModule(id) {
+  document.querySelectorAll('#view-generic .module-panel').forEach(function(m) { m.classList.remove('show'); });
+  var target = document.getElementById('gen-mod-' + id);
+  if (target) target.classList.add('show');
+  var sb = document.getElementById('gen-stepbar');
+  if (id === 'overview') { sb.style.display = 'none'; }
+  else { sb.style.display = 'flex'; genUpdateStepBar(id); saveProgress(GEN_COURSE_ID, id); }
+  // 更新 hero 进度条
+  if (id !== 'overview') {
+    var num = parseInt(id.replace('s','')) || 0;
+    var total = GEN_COURSE ? GEN_COURSE.stages.length : 4;
+    var pct = Math.round((num / total) * 100);
+    var fill = document.querySelector('#view-generic .progress-bar .fill');
+    if (fill) fill.style.width = pct + '%';
+  }
+}
+
+function continueGen(){
+  var p = getProgress(GEN_COURSE_ID);
+  if (p.max && p.max < GEN_COURSE.stages.length) {
+    genShowModule('s' + (p.max + 1));
+  } else {
+    genShowModule('s1');
+  }
+}
+function genUpdateStepBar(activeId) {
+  var c = GEN_COURSE; if (!c) return;
+  var cur = parseInt(activeId.replace('s','')) || 0;
+  for (var i = 1; i <= c.stages.length; i++) {
+    var n = document.getElementById('gsn' + i), l = document.getElementById('gsl' + i), ln = document.getElementById('gsline' + (i - 1));
+    if (!n) continue;
+    n.className = 'dot'; l.className = 'lbl';
+    if (i < cur) { n.classList.add('ok'); l.classList.add('ok'); }
+    if (i === cur) { n.classList.add('on'); l.classList.add('on'); }
+    if (ln) { ln.className = 'conn'; if (i < cur) ln.classList.add('ok'); }
+  }
+}
+
+// ====== 课程导航 ======
+function showCourseList(){
+  document.querySelectorAll('#workspace .view').forEach(function(v){v.classList.remove('show')});
+  document.getElementById('view-courses').classList.add('show');
+  document.querySelectorAll('#switch-btns button').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('btn-front').classList.add('active');
+}
+function enterCourse(id){
+  if(id==='prod'){
+    switchView('front');
+    var p = getProgress('prod');
+    // 更新 hero 进度条
+    var pct = {m1:20,m2:40,m3:60,m4:80,m5:100}[p.last]||0;
+    var fill = document.querySelector('#view-front .progress-bar .fill');
+    if(fill) fill.style.width = pct + '%';
+    showModule(p.last || 'overview');
+  }
+  else {
+    document.querySelectorAll('#workspace .view').forEach(function(v){v.classList.remove('show')});
+    document.getElementById('view-generic').classList.add('show');
+    document.querySelectorAll('#switch-btns button').forEach(function(b){b.classList.remove('active')});
+    document.getElementById('btn-front').classList.add('active');
+    renderGenericCourse(id);
+  }
+}
+function continueProd(){
+  var p = getProgress('prod');
+  if (p.max && p.max < 5) {
+    showModule('m' + (p.max + 1));
+  } else {
+    showModule('m2'); // 默认从头开始
+  }
+}
+function showModule(id){
+  document.querySelectorAll('#view-front .module-panel').forEach(function(m){m.classList.remove('show')});
+  var t=document.getElementById('mod-'+id);if(t)t.classList.add('show');
+  var sb=document.getElementById('stepbar');
+  if(id==='overview'||id==='consult'){sb.style.display='none'}
+  else {sb.style.display='flex';updateStepBar(id);saveProgress('prod', id);}
+  // 更新 hero 进度条
+  if(id!=='overview'&&id!=='consult'){
+    var pct = {m1:20,m2:40,m3:60,m4:80,m5:100}[id]||0;
+    var fill = document.querySelector('#view-front .progress-bar .fill');
+    if(fill) fill.style.width = pct + '%';
+  }
+}
+function updateStepBar(activeId){
+  var map={m1:1,m2:2,m3:3,m4:4,m5:5};var cur=map[activeId]||0;
+  for(var i=1;i<=5;i++){
+    var n=document.getElementById('sn'+i),l=document.getElementById('sl'+i),ln=document.getElementById('sline'+(i-1));
+    if(!n)continue;n.className='dot';l.className='lbl';
+    if(i<cur){n.classList.add('ok');l.classList.add('ok')}
+    if(i===cur){n.classList.add('on');l.classList.add('on')}
+    if(ln){ln.className='conn';if(i<cur)ln.classList.add('ok')}
+  }
+}
+
+// ====== 侧边栏折叠 ======
+function toggleNav(id){
+  var kids=document.getElementById('kids-'+id),arr=document.getElementById('arr-'+id);
+  if(!kids||!arr)return;
+  if(kids.classList.contains('folded')){kids.classList.remove('folded');kids.style.maxHeight=kids.scrollHeight+'px';arr.classList.remove('folded')}
+  else{kids.style.maxHeight=kids.scrollHeight+'px';requestAnimationFrame(function(){kids.classList.add('folded');arr.classList.add('folded')})}
+}
+
+// ====== 后台菜单跳转 ======
+function scrollToCard(id){
+  document.querySelectorAll('#workspace .view').forEach(function(v){v.classList.remove('show')});
+  document.getElementById('view-back').classList.add('show');
+  document.querySelectorAll('#switch-btns button').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('btn-back').classList.add('active');
+  document.querySelectorAll('#view-back .nav-item').forEach(function(m){m.classList.remove('active')});
+  var clicked=document.querySelector('#view-back .nav-item[onclick*="'+id+'"]');
+  if(clicked)clicked.classList.add('active');
+  var target=document.getElementById(id);
+  if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ====== 表单页面 ======
+function openFormPage(){ document.getElementById('appbar').style.display='none';document.getElementById('workspace').style.display='none';document.getElementById('form-page').style.display='flex' }
+function closeFormPage(){ document.getElementById('appbar').style.display='flex';document.getElementById('workspace').style.display='flex';document.getElementById('form-page').style.display='none' }
+
+// ====== 初始化 ======
+(function(){ document.getElementById('stepbar').style.display='none'; })();
+</script>
+
+</body>
+</html>
