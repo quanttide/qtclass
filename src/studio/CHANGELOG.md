@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0-beta.5] - 2026-08-08
+
+### Changed
+- Web 应用品牌信息：PWA manifest 与 `index.html` 占位文案替换为正式品牌——
+  - `manifest.json`：name / short_name 改为「量潮课堂」，description 改为「量潮课堂工作台」，theme_color 改为品牌绿 `#2F6B4F`（原 Flutter 默认蓝）
+  - `index.html`：浏览器标题 / iOS 主屏标题（apple-mobile-web-app-title）/ meta description 同步更新
+
 ## [0.1.0-beta.4] - 2026-08-08
 
 ### Refactor
