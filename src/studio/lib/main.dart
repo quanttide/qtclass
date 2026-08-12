@@ -8,7 +8,9 @@ import 'screens/player_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // 加载课程业务数据（assets/course.json，失败时保留内置默认）
-  await CourseData.load();
+  await CourseData.load(
+    apiUrl: const String.fromEnvironment('QTCLASS_COURSE_API_URL'),
+  );
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => PlayerState())],

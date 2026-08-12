@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'dart:convert';
+
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:http/http.dart' as http;
 
 import '../models/interaction.dart';
 import '../models/segment.dart';
@@ -66,11 +69,30 @@ class CourseData {
     );
   }
 
-  /// 加载课程数据（默认 `assets/course.json`，可传自定义路径切换课程）。
-  /// 加载成功后更新 [current]；失败时保留内置默认数据。
+  /// 加载课程数据：优先从服务端 API（player-data）拉取，失败回退本地资产。
+  /// 加载成功后更新 [current]；全部失败时保留内置默认数据。
   static Future<CourseData> load({
     String assetPath = 'assets/course.json',
+    String? apiUrl,
   }) async {
+    // 1. 服务端课程数据（qtcloud-course provider，替代硬编码）
+    if (apiUrl != null && apiUrl.isNotEmpty) {
+      try {
+        final resp = await http
+            .get(Uri.parse(apiUrl))
+            .timeout(const Duration(seconds: 10));
+        if (resp.statusCode == 200) {
+          final parsed = CourseData.fromJson(
+            jsonDecode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>,
+          );
+          current = parsed;
+          return parsed;
+        }
+      } on Exception {
+        // 网络失败回退本地
+      }
+    }
+    // 2. 本地资产（fallback）
     try {
       final raw = await rootBundle.loadString(assetPath);
       final parsed = CourseData.fromJson(
