@@ -52,7 +52,8 @@ jobs:
 
       - name: Build Web
         working-directory: src/studio
-        run: flutter build web --release
+        run: flutter build web --release \
+          --dart-define=QTCLASS_COURSE_API_URL=${{ vars.QTCLASS_COURSE_API_URL }}
 
       - name: Setup ossutil
         uses: manyuanrong/setup-ossutil@v3.0
