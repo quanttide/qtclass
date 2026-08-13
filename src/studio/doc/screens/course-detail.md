@@ -96,7 +96,7 @@
 
 | 交互 | 触发条件 | 行为 |
 |------|---------|------|
-| 点击课时条目 | `.lesson-item` | 跳转 `player.html?course=<id>&lesson=<lessonId>`（客户端播放器，见 [player.md](player.md)） |
+| 点击课时条目 | `.lesson-item` | 跳转 `player.html?course=<id>&lesson=<lessonId>`（客户端播放器） |
 | 点击步骤节点 | 步骤条 `.step` | 切换到对应模块面板 |
 | 点击"继续学习" | Hero 中 | 有进度跳到最后完成的下一步，无进度跳到阶段 1 |
 | 点击"→ 下一模块" | 模块底部 | 切换下一面板，`updateStepBar()` + `saveProgress()` |
