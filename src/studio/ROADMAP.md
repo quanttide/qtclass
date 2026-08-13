@@ -28,7 +28,7 @@
 | **技术栈** | Vanilla HTML/CSS/JS（3 页面 SPA） |
 | **架构范式** | 互动媒体播放器：时序播放 + 分支选择 + 状态机 |
 | **核心模型** | `Segment`（播放片段）、`State`（运行时状态机）、`ChoiceOption`（互动选项）、`Scene`（场景容器）、`LearningRecord`（学习记录） |
-| **页面** | `home.html`（课程首页）、`player.html`（互动播放器）、`result.html`（结果总结） |
+| **页面** | 课程首页 / 互动播放器 / 结果总结（HTML 原型：`docs/dev-guide/prototype/`，页面规格：`doc/screens/`） |
 | **状态管理** | 纯 JS 对象 + `localStorage` |
 | **数据持久化** | `localStorage('qc-player-state')` + `localStorage('qc-history')` |
 | **目标用户** | 学生/学习者 |
@@ -66,16 +66,16 @@ ROADMAP 的核心任务是：**将 `doc/` 中的互动影游方案实现为可�
 
 | 模块 | 输出 | 说明 |
 |------|------|------|
-| **数据模型** | `models/segment.dart`, `models/scene.dart`, `models/choice_option.dart`, `models/learning_record.dart` | 从 `doc/models/scene.md` 映射 |
+| **数据模型** | `models/segment.dart`, `models/scene.dart`, `models/choice_option.dart`, `models/learning_record.dart` | 从互动播放器原型（`docs/dev-guide/prototype/`）映射 |
 | **状态机** | `services/player_state.dart` | 纯 JS `state` 对象的 Dart 实现，含播放计时器、片段流转、防重复 |
 | **播放舞台** | `screens/player_stage.dart` | 场景切换、字幕框、互动覆盖层、完成覆盖层 |
 | **播放控制栏** | `widgets/player_controls.dart` | 进度条（可拖动）、播放/暂停、倍速切换、重播 |
 | **侧边栏** | `widgets/sidebar.dart` | 学习路径（5 步阶梯）、演示控制、互动节点状态、课程脉络 |
 | **互动节点** | `widgets/interaction_overlay.dart` | 选项卡片网格、选择逻辑、反馈展示、确认按钮 |
 | **学习记录** | `services/history_service.dart` | localStorage 读写、历史记录恢复/删除 |
-| **首页** | `screens/home_screen.dart` | 从 `doc/screens/home.html` 映射 |
-| **结果页** | `screens/result_screen.dart` | 从 `doc/screens/result.html` 映射 |
-| **数据流** | `doc/screens/player.md` → `services/` | 片段表、状态流转图、持久化方案 |
+| **首页** | `screens/home_screen.dart` | 从课程详情页面规格（`doc/screens/course-detail.md` Hero 部分）映射 |
+| **结果页** | `screens/result_screen.dart` | 从播放器完成覆盖层（原型 `docs/dev-guide/prototype/`）映射 |
+| **数据流** | 播放器原型（`docs/dev-guide/prototype/`）→ `services/` | 片段表、状态流转图、持久化方案 |
 
 **关键指标**：
 - 播放器核心功能覆盖率 ≥ 90%（播放/暂停/进度/分支/完成）
