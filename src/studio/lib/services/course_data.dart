@@ -92,7 +92,7 @@ class CourseData {
         // 网络失败回退本地
       }
     }
-    // 2. 本地资产（fallback）
+    // 2. 本地资产（fallback）——资源可能已移除（数据来自 API），失败返回内置默认
     try {
       final raw = await rootBundle.loadString(assetPath);
       final parsed = CourseData.fromJson(
@@ -100,7 +100,8 @@ class CourseData {
       );
       current = parsed;
       return parsed;
-    } on Exception {
+    } catch (_) {
+      // catch 所有（Flutter asset 404 抛 Error 而非 Exception，on Exception 捕获不到）
       return current;
     }
   }
