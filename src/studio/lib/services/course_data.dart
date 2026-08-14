@@ -80,7 +80,7 @@ class CourseData {
       try {
         final resp = await http
             .get(Uri.parse(apiUrl))
-            .timeout(const Duration(seconds: 10));
+            .timeout(const Duration(seconds: 30));
         if (resp.statusCode == 200) {
           final parsed = CourseData.fromJson(
             jsonDecode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>,
@@ -88,8 +88,8 @@ class CourseData {
           current = parsed;
           return parsed;
         }
-      } on Exception {
-        // 网络失败回退本地
+      } catch (_) {
+        // 网络失败或数据解析错误（Error 需 catch 全捕获），回退内置默认——不崩溃
       }
     }
     // 2. 本地资产（fallback）——资源可能已移除（数据来自 API），失败返回内置默认
