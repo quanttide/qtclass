@@ -1,0 +1,221 @@
+{
+  "courses": [
+    {
+      "id": "knowledge-work",
+      "name": "知识工作",
+      "icon": "📁",
+      "badge": "入门",
+      "badgeClass": "beginner",
+      "desc": "从整理文档开始，建立高效知识工作流。",
+      "meta": { "modules": 4, "duration": "1 周", "students": 86 },
+      "stages": [
+        {
+          "id": "s1",
+          "name": "文档即资产",
+          "lessons": [
+            { "id": "kw1-1", "title": "1.1 为什么文档是资产", "duration": "8 min", "type": "阅读" },
+            { "id": "kw1-2", "title": "1.2 建立文档体系", "duration": "12 min", "type": "练习" }
+          ]
+        },
+        {
+          "id": "s2",
+          "name": "信息收集与整理",
+          "lessons": [
+            { "id": "kw2-1", "title": "2.1 收集入口统一", "duration": "10 min", "type": "阅读" },
+            { "id": "kw2-2", "title": "2.2 卡片笔记法", "duration": "15 min", "type": "视频" }
+          ]
+        },
+        {
+          "id": "s3",
+          "name": "知识输出",
+          "lessons": [
+            { "id": "kw3-1", "title": "3.1 从笔记到文章", "duration": "10 min", "type": "阅读" }
+          ]
+        },
+        {
+          "id": "s4",
+          "name": "工作流闭环",
+          "lessons": [
+            { "id": "kw4-1", "title": "4.1 搭建个人工作流", "duration": "15 min", "type": "练习" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vibe-coding",
+      "name": "氛围编程",
+      "icon": "🎧",
+      "badge": "入门",
+      "badgeClass": "beginner",
+      "desc": "借助 AI 助手的编程方式，零基础也能产出可用代码。",
+      "meta": { "modules": 4, "duration": "1 周", "students": 64 },
+      "stages": [
+        {
+          "id": "s1",
+          "name": "AI 编程入门",
+          "lessons": [
+            { "id": "vc1-1", "title": "1.1 什么是氛围编程", "duration": "8 min", "type": "阅读" },
+            { "id": "vc1-2", "title": "1.2 第一次对话", "duration": "10 min", "type": "视频" }
+          ]
+        },
+        {
+          "id": "s2",
+          "name": "提示词基础",
+          "lessons": [
+            { "id": "vc2-1", "title": "2.1 结构化提问", "duration": "12 min", "type": "视频" },
+            { "id": "vc2-2", "title": "2.2 上下文管理", "duration": "10 min", "type": "阅读" }
+          ]
+        },
+        {
+          "id": "s3",
+          "name": "代码产出与验证",
+          "lessons": [
+            { "id": "vc3-1", "title": "3.1 让 AI 写代码", "duration": "15 min", "type": "视频" },
+            { "id": "vc3-2", "title": "3.2 跑通并验证", "duration": "15 min", "type": "练习" }
+          ]
+        },
+        {
+          "id": "s4",
+          "name": "项目实战",
+          "lessons": [
+            { "id": "vc4-1", "title": "4.1 小工具实战", "duration": "20 min", "type": "练习" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "big-data-intro",
+      "name": "大数据导论",
+      "icon": "📊",
+      "badge": "进阶",
+      "badgeClass": "intermediate",
+      "desc": "理解大数据的本质、技术栈与典型应用场景。",
+      "meta": { "modules": 4, "duration": "2 周", "students": 52 },
+      "stages": [
+        {
+          "id": "s1",
+          "name": "大数据是什么",
+          "lessons": [
+            { "id": "bd1-1", "title": "1.1 大数据的 4V 特征", "duration": "10 min", "type": "阅读" }
+          ]
+        },
+        {
+          "id": "s2",
+          "name": "技术栈全景",
+          "lessons": [
+            { "id": "bd2-1", "title": "2.1 采集与存储", "duration": "12 min", "type": "视频" },
+            { "id": "bd2-2", "title": "2.2 计算与分析", "duration": "12 min", "type": "视频" }
+          ]
+        },
+        {
+          "id": "s3",
+          "name": "典型应用",
+          "lessons": [
+            { "id": "bd3-1", "title": "3.1 用户画像", "duration": "10 min", "type": "阅读" },
+            { "id": "bd3-2", "title": "3.2 实时推荐", "duration": "10 min", "type": "阅读" }
+          ]
+        },
+        {
+          "id": "s4",
+          "name": "案例拆解",
+          "lessons": [
+            { "id": "bd4-1", "title": "4.1 电商大数据案例", "duration": "15 min", "type": "视频" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data-engineering",
+      "name": "数据工程",
+      "icon": "🛠️",
+      "badge": "高阶",
+      "badgeClass": "advanced",
+      "desc": "掌握数据管道的设计与实现，从数据到可用的分析资产。",
+      "meta": { "modules": 4, "duration": "2 周", "students": 41 },
+      "stages": [
+        {
+          "id": "s1",
+          "name": "数据管道基础",
+          "lessons": [
+            { "id": "de1-1", "title": "1.1 管道是什么", "duration": "10 min", "type": "阅读" },
+            { "id": "de1-2", "title": "1.2 数据质量", "duration": "10 min", "type": "阅读" }
+          ]
+        },
+        {
+          "id": "s2",
+          "name": "清洗与标准化",
+          "lessons": [
+            { "id": "de2-1", "title": "2.1 数据清洗实战", "duration": "15 min", "type": "视频" },
+            { "id": "de2-2", "title": "2.2 标准化流程", "duration": "12 min", "type": "练习" }
+          ]
+        },
+        {
+          "id": "s3",
+          "name": "存储与调度",
+          "lessons": [
+            { "id": "de3-1", "title": "3.1 存储选型", "duration": "12 min", "type": "阅读" }
+          ]
+        },
+        {
+          "id": "s4",
+          "name": "交付与分析",
+          "lessons": [
+            { "id": "de4-1", "title": "4.1 数据交付规范", "duration": "10 min", "type": "阅读" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prod",
+      "name": "生产实习",
+      "icon": "🏭",
+      "badge": "生产实习 · 微型创业",
+      "badgeClass": "capstone",
+      "desc": "在真实项目中完成一次从需求到交付的微型创业，综合运用前四门课的全部能力。",
+      "meta": { "modules": 5, "duration": "2 周", "students": 38 },
+      "stages": [
+        {
+          "id": "m1",
+          "name": "一、量潮是谁",
+          "lessons": [
+            { "id": "m1-1", "title": "1.1 量潮的创立故事", "duration": "阅读 10 min", "type": "阅读" },
+            { "id": "m1-2", "title": "1.2 组织架构与团队分工", "duration": "阅读 8 min", "type": "阅读" },
+            { "id": "m1-3", "title": "1.3 量潮云 + 量潮课堂", "duration": "视频 15 min", "type": "视频" }
+          ]
+        },
+        {
+          "id": "m2",
+          "name": "二、业务与市场",
+          "lessons": [
+            { "id": "m2-1", "title": "2.1 客户是谁", "duration": "阅读 10 min", "type": "阅读" },
+            { "id": "m2-2", "title": "2.2 市场调研", "duration": "视频 12 min", "type": "视频" }
+          ]
+        },
+        {
+          "id": "m3",
+          "name": "三、方法论",
+          "lessons": [
+            { "id": "m3-1", "title": "3.1 数据驱动决策", "duration": "视频 15 min", "type": "视频" },
+            { "id": "m3-2", "title": "3.2 最小可行产品", "duration": "阅读 10 min", "type": "阅读" }
+          ]
+        },
+        {
+          "id": "m4",
+          "name": "四、方案与实施",
+          "lessons": [
+            { "id": "m4-1", "title": "4.1 方案设计", "duration": "阅读 12 min", "type": "阅读" },
+            { "id": "m4-2", "title": "4.2 实施推进", "duration": "视频 15 min", "type": "视频" }
+          ]
+        },
+        {
+          "id": "m5",
+          "name": "五、复盘与展示",
+          "lessons": [
+            { "id": "m5-1", "title": "5.1 复盘方法论", "duration": "阅读 8 min", "type": "阅读" },
+            { "id": "m5-2", "title": "5.2 成果展示", "duration": "视频 12 min", "type": "视频" }
+          ]
+        }
+      ]
+    }
+  ]
+}
