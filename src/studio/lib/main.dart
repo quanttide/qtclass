@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'services/course_data.dart';
+import 'services/course_service.dart';
 import 'services/player_state.dart';
-import 'screens/home_screen.dart';
+import 'screens/course_list_screen.dart';
 import 'screens/player_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // 课程目录（列表页数据源；失败时保留空列表）
+  await CourseService.load(
+    apiUrl: const String.fromEnvironment('QTCLASS_COURSE_API_URL'),
+  );
   // 加载课程业务数据（assets/course.json，失败时保留内置默认）
   await CourseData.load(
     apiUrl: const String.fromEnvironment('QTCLASS_COURSE_API_URL'),
@@ -36,7 +41,7 @@ class QtClassApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (_) => const HomeScreen(),
+        '/': (_) => const CourseListScreen(),
         '/player': (_) => const PlayerScreen(),
       },
     );
