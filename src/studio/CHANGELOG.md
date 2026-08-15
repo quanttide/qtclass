@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.0] - 2026-08-14
+
+### Added
+- 课程列表页（course-list）：五门课程阶梯导航（知识工作/氛围编程/大数据导论/数据工程/生产实习），难度标签四变体、生产实习 active 高亮
+- 课程详情页（course-detail）：Hero（标签/标题/描述/元信息/进度条/继续学习/组队广场占位）+ StepBar 步骤条三态 + 模块面板课时列表，双形态渲染（生产实习 5 模块 / 通用课程按 stages 动态）
+- 课程目录数据层：Course/Stage/Lesson 模型 + 5 门课 mock 数据（assets/course_list.json）+ CourseService（本地资产加载，预留 GET /courses API）
+- 进度持久化：ProgressService（shared_preferences 读写 `qt-progress-<id>`，max 只增不减，重新打开恢复上次模块）
+- 路由：`/` 改为课程列表页，详情页课时条目衔接现有播放器
+
+### Changed
+- 修复 course_data.dart 重复 import（pre-existing lint）
+
 ## [0.1.0-beta.5] - 2026-08-08
 
 ### Changed
