@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import '../models/course.dart';
 import '../services/course_service.dart';
+import '../services/learn_api.dart';
+import '../services/learner_service.dart';
 import '../services/progress_service.dart';
 import '../widgets/course/course_hero.dart';
 import '../widgets/course/module_panel.dart';
 import '../widgets/course/step_bar.dart';
 import 'player_screen.dart';
+import 'proposal_screen.dart';
 
 /// 课程详情页 — Hero + StepBar + 模块面板
 ///
@@ -76,6 +79,23 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       _maxDone = _maxDone > index ? _maxDone : index + 1;
     });
     _persist(index);
+    _reportProgress(index);
+  }
+
+  /// 上报进度到学习云（MVP 闭环：后台学员表进度实时可见）。
+  /// 本地失败静默（进度本地仍保存，服务端下次进入重试）。
+  Future<void> _reportProgress(int moduleIndex) async {
+    final course = _course;
+    if (course == null || !course.isProd) return;
+    try {
+      final name = await LearnerService.name();
+      await LearnApi().reportProgress(
+        moduleId: course.stages[moduleIndex].id,
+        name: name,
+      );
+    } catch (_) {
+      // 服务端不可达时不打断学习流程
+    }
   }
 
   void _backToHero() {
@@ -188,6 +208,20 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       : _backToHero,
                   onBackToHero: _backToHero,
                   onLessonTap: _openLesson,
+                  // 生产实习 m5：提交立项入口（MVP 核心动作）
+                  footerAction: course.isProd &&
+                          course.stages[_currentModule].id == 'm5'
+                      ? FilledButton.icon(
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ProposalScreen(),
+                            ),
+                          ),
+                          icon: const Icon(Icons.rocket_launch, size: 18),
+                          label: const Text('提交立项'),
+                        )
+                      : null,
                 ),
               const SizedBox(height: 16),
               if (_currentModule >= 0)

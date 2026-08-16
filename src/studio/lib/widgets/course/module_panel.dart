@@ -11,12 +11,16 @@ class ModulePanel extends StatelessWidget {
   final VoidCallback onBackToHero;
   final ValueChanged<CourseLesson> onLessonTap;
 
+  /// 可选：模块底部动作（生产实习 m5 的"提交立项"入口）。
+  final Widget? footerAction;
+
   const ModulePanel({
     super.key,
     required this.stage,
     required this.onNext,
     required this.onBackToHero,
     required this.onLessonTap,
+    this.footerAction,
   });
 
   @override
@@ -57,6 +61,10 @@ class ModulePanel extends StatelessWidget {
                   onPressed: onBackToHero,
                   child: const Text('← 返回课程首页'),
                 ),
+                if (footerAction != null) ...[
+                  const Spacer(),
+                  footerAction!,
+                ],
               ],
             ),
           ],
