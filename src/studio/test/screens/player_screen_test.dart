@@ -115,7 +115,10 @@ void main() {
       setLargeScreen(tester);
       final state = PlayerState();
       final client = MockClient((request) async {
-        expect(request.url.toString(), 'https://course.test/prod/player');
+        expect(
+          request.url.toString(),
+          'https://course.test/courses/prod/player',
+        );
         return http.Response(
           '''
 {

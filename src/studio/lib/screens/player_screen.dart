@@ -60,7 +60,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
           const String.fromEnvironment('QTCLASS_COURSE_API_URL');
       if (apiUrl.isNotEmpty) {
         await CourseData.loadFromUrl(
-          '$apiUrl/$courseId/player',
+          '$apiUrl/courses/$courseId/player',
           client: widget.playerDataClient,
         );
         Segment? firstSegment;
