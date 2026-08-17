@@ -136,6 +136,8 @@ class CourseData {
   static String get description => current._description;
   static List<String> get objectives => current._objectives;
 
+  Map<String, Segment> get segmentMap => _segments;
+
   /// 内置默认数据（fallback / 测试默认，与 `assets/course.json` 一致）
   static Map<String, dynamic> get defaultJson => {
     'title': '氛围编程 — 课时1：开发环境搭建',

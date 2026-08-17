@@ -59,19 +59,15 @@ class _PlayerScreenState extends State<PlayerScreen> {
           widget.courseApiUrl ??
           const String.fromEnvironment('QTCLASS_COURSE_API_URL');
       if (apiUrl.isNotEmpty) {
-        await CourseData.loadFromUrl(
-          '$apiUrl/courses/$courseId/player',
+        final baseUrl = apiUrl.replaceFirst(RegExp(r'/$'), '');
+        final courseData = await CourseData.loadFromUrl(
+          '$baseUrl/courses/$courseId/player',
           client: widget.playerDataClient,
         );
-        Segment? firstSegment;
-        for (final seg in CourseData.segments.values) {
-          if (seg.pathStepId == lessonId) {
-            firstSegment = seg;
-            break;
-          }
-        }
-        if (firstSegment != null && mounted) {
-          context.read<PlayerState>().setActiveSegment(firstSegment.id);
+        if (courseData == null) return;
+        final selectedSegment = _selectInitialSegment(courseData, lessonId);
+        if (selectedSegment != null && mounted) {
+          context.read<PlayerState>().setActiveSegment(selectedSegment.id);
         }
       }
     } catch (_) {
@@ -80,6 +76,21 @@ class _PlayerScreenState extends State<PlayerScreen> {
     if (mounted) {
       setState(() => _loading = false);
     }
+  }
+
+  Segment? _selectInitialSegment(CourseData courseData, String lessonId) {
+    for (final seg in courseData.segmentMap.values) {
+      if (seg.pathStepId == lessonId) return seg;
+    }
+    final lessonTitle = widget.lessonTitle;
+    if (lessonTitle != null && lessonTitle.isNotEmpty) {
+      for (final seg in courseData.segmentMap.values) {
+        if (seg.title == lessonTitle) return seg;
+      }
+    }
+    return courseData.segmentMap.isEmpty
+        ? null
+        : courseData.segmentMap.values.first;
   }
 
   @override

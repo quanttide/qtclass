@@ -12,10 +12,8 @@ Future<void> main() async {
   await CourseService.load(
     apiUrl: const String.fromEnvironment('QTCLASS_COURSE_API_URL'),
   );
-  // 加载课程业务数据（assets/course.json，失败时保留内置默认）
-  await CourseData.load(
-    apiUrl: const String.fromEnvironment('QTCLASS_COURSE_API_URL'),
-  );
+  // 播放器单课数据在进入课时时按课程加载；启动阶段只准备内置 fallback。
+  await CourseData.load();
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => PlayerState())],

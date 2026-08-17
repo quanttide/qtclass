@@ -126,18 +126,18 @@ void main() {
   "description": "走进真实业务",
   "objectives": [],
   "segments": {
-    "seg-1": {
-      "id": "seg-1",
+    "scen-10": {
+      "id": "scen-10",
       "sceneKey": "intro",
       "duration": 10,
       "title": "其他课时",
       "caption": "其他正文",
       "chapter": "m1",
-      "pathStepId": "less-1",
-      "next": "seg-2"
+      "pathStepId": "less-10",
+      "action": "finish"
     },
-    "seg-2": {
-      "id": "seg-2",
+    "scen-9": {
+      "id": "scen-9",
       "sceneKey": "intro",
       "duration": 10,
       "title": "我们从哪里来：量潮的创立故事",
@@ -148,10 +148,6 @@ void main() {
     }
   },
   "interactions": {},
-  "pathSteps": [
-    {"id": "less-1", "label": "其他课时", "meta": "m1", "segmentId": "seg-1"},
-    {"id": "less-9", "label": "创立故事", "meta": "m1", "segmentId": "seg-2"}
-  ],
   "interactionNodes": []
 }
 ''',
@@ -179,7 +175,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(state.currentSegmentId, 'seg-2');
+      expect(state.currentSegmentId, 'scen-9');
+      expect(CourseData.title, '生产实习');
       expect(find.textContaining('我们从哪里来：量潮的创立故事'), findsWidgets);
       expect(find.textContaining('真实正文'), findsWidgets);
       expect(find.textContaining('氛围编程旧内容'), findsNothing);
