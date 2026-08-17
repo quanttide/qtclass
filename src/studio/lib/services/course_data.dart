@@ -67,6 +67,26 @@ class CourseData {
     );
   }
 
+  /// 从指定 URL 加载播放数据（如 GET /v1/courses/{id}/player），成功更新 [current]。
+  /// 失败时保留现有数据（由调用方容错）。
+  static Future<CourseData?> loadFromUrl(
+    String url, {
+    http.Client? client,
+  }) async {
+    final uri = Uri.parse(url);
+    final resp = await (client?.get(uri) ?? http.get(uri)).timeout(
+      const Duration(seconds: 30),
+    );
+    if (resp.statusCode != 200) {
+      throw StateError('player data HTTP ${resp.statusCode}');
+    }
+    final parsed = CourseData.fromJson(
+      jsonDecode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>,
+    );
+    current = parsed;
+    return parsed;
+  }
+
   /// 加载课程数据：优先从服务端 API（player-data）拉取，失败回退本地资产。
   /// 加载成功后更新 [current]；全部失败时保留内置默认数据。
   static Future<CourseData> load({

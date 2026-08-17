@@ -109,11 +109,17 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   }
 
   void _openLesson(CourseLesson lesson) {
-    // v0.1：播放器内容为现有 course.json（mock），课时数据切换待服务端
-    // GET /courses/{id}/player 就绪后接入。
+    // 生产实习：按课时加载播放数据（GET /v1/courses/prod/player 定位对应课时）；
+    // 其他课程无服务端数据时播放器保持默认内容。
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const PlayerScreen()),
+      MaterialPageRoute(
+        builder: (_) => PlayerScreen(
+          courseId: _course?.id,
+          lessonId: lesson.id,
+          lessonTitle: lesson.title,
+        ),
+      ),
     );
   }
 

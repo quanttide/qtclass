@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import '../models/segment.dart';
 import '../services/course_data.dart';
 import '../services/player_state.dart';
 import '../widgets/common/sidebar.dart';
@@ -11,8 +13,24 @@ import '../widgets/stage/player_stage.dart';
 ///
 /// 页面骨架：顶栏 + 主列（标题区 + 播放舞台 + 控制栏）+ 侧边栏。
 /// 映射自 `doc/screens/player.html` — 核心交互界面。
+/// 可选参数 [courseId]/[lessonId]/[lessonTitle]：从详情页课时点击进入时，
+/// 加载该课时的播放数据（GET /v1/courses/{courseId}/player）并定位到对应课时；
+/// 不传时保持旧行为（全局 CourseData 单课数据）。
 class PlayerScreen extends StatefulWidget {
-  const PlayerScreen({super.key});
+  const PlayerScreen({
+    super.key,
+    this.courseId,
+    this.lessonId,
+    this.lessonTitle,
+    this.courseApiUrl,
+    this.playerDataClient,
+  });
+
+  final String? courseId;
+  final String? lessonId;
+  final String? lessonTitle;
+  final String? courseApiUrl;
+  final http.Client? playerDataClient;
 
   @override
   State<PlayerScreen> createState() => _PlayerScreenState();
@@ -20,9 +38,55 @@ class PlayerScreen extends StatefulWidget {
 
 class _PlayerScreenState extends State<PlayerScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  /// 从 API 加载指定课程的播放数据并定位到课时（失败时保留全局数据，不阻塞播放器）。
+  Future<void> _init() async {
+    final courseId = widget.courseId;
+    final lessonId = widget.lessonId;
+    if (courseId == null || lessonId == null) {
+      setState(() => _loading = false);
+      return;
+    }
+    try {
+      final apiUrl =
+          widget.courseApiUrl ??
+          const String.fromEnvironment('QTCLASS_COURSE_API_URL');
+      if (apiUrl.isNotEmpty) {
+        await CourseData.loadFromUrl(
+          '$apiUrl/$courseId/player',
+          client: widget.playerDataClient,
+        );
+        Segment? firstSegment;
+        for (final seg in CourseData.segments.values) {
+          if (seg.pathStepId == lessonId) {
+            firstSegment = seg;
+            break;
+          }
+        }
+        if (firstSegment != null && mounted) {
+          context.read<PlayerState>().setActiveSegment(firstSegment.id);
+        }
+      }
+    } catch (_) {
+      // 播放数据加载失败：保留现有数据（v0.1 容错）
+    }
+    if (mounted) {
+      setState(() => _loading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     final isWide = MediaQuery.sizeOf(context).width > 1040;
 
     return Scaffold(
@@ -53,7 +117,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
                         return Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(child: _MainColumn(state: state)),
+                            Expanded(
+                              child: _MainColumn(
+                                state: state,
+                                lessonTitle: widget.lessonTitle,
+                              ),
+                            ),
                             SizedBox(
                               width: 318,
                               child: Sidebar(
@@ -63,7 +132,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           ],
                         );
                       } else {
-                        return _MainColumn(state: state);
+                        return _MainColumn(
+                          state: state,
+                          lessonTitle: widget.lessonTitle,
+                        );
                       }
                     },
                   ),
@@ -101,8 +173,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
 // ============================================================
 class _MainColumn extends StatelessWidget {
   final PlayerState state;
+  final String? lessonTitle;
 
-  const _MainColumn({required this.state});
+  const _MainColumn({required this.state, this.lessonTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +193,7 @@ class _MainColumn extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '课时1 · 开发环境搭建',
+                      lessonTitle ?? '课时1 · 开发环境搭建',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w800,

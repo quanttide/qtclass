@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 import 'package:qtclass_studio/screens/player_screen.dart';
+import 'package:qtclass_studio/services/course_data.dart';
 import 'package:qtclass_studio/services/player_state.dart';
 
 import '../helpers/seed.dart';
@@ -106,6 +109,78 @@ void main() {
 
       expect(find.text('量潮课堂'), findsWidgets);
       expect(find.textContaining('开发环境搭建'), findsWidgets);
+    });
+
+    testWidgets('带课程与课时参数时加载服务端播放数据并定位到该课时正文', (tester) async {
+      setLargeScreen(tester);
+      final state = PlayerState();
+      final client = MockClient((request) async {
+        expect(request.url.toString(), 'https://course.test/prod/player');
+        return http.Response(
+          '''
+{
+  "title": "生产实习",
+  "description": "走进真实业务",
+  "objectives": [],
+  "segments": {
+    "seg-1": {
+      "id": "seg-1",
+      "sceneKey": "intro",
+      "duration": 10,
+      "title": "其他课时",
+      "caption": "其他正文",
+      "chapter": "m1",
+      "pathStepId": "less-1",
+      "next": "seg-2"
+    },
+    "seg-2": {
+      "id": "seg-2",
+      "sceneKey": "intro",
+      "duration": 10,
+      "title": "我们从哪里来：量潮的创立故事",
+      "caption": "这是生产实习课时的真实正文，来自服务端播放数据。",
+      "chapter": "m1",
+      "pathStepId": "less-9",
+      "action": "finish"
+    }
+  },
+  "interactions": {},
+  "pathSteps": [
+    {"id": "less-1", "label": "其他课时", "meta": "m1", "segmentId": "seg-1"},
+    {"id": "less-9", "label": "创立故事", "meta": "m1", "segmentId": "seg-2"}
+  ],
+  "interactionNodes": []
+}
+''',
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        );
+      });
+      addTearDown(() {
+        CourseData.current = CourseData.fromJson(CourseData.defaultJson);
+        state.pause();
+        client.close();
+      });
+
+      await tester.pumpWidget(
+        wrapWithProviders(
+          PlayerScreen(
+            courseId: 'prod',
+            lessonId: 'less-9',
+            lessonTitle: '我们从哪里来：量潮的创立故事',
+            courseApiUrl: 'https://course.test',
+            playerDataClient: client,
+          ),
+          state: state,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(state.currentSegmentId, 'seg-2');
+      expect(find.textContaining('我们从哪里来：量潮的创立故事'), findsWidgets);
+      expect(find.textContaining('真实正文'), findsWidgets);
+      expect(find.textContaining('氛围编程旧内容'), findsNothing);
+      state.pause();
     });
   });
 
