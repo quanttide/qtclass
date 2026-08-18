@@ -41,9 +41,10 @@ class PathStep {
   /// 从 JSON 构造（数据源：assets/course.json → pathSteps）
   factory PathStep.fromJson(Map<String, dynamic> json) => PathStep(
     id: json['id'] as String,
-    label: json['label'] as String,
-    meta: json['meta'] as String,
-    segmentId: json['segmentId'] as String,
+    // 容错：服务端契约（title）与旧数据（label）兼容
+    label: json['label'] as String? ?? json['title'] as String? ?? '',
+    meta: json['meta'] as String? ?? '',
+    segmentId: json['segmentId'] as String? ?? '',
   );
 }
 
