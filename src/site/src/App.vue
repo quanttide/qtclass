@@ -1,5 +1,5 @@
 <script setup>
-const learnUrl = 'https://learn.cloud.quanttide.com'
+const learnUrl = 'https://studio.class.quanttide.com'
 
 const courses = [
   {
@@ -58,7 +58,7 @@ const resourceGroups = [
           <a :href="learnUrl">进入学员端</a>
         </nav>
         <div class="heroText">
-          <p>course.cloud.quanttide.com</p>
+          <p>class.quanttide.com</p>
           <h1>量潮课堂</h1>
           <span>课程体系展示 · 学习资料区框架</span>
         </div>
