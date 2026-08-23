@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Fixed
+- 登录/进度/立项 API 默认地址：release 构建在 `--dart-define` 缺失时回退生产网关（原回退 localhost 导致 CI 变量缺失时登录失败）
+
 ### Added
 - 学员端登录：接入 qtcloud-auth password token 接口，token 持久化到 `shared_preferences`
 - `LearnApi` 请求自动携带 `Authorization: Bearer <token>`，缺 token 时引导登录

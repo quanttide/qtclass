@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'auth_api.dart';
@@ -24,6 +25,8 @@ class LearnApi {
     if (fromEnv.isNotEmpty) {
       return fromEnv;
     }
+    // release 构建默认生产网关，避免 CI 变量缺失时回退 localhost（debug 开发默认本地）
+    if (kReleaseMode) return 'https://api.quanttide.com/qtcloud-learn';
     return 'http://localhost:8080';
   }
 
