@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- 学员端登录：接入 qtcloud-auth password token 接口，token 持久化到 `shared_preferences`
+- `LearnApi` 请求自动携带 `Authorization: Bearer <token>`，缺 token 时引导登录
+
 ## [0.1.4] - 2026-08-14
 
 ### Added

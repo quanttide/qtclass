@@ -30,7 +30,11 @@ class ProgressService {
   }
 
   /// 保存进度：max 只增不减，last 总是更新
-  static Future<void> save(String courseId, {required int max, String? last}) async {
+  static Future<void> save(
+    String courseId, {
+    required int max,
+    String? last,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
     final current = await load(courseId);
     final newMax = max > current.max ? max : current.max;

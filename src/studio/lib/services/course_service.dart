@@ -32,7 +32,9 @@ class CourseService {
             .get(Uri.parse('$apiUrl/courses'))
             .timeout(const Duration(seconds: 30));
         if (resp.statusCode == 200) {
-          _fromJson(jsonDecode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>);
+          _fromJson(
+            jsonDecode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>,
+          );
           return;
         }
       } catch (_) {

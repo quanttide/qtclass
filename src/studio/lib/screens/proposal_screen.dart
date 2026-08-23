@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../services/learn_api.dart';
 import '../services/learner_service.dart';
+import 'login_screen.dart';
 
 /// 立项申请表（生产实习第五步·微型创业 Sell Your Demo）。
 /// 对齐原型 m5 内嵌表单：5 问 + 方向类型 + 组队方式姓名栏——
@@ -71,6 +72,13 @@ class _ProposalScreenState extends State<ProposalScreen> {
         Navigator.pop(context);
       }
     } on LearnApiException catch (e) {
+      if (e.statusCode == 401 && mounted) {
+        await Navigator.push<bool>(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+        );
+        return;
+      }
       if (mounted) {
         setState(() => _error = e.message);
       }
@@ -95,7 +103,10 @@ class _ProposalScreenState extends State<ProposalScreen> {
           child: ListView(
             padding: const EdgeInsets.all(24),
             children: [
-              Text('微型创业 · 立项申请', style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                '微型创业 · 立项申请',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
               const SizedBox(height: 4),
               const Text(
                 '说清楚你发现了什么、为什么适合量潮、两周后想证明什么',
@@ -104,12 +115,18 @@ class _ProposalScreenState extends State<ProposalScreen> {
               const SizedBox(height: 20),
               TextField(
                 controller: _name,
-                decoration: const InputDecoration(labelText: '你的姓名', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: '你的姓名',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: _projectName,
-                decoration: const InputDecoration(labelText: '项目名称（便于传播的名字）', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: '项目名称（便于传播的名字）',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 12),
               TextField(
@@ -150,7 +167,10 @@ class _ProposalScreenState extends State<ProposalScreen> {
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
                 initialValue: _direction,
-                decoration: const InputDecoration(labelText: '方向类型', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: '方向类型',
+                  border: OutlineInputBorder(),
+                ),
                 items: const [
                   DropdownMenuItem(value: '内容', child: Text('内容')),
                   DropdownMenuItem(value: '数据', child: Text('数据')),
@@ -162,7 +182,10 @@ class _ProposalScreenState extends State<ProposalScreen> {
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
                 initialValue: _teamMode,
-                decoration: const InputDecoration(labelText: '组队方式', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: '组队方式',
+                  border: OutlineInputBorder(),
+                ),
                 items: const [
                   DropdownMenuItem(value: 'personal', child: Text('个人独立')),
                   DropdownMenuItem(value: 'partner', child: Text('已找好搭档')),
@@ -173,12 +196,18 @@ class _ProposalScreenState extends State<ProposalScreen> {
               if (_teamMode == 'personal')
                 TextField(
                   controller: _leader,
-                  decoration: const InputDecoration(labelText: '你的姓名（个人独立）', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                    labelText: '你的姓名（个人独立）',
+                    border: OutlineInputBorder(),
+                  ),
                 )
               else ...[
                 TextField(
                   controller: _leader,
-                  decoration: const InputDecoration(labelText: '队长姓名', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                    labelText: '队长姓名',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
                 const SizedBox(height: 12),
                 TextField(

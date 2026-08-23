@@ -10,6 +10,7 @@ import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:qtclass_studio/screens/proposal_screen.dart';
+import 'package:qtclass_studio/services/auth_api.dart';
 import 'package:qtclass_studio/services/learn_api.dart';
 import 'package:qtclass_studio/services/learner_service.dart';
 
@@ -22,28 +23,63 @@ void main() {
 
   test('LearnApi.reportProgress 上报 {moduleId, name}', () async {
     late Map<String, dynamic> sent;
+    late String? authHeader;
     final client = MockClient((request) async {
+      authHeader = request.headers['Authorization'];
       sent = jsonDecode(request.body) as Map<String, dynamic>;
-      return http.Response('{"max":3,"last":"m3"}', 200,
-          headers: {'content-type': 'application/json'});
+      return http.Response(
+        '{"max":3,"last":"m3"}',
+        200,
+        headers: {'content-type': 'application/json'},
+      );
     });
-    final api = LearnApi(client: client, baseUrl: 'http://fake');
+    final api = LearnApi(
+      client: client,
+      baseUrl: 'http://fake',
+      tokenProvider: () async => 'test-token',
+    );
 
     final result = await api.reportProgress(moduleId: 'm3', name: '演示学员');
+    expect(authHeader, 'Bearer test-token');
     expect(sent['moduleId'], 'm3');
     expect(sent['name'], '演示学员');
     expect(result.max, 3);
     expect(result.last, 'm3');
   });
 
+  test('LearnApi 无 token 时抛 401 登录提示', () async {
+    final client = MockClient((_) async => http.Response('{}', 200));
+    final api = LearnApi(
+      client: client,
+      baseUrl: 'http://fake',
+      tokenProvider: () async => null,
+    );
+
+    expect(
+      () => api.reportProgress(moduleId: 'm1', name: '演示学员'),
+      throwsA(
+        isA<LearnApiException>()
+            .having((e) => e.statusCode, 'statusCode', 401)
+            .having((e) => e.message, 'message', '请先登录'),
+      ),
+    );
+  });
+
   test('LearnApi.submitProposal 提交 5 问 + 姓名栏', () async {
     late Map<String, dynamic> sent;
     final client = MockClient((request) async {
       sent = jsonDecode(request.body) as Map<String, dynamic>;
-      return http.Response('{"id":"appl-1"}', 201,
-          headers: {'content-type': 'application/json'});
+      return http.Response(
+        '{"id":"appl-1"}',
+        201,
+        headers: {'content-type': 'application/json'},
+      );
     });
-    final api = LearnApi(client: client, baseUrl: 'http://fake');
+    final api = LearnApi(
+      client: client,
+      baseUrl: 'http://fake',
+      tokenProvider: () async => 'test-token',
+    );
 
     await api.submitProposal(
       projectName: '选课助手',
@@ -64,16 +100,46 @@ void main() {
     expect(sent['teamMember'], '李四、王五');
   });
 
+  test('AuthApi.login 表单登录并保存 token', () async {
+    late String requestBody;
+    final client = MockClient((request) async {
+      requestBody = request.body;
+      return http.Response(
+        '{"access_token":"jwt-token"}',
+        200,
+        headers: {'content-type': 'application/json'},
+      );
+    });
+    final api = AuthApi(client: client, baseUrl: 'http://auth');
+
+    await api.login(username: 'test-verify-0815', password: 'TestPass123');
+
+    expect(requestBody, contains('grant_type=password'));
+    expect(requestBody, contains('username=test-verify-0815'));
+    expect(await AuthApi.token(), 'jwt-token');
+  });
+
   testWidgets('立项表单：组队方式切换姓名栏（个人→队长+队员）', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(800, 2000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
     final client = MockClient((request) async {
-      return http.Response('{"id":"appl-1"}', 201,
-          headers: {'content-type': 'application/json'});
+      return http.Response(
+        '{"id":"appl-1"}',
+        201,
+        headers: {'content-type': 'application/json'},
+      );
     });
     await tester.pumpWidget(
-      MaterialApp(home: ProposalScreen(api: LearnApi(client: client, baseUrl: 'http://fake'))),
+      MaterialApp(
+        home: ProposalScreen(
+          api: LearnApi(
+            client: client,
+            baseUrl: 'http://fake',
+            tokenProvider: () async => 'test-token',
+          ),
+        ),
+      ),
     );
     await tester.pumpAndSettle();
 
@@ -94,11 +160,22 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
     final client = MockClient((request) async {
-      return http.Response('{"id":"appl-1"}', 201,
-          headers: {'content-type': 'application/json'});
+      return http.Response(
+        '{"id":"appl-1"}',
+        201,
+        headers: {'content-type': 'application/json'},
+      );
     });
     await tester.pumpWidget(
-      MaterialApp(home: ProposalScreen(api: LearnApi(client: client, baseUrl: 'http://fake'))),
+      MaterialApp(
+        home: ProposalScreen(
+          api: LearnApi(
+            client: client,
+            baseUrl: 'http://fake',
+            tokenProvider: () async => 'test-token',
+          ),
+        ),
+      ),
     );
     await tester.pumpAndSettle();
 

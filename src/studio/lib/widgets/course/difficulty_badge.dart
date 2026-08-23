@@ -8,7 +8,11 @@ class DifficultyBadge extends StatelessWidget {
   final String label;
   final String badgeClass;
 
-  const DifficultyBadge({super.key, required this.label, required this.badgeClass});
+  const DifficultyBadge({
+    super.key,
+    required this.label,
+    required this.badgeClass,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +24,11 @@ class DifficultyBadge extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: _color),
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: _color,
+        ),
       ),
     );
   }

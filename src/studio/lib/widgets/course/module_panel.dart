@@ -61,10 +61,7 @@ class ModulePanel extends StatelessWidget {
                   onPressed: onBackToHero,
                   child: const Text('← 返回课程首页'),
                 ),
-                if (footerAction != null) ...[
-                  const Spacer(),
-                  footerAction!,
-                ],
+                if (footerAction != null) ...[const Spacer(), footerAction!],
               ],
             ),
           ],
@@ -97,26 +94,38 @@ class ModulePanel extends StatelessWidget {
                 Expanded(
                   child: Text(
                     lesson.title,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 if (lesson.type.isNotEmpty) ...[
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       lesson.type,
-                      style: TextStyle(fontSize: 11, color: theme.colorScheme.primary),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),
                 ],
                 Text(
                   lesson.duration,
-                  style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(width: 4),
                 Icon(

@@ -45,7 +45,11 @@ class CourseCard extends StatelessWidget {
                     : theme.dividerColor,
               ),
               boxShadow: const [
-                BoxShadow(color: Colors.black12, blurRadius: 3, offset: Offset(0, 1)),
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 3,
+                  offset: Offset(0, 1),
+                ),
               ],
             ),
             child: Row(
@@ -66,7 +70,9 @@ class CourseCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: active ? Colors.white : theme.colorScheme.onSurface,
+                      color: active
+                          ? Colors.white
+                          : theme.colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -80,16 +86,25 @@ class CourseCard extends StatelessWidget {
                         children: [
                           Text(
                             '${course.icon} ${course.name}',
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           const SizedBox(width: 8),
-                          DifficultyBadge(label: course.badge, badgeClass: course.badgeClass),
+                          DifficultyBadge(
+                            label: course.badge,
+                            badgeClass: course.badgeClass,
+                          ),
                         ],
                       ),
                       const SizedBox(height: 4),
                       Text(
                         course.desc,
-                        style: TextStyle(fontSize: 13, color: theme.colorScheme.onSurfaceVariant),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),

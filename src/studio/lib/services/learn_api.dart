@@ -2,14 +2,21 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import 'auth_api.dart';
+
 /// 学习云 API（qtcloud-learn）：进度上报 + 提交立项。
 /// 基址经 --dart-define=QTCLASS_LEARN_API_URL 注入（生产 = 网关 /qtcloud-learn）。
 class LearnApi {
-  LearnApi({http.Client? client, String? baseUrl})
-    : _client = client ?? http.Client(),
-      baseUrl = baseUrl ?? defaultBaseUrl();
+  LearnApi({
+    http.Client? client,
+    String? baseUrl,
+    Future<String?> Function()? tokenProvider,
+  }) : _client = client ?? http.Client(),
+       _tokenProvider = tokenProvider ?? AuthApi.token,
+       baseUrl = baseUrl ?? defaultBaseUrl();
 
   final http.Client _client;
+  final Future<String?> Function() _tokenProvider;
   final String baseUrl;
 
   static String defaultBaseUrl() {
@@ -25,17 +32,19 @@ class LearnApi {
     required String moduleId,
     required String name,
   }) async {
+    final headers = await _authHeaders();
     final resp = await _client
         .post(
           Uri.parse('$baseUrl/api/courses/prod/progress'),
-          headers: const {'Content-Type': 'application/json'},
+          headers: headers,
           body: jsonEncode({'moduleId': moduleId, 'name': name}),
         )
         .timeout(const Duration(seconds: 15));
     if (resp.statusCode != 200) {
       throw LearnApiException('上报进度失败（HTTP ${resp.statusCode}）');
     }
-    final body = jsonDecode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>;
+    final body =
+        jsonDecode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>;
     return (max: body['max'] as int? ?? 0, last: body['last'] as String? ?? '');
   }
 
@@ -52,10 +61,11 @@ class LearnApi {
     required String teamMember,
     required String studentName,
   }) async {
+    final headers = await _authHeaders();
     final resp = await _client
         .post(
           Uri.parse('$baseUrl/api/proposals'),
-          headers: const {'Content-Type': 'application/json'},
+          headers: headers,
           body: jsonEncode({
             'projectName': projectName,
             'opportunity': opportunity,
@@ -75,9 +85,21 @@ class LearnApi {
     }
   }
 
+  Future<Map<String, String>> _authHeaders() async {
+    final token = await _tokenProvider();
+    if (token == null || token.isEmpty) {
+      throw const LearnApiException('请先登录', statusCode: 401);
+    }
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+  }
+
   String _errorMessage(http.Response resp) {
     try {
-      final body = jsonDecode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>;
+      final body =
+          jsonDecode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>;
       return body['error'] as String? ?? 'HTTP ${resp.statusCode}';
     } on FormatException {
       return 'HTTP ${resp.statusCode}';
@@ -86,8 +108,11 @@ class LearnApi {
 }
 
 class LearnApiException implements Exception {
-  const LearnApiException(this.message);
+  const LearnApiException(this.message, {this.statusCode});
+
   final String message;
+  final int? statusCode;
+
   @override
   String toString() => message;
 }

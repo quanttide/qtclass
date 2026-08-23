@@ -99,7 +99,11 @@ class StepBar extends StatelessWidget {
                   ? Icon(icon, size: 16, color: fg)
                   : Text(
                       '${index + 1}',
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: fg),
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: fg,
+                      ),
                     ),
             ),
             const SizedBox(width: 6),
@@ -107,7 +111,9 @@ class StepBar extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 12,
-                fontWeight: state == _StepState.current ? FontWeight.w700 : FontWeight.w400,
+                fontWeight: state == _StepState.current
+                    ? FontWeight.w700
+                    : FontWeight.w400,
                 color: state == _StepState.done
                     ? Colors.green
                     : (state == _StepState.current

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:qtclass_studio/models/course.dart';
 import 'package:qtclass_studio/screens/course_list_screen.dart';
 import 'package:qtclass_studio/services/course_service.dart';
 import 'package:qtclass_studio/widgets/course/course_card.dart';
@@ -30,7 +29,11 @@ void main() {
       ('capstone', '生产实习 · 微型创业'),
     ]) {
       await tester.pumpWidget(
-        MaterialApp(home: Scaffold(body: DifficultyBadge(label: label, badgeClass: badgeClass))),
+        MaterialApp(
+          home: Scaffold(
+            body: DifficultyBadge(label: label, badgeClass: badgeClass),
+          ),
+        ),
       );
       expect(find.text(label), findsOneWidget);
     }

@@ -60,7 +60,11 @@ class CourseHero extends StatelessWidget {
           // 标题
           Text(
             course.name,
-            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           const SizedBox(height: 8),
           // 描述
@@ -76,7 +80,10 @@ class CourseHero extends StatelessWidget {
           // 元信息
           Text(
             '📚 ${course.meta.modules} 个模块 · ⏱ ${course.meta.duration} · ${course.meta.students} 人在学',
-            style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.8)),
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.white.withValues(alpha: 0.8),
+            ),
           ),
           const SizedBox(height: 16),
           // 进度条
@@ -92,7 +99,10 @@ class CourseHero extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             '${(progress * 100).round()}%',
-            style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.8)),
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.white.withValues(alpha: 0.8),
+            ),
           ),
           const SizedBox(height: 20),
           // CTA
@@ -103,7 +113,10 @@ class CourseHero extends StatelessWidget {
                 style: FilledButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: theme.colorScheme.primary,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
                 ),
                 icon: const Icon(Icons.play_arrow, size: 20),
                 label: const Text('继续学习'),
@@ -115,7 +128,10 @@ class CourseHero extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
                     side: const BorderSide(color: Colors.white70),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
                   ),
                   icon: const Icon(Icons.group, size: 18),
                   label: const Text('组队广场'),

@@ -4,6 +4,7 @@ import 'services/course_data.dart';
 import 'services/course_service.dart';
 import 'services/player_state.dart';
 import 'screens/course_list_screen.dart';
+import 'screens/login_screen.dart';
 import 'screens/player_screen.dart';
 
 Future<void> main() async {
@@ -40,6 +41,7 @@ class QtClassApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (_) => const CourseListScreen(),
+        '/login': (_) => const LoginScreen(),
         '/player': (_) => const PlayerScreen(),
       },
     );

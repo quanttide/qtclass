@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/course.dart';
+import '../services/auth_api.dart';
 import '../services/course_service.dart';
 import '../services/learn_api.dart';
 import '../services/learner_service.dart';
@@ -8,6 +9,7 @@ import '../widgets/course/course_hero.dart';
 import '../widgets/course/module_panel.dart';
 import '../widgets/course/step_bar.dart';
 import 'player_screen.dart';
+import 'login_screen.dart';
 import 'proposal_screen.dart';
 
 /// 课程详情页 — Hero + StepBar + 模块面板
@@ -49,9 +51,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       _course = course;
       _maxDone = progress.max.clamp(0, course.stages.length);
       // 有进度恢复上次模块，无进度显示课程首页
-      _currentModule = progress.last != null
-          ? _stageIndex(progress.last!)
-          : -1;
+      _currentModule = progress.last != null ? _stageIndex(progress.last!) : -1;
       _loaded = true;
     });
   }
@@ -69,7 +69,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     await ProgressService.save(
       course.id,
       max: max,
-      last: stageId ?? (moduleIndex >= 0 ? course.stages[moduleIndex].id : null),
+      last:
+          stageId ?? (moduleIndex >= 0 ? course.stages[moduleIndex].id : null),
     );
   }
 
@@ -88,6 +89,12 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     final course = _course;
     if (course == null || !course.isProd) return;
     try {
+      if (!await AuthApi.hasToken()) {
+        if (mounted) {
+          await _openLogin();
+        }
+        if (!await AuthApi.hasToken()) return;
+      }
       final name = await LearnerService.name();
       await LearnApi().reportProgress(
         moduleId: course.stages[moduleIndex].id,
@@ -96,6 +103,14 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     } catch (_) {
       // 服务端不可达时不打断学习流程
     }
+  }
+
+  Future<bool> _openLogin() async {
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
+    return result == true;
   }
 
   void _backToHero() {
@@ -143,12 +158,17 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                 children: [
                   Text(
                     '~ 量潮课堂',
-                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const Spacer(),
                   Text(
                     'v0.1.0',
-                    style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -202,9 +222,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   course: course,
                   progress: _maxDone / course.stages.length,
                   onContinue: _continue,
-                  onTeam: course.isProd
-                      ? () => _showTeamDialog(theme)
-                      : null,
+                  onTeam: course.isProd ? () => _showTeamDialog(theme) : null,
                 )
               else
                 ModulePanel(
@@ -215,15 +233,23 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   onBackToHero: _backToHero,
                   onLessonTap: _openLesson,
                   // 生产实习 m5：提交立项入口（MVP 核心动作）
-                  footerAction: course.isProd &&
-                          course.stages[_currentModule].id == 'm5'
+                  footerAction:
+                      course.isProd && course.stages[_currentModule].id == 'm5'
                       ? FilledButton.icon(
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const ProposalScreen(),
-                            ),
-                          ),
+                          onPressed: () async {
+                            if (!await AuthApi.hasToken()) {
+                              if (!mounted) return;
+                              final loggedIn = await _openLogin();
+                              if (!loggedIn) return;
+                            }
+                            if (!mounted) return;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const ProposalScreen(),
+                              ),
+                            );
+                          },
                           icon: const Icon(Icons.rocket_launch, size: 18),
                           label: const Text('提交立项'),
                         )

@@ -18,7 +18,12 @@ void main() {
           'id': 'm1',
           'name': '一、量潮是谁',
           'lessons': [
-            {'id': 'm1-1', 'title': '1.1 量潮的创立故事', 'duration': '阅读 10 min', 'type': '阅读'},
+            {
+              'id': 'm1-1',
+              'title': '1.1 量潮的创立故事',
+              'duration': '阅读 10 min',
+              'type': '阅读',
+            },
           ],
         },
       ],

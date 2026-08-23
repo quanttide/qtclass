@@ -31,7 +31,9 @@ class Course {
     badgeClass: json['badgeClass'] as String? ?? 'beginner',
     desc: json['desc'] as String? ?? '',
     meta: CourseMeta.fromJson(
-      json['meta'] is Map ? Map<String, dynamic>.from(json['meta'] as Map) : const <String, dynamic>{},
+      json['meta'] is Map
+          ? Map<String, dynamic>.from(json['meta'] as Map)
+          : const <String, dynamic>{},
     ),
     stages: (json['stages'] as List<dynamic>? ?? [])
         .map((e) => CourseStage.fromJson(e as Map<String, dynamic>))
@@ -67,7 +69,11 @@ class CourseStage {
   final String name;
   final List<CourseLesson> lessons;
 
-  const CourseStage({required this.id, required this.name, required this.lessons});
+  const CourseStage({
+    required this.id,
+    required this.name,
+    required this.lessons,
+  });
 
   factory CourseStage.fromJson(Map<String, dynamic> json) => CourseStage(
     id: json['id'] as String,
