@@ -6,6 +6,10 @@
 - 学员端登录：接入 qtcloud-auth password token 接口，token 持久化到 `shared_preferences`
 - `LearnApi` 请求自动携带 `Authorization: Bearer <token>`，缺 token 时引导登录
 
+### Changed
+- 播放器视频源支持 `http(s)` 网络 URL，保留本地 asset 兼容
+- studio 部署域名切换为 `learn.cloud.quanttide.com`，构建注入 `QTCLASS_AUTH_API_URL`
+
 ## [0.1.4] - 2026-08-14
 
 ### Added

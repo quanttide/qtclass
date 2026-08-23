@@ -13,7 +13,7 @@ class Segment {
   final String caption; // 底部字幕文案
   final String chapter; // 章节标签
   final String pathStepId; // 关联侧边栏路径步骤 ID
-  final String? video; // 关联视频资产路径（assets/videos/...），无则文本场景
+  final String? video; // 关联视频资产路径或 http(s) URL，无则文本场景
   final String? next; // 结束后的下一片段 ID
   final String? interaction; // 结束后弹出的互动节点 ID
   final String? action; // 结束动作：'finish'

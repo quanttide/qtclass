@@ -4,7 +4,7 @@
 #
 # 对齐 qtcloud-delib 的 deploy-studio.yml 模式：
 #   studio/* tag → Actions（flutter build web，ossutil cp）→ OSS 桶（qtclass-studio，静态网站托管）
-#   → CDN（class.quanttide.com，泛域名证书 *.quanttide.com）→ 用户浏览器
+#   → CDN（learn.cloud.quanttide.com，泛域名证书 *.quanttide.com）→ 用户浏览器
 #
 # 触发说明：用 tag 精确匹配 studio/ 前缀，避免其他 tag 误触发。
 #
@@ -27,7 +27,7 @@ concurrency:
 env:
   OSS_BUCKET: qtclass-studio
   OSS_ENDPOINT: oss-cn-hangzhou.aliyuncs.com
-  CDN_DOMAIN: class.quanttide.com
+  CDN_DOMAIN: learn.cloud.quanttide.com
 
 jobs:
   build-and-deploy:
@@ -52,7 +52,7 @@ jobs:
 
       - name: Build Web
         working-directory: src/studio
-        run: flutter build web --release --dart-define=QTCLASS_COURSE_API_URL=${{ vars.QTCLASS_COURSE_API_URL }} --dart-define=QTCLASS_LEARN_API_URL=${{ vars.QTCLASS_LEARN_API_URL }}
+        run: flutter build web --release --dart-define=QTCLASS_COURSE_API_URL=${{ vars.QTCLASS_COURSE_API_URL }} --dart-define=QTCLASS_LEARN_API_URL=${{ vars.QTCLASS_LEARN_API_URL }} --dart-define=QTCLASS_AUTH_API_URL=${{ vars.QTCLASS_AUTH_API_URL }}
 
       - name: Setup ossutil
         uses: manyuanrong/setup-ossutil@v3.0

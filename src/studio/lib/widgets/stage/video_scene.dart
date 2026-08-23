@@ -36,8 +36,15 @@ class _VideoSceneState extends State<VideoScene> {
   }
 
   Future<void> _initVideo() async {
+    _failed = false;
     debugPrint('VIDEO: init start ${widget.assetPath}');
-    final controller = VideoPlayerController.asset(widget.assetPath);
+    final uri = Uri.tryParse(widget.assetPath);
+    final controller =
+        uri != null &&
+            uri.hasScheme &&
+            (uri.scheme == 'http' || uri.scheme == 'https')
+        ? VideoPlayerController.networkUrl(uri)
+        : VideoPlayerController.asset(widget.assetPath);
     try {
       await controller.initialize().timeout(const Duration(seconds: 30));
       if (!mounted) {
@@ -51,6 +58,7 @@ class _VideoSceneState extends State<VideoScene> {
       widget.state.setDurationOverride(duration);
       if (widget.state.playing) controller.play();
       controller.addListener(_onVideoTick);
+      widget.state.addListener(_syncPlayback);
     } catch (e) {
       debugPrint('VIDEO: init FAILED: $e');
       await controller.dispose();
@@ -83,6 +91,7 @@ class _VideoSceneState extends State<VideoScene> {
 
   void _disposeVideo() {
     _controller?.removeListener(_onVideoTick);
+    widget.state.removeListener(_syncPlayback);
     _controller?.dispose();
     _controller = null;
     // 不在此通知：dispose 期间 notifyListeners 会触发 markNeedsBuild 异常；
@@ -99,8 +108,6 @@ class _VideoSceneState extends State<VideoScene> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // 播放状态联动
-    widget.state.addListener(_syncPlayback);
     WidgetsBinding.instance.addPostFrameCallback((_) => _syncPlayback());
 
     if (_failed) {
