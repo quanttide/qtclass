@@ -4,7 +4,7 @@
 #
 # 对齐 qtcloud-delib 的 deploy-studio.yml 模式：
 #   studio/* tag → Actions（flutter build web，ossutil cp）→ OSS 桶（qtclass-studio，静态网站托管）
-#   → CDN（learn.cloud.quanttide.com，泛域名证书 *.quanttide.com）→ 用户浏览器
+#   → CDN（studio.class.quanttide.com，独立证书）→ 用户浏览器
 #
 # 触发说明：用 tag 精确匹配 studio/ 前缀，避免其他 tag 误触发。
 #
@@ -27,7 +27,7 @@ concurrency:
 env:
   OSS_BUCKET: qtclass-studio
   OSS_ENDPOINT: oss-cn-hangzhou.aliyuncs.com
-  CDN_DOMAIN: learn.cloud.quanttide.com
+  CDN_DOMAIN: studio.class.quanttide.com
 
 jobs:
   build-and-deploy:
