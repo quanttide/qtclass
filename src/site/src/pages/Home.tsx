@@ -10,7 +10,7 @@ const courses = [
   },
   {
     name: '氛围编程',
-    level: '进阶',
+    level: '入门',
     audience: '需要用 AI 提升研发和自动化效率的成员',
     summary: '从开发环境搭建到 API Key、编辑器 Agent 配置，完成可运行的 AI 编程闭环。',
     modules: ['开发环境搭建', '工具配置', '任务拆解'],

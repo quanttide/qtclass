@@ -28,14 +28,11 @@ p {
   margin: 0;
 }
 
-.courseSection,
-
-
+/* 首页课程列表 */
 .courseSection {
+  padding: 56px 0;
   background: #f7f8f3;
 }
-
-
 
 .sectionHead {
   width: min(1120px, 100%);
@@ -62,15 +59,21 @@ p {
   color: #24563e;
 }
 
-.courseGrid,
-
-
 .courseGrid {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
 }
 
-.courseCard,
-
+.courseCard {
+  min-width: 0;
+  border: 1px solid rgba(21, 35, 27, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 18px;
+}
 
 .courseTop {
   display: flex;
@@ -79,13 +82,7 @@ p {
   gap: 12px;
 }
 
-h3 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.courseTop span,
-.status {
+.courseTop span {
   flex: 0 0 auto;
   border-radius: 999px;
   background: #dce9d5;
@@ -122,18 +119,11 @@ h3 {
   font-size: 12px;
 }
 
-
-
-@media (max-width: 980px) {
-  .courseGrid,
-  
-}
-
-/* 课程详情页面样式 */
+/* 课程详情页面 */
 .course-hero {
   background: linear-gradient(135deg, #2d4a3e 0%, #1a241d 100%);
   color: #fff;
-  padding: 60px 0;
+  padding: 60px 32px;
   text-align: center;
 }
 
@@ -150,55 +140,80 @@ h3 {
 }
 
 .course-content {
-  padding: 40px 0;
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding: 40px 32px;
 }
 
-.course-content h2 {
-  margin: 0 0 24px;
+.course-content > h2 {
+  margin: 0 0 32px;
   font-size: 28px;
 }
 
-.lesson-grid {
-  display: grid;
-  gap: 16px;
+/* 章节列表 */
+.chapter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.chapter {
+  border: 1px solid rgba(21, 35, 27, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.82);
+  overflow: hidden;
+}
+
+.chapter-title {
+  margin: 0;
+  padding: 16px 20px;
+  font-size: 18px;
+  font-weight: 700;
+  background: #e8ece2;
+  color: #24563e;
+}
+
+.lesson-list {
+  display: flex;
+  flex-direction: column;
 }
 
 .lesson-card {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 16px;
-  border: 1px solid rgba(21, 35, 27, 0.14);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.82);
+  padding: 16px 20px;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.2s, box-shadow 0.2s;
+  border-top: 1px solid rgba(21, 35, 27, 0.08);
+  transition: background 0.2s;
 }
 
 .lesson-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: rgba(220, 233, 213, 0.3);
 }
 
 .lesson-number {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   background: #dce9d5;
   color: #24563e;
   border-radius: 50%;
   font-weight: 800;
-  font-size: 14px;
+  font-size: 13px;
+  flex-shrink: 0;
 }
 
-.lesson-info h3 {
+.lesson-info h4 {
   margin: 0;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
+/* 课程内容页面 */
 .not-found {
   text-align: center;
   padding: 60px 0;
@@ -236,18 +251,30 @@ h3 {
 }
 
 .lesson-header {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(21, 35, 27, 0.14);
 }
 
-.lesson-badge {
+.lesson-badge,
+.chapter-badge {
   display: inline-block;
   padding: 4px 12px;
-  background: #dce9d5;
-  color: #24563e;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 800;
+  margin-right: 8px;
   margin-bottom: 12px;
+}
+
+.lesson-badge {
+  background: #dce9d5;
+  color: #24563e;
+}
+
+.chapter-badge {
+  background: #f3f0df;
+  color: #8b7a3e;
 }
 
 .lesson-header h1 {
@@ -255,15 +282,102 @@ h3 {
   font-size: 28px;
 }
 
+/* Markdown 内容样式 */
 .lesson-body {
   line-height: 1.8;
   color: #15231b;
 }
 
+.lesson-body h1 {
+  font-size: 24px;
+  margin: 32px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(21, 35, 27, 0.14);
+}
+
+.lesson-body h2 {
+  font-size: 20px;
+  margin: 28px 0 12px;
+  color: #24563e;
+}
+
+.lesson-body h3 {
+  font-size: 17px;
+  margin: 24px 0 10px;
+}
+
+.lesson-body p {
+  margin: 0 0 16px;
+}
+
+.lesson-body ul,
+.lesson-body ol {
+  margin: 0 0 16px;
+  padding-left: 24px;
+}
+
+.lesson-body li {
+  margin-bottom: 6px;
+}
+
+.lesson-body strong {
+  font-weight: 700;
+}
+
+.lesson-body blockquote {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 4px solid #24563e;
+  background: rgba(220, 233, 213, 0.3);
+  color: #3d5a4a;
+  font-style: italic;
+}
+
+.lesson-body code {
+  padding: 2px 6px;
+  background: rgba(21, 35, 27, 0.08);
+  border-radius: 4px;
+  font-family: "SF Mono", "Fira Code", monospace;
+  font-size: 0.9em;
+}
+
+.lesson-body pre {
+  margin: 16px 0;
+  padding: 16px;
+  background: #1a241d;
+  color: #e8ece2;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.lesson-body pre code {
+  padding: 0;
+  background: none;
+  color: inherit;
+}
+
+.lesson-body hr {
+  margin: 24px 0;
+  border: none;
+  border-top: 1px solid rgba(21, 35, 27, 0.14);
+}
+
+.lesson-body table {
+  width: 100%;
+  margin: 16px 0;
+  border-collapse: collapse;
+}
+
+.lesson-body td {
+  padding: 8px 12px;
+  border: 1px solid rgba(21, 35, 27, 0.14);
+}
+
+/* 课程导航 */
 .lesson-footer {
   display: flex;
   justify-content: space-between;
-  margin-top: 32px;
+  margin-top: 40px;
   padding-top: 24px;
   border-top: 1px solid rgba(21, 35, 27, 0.14);
 }
@@ -271,13 +385,14 @@ h3 {
 .nav-button {
   display: inline-flex;
   align-items: center;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: 1px solid #24563e;
   border-radius: 6px;
   color: #24563e;
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
+  transition: background 0.2s, color 0.2s;
 }
 
 .nav-button:hover {
@@ -285,17 +400,34 @@ h3 {
   color: #fff;
 }
 
-@media (max-width: 640px) {
-  .courseSection,
+/* 响应式设计 */
+@media (max-width: 980px) {
+  .courseGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 
+@media (max-width: 640px) {
+  .courseSection {
+    padding: 40px 20px;
+  }
 
   .sectionHead {
     align-items: start;
     flex-direction: column;
   }
 
-  .courseGrid,
-  
+  .courseGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .course-content {
+    padding: 32px 20px;
+  }
+
+  .lesson-content {
+    padding: 20px;
+  }
 
   .lesson-footer {
     flex-direction: column;
