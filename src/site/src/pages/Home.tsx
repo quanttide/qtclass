@@ -39,14 +39,6 @@ const courses = [
   },
 ]
 
-const resourceGroups = [
-  '量潮是谁',
-  '业务与市场',
-  '方法论',
-  '方案与实施',
-  '复盘与展示',
-]
-
 function Home() {
   return (
     <main>
@@ -77,24 +69,6 @@ function Home() {
                   查看课程
                 </Link>
               )}
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="resources" aria-labelledby="resources-title">
-        <div className="sectionHead">
-          <div>
-            <p>Materials</p>
-            <h2 id="resources-title">学习资料区</h2>
-          </div>
-          <span className="status">待周会确认</span>
-        </div>
-        <div className="resourceGrid">
-          {resourceGroups.map((group) => (
-            <article key={group}>
-              <h3>{group}</h3>
-              <p>内容待周会确认</p>
             </article>
           ))}
         </div>
