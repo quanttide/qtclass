@@ -15,7 +15,7 @@
 
 ### Changed
 - 播放器视频源支持 `http(s)` 网络 URL，保留本地 asset 兼容
-- studio 部署域名切换为 `learn.cloud.quanttide.com`，构建注入 `QTCLASS_AUTH_API_URL`
+- studio 部署域名切换为 `studio.class.quanttide.com`，构建注入 `QTCLASS_AUTH_API_URL`
 
 ## [0.1.7] - 2026-08-18
 
