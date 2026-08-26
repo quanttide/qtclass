@@ -124,7 +124,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   }
 
   void _openLesson(CourseLesson lesson) {
-    // 生产实习：按课时加载播放数据（GET /v1/courses/prod/player 定位对应课时）；
+    // 生产实习：按课时加载播放数据（GET /courses/prod/player 定位对应课时）；
     // 其他课程无服务端数据时播放器保持默认内容。
     Navigator.push(
       context,

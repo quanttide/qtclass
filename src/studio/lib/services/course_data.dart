@@ -67,7 +67,7 @@ class CourseData {
     );
   }
 
-  /// 从指定 URL 加载播放数据（如 GET /v1/courses/{id}/player），成功更新 [current]。
+  /// 从指定 URL 加载播放数据（如 GET /courses/{id}/player），成功更新 [current]。
   /// 失败时保留现有数据（由调用方容错）。
   static Future<CourseData?> loadFromUrl(
     String url, {

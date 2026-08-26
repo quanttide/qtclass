@@ -14,7 +14,7 @@ import '../widgets/stage/player_stage.dart';
 /// 页面骨架：顶栏 + 主列（标题区 + 播放舞台 + 控制栏）+ 侧边栏。
 /// 映射自 `doc/screens/player.html` — 核心交互界面。
 /// 可选参数 [courseId]/[lessonId]/[lessonTitle]：从详情页课时点击进入时，
-/// 加载该课时的播放数据（GET /v1/courses/{courseId}/player）并定位到对应课时；
+/// 加载该课时的播放数据（GET /courses/{courseId}/player）并定位到对应课时；
 /// 不传时保持旧行为（全局 CourseData 单课数据）。
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({
