@@ -2,8 +2,12 @@
 
 ## Unreleased
 
+## [0.1.9] - 2026-08-23
+
 ### Fixed
 - 登录/进度/立项 API 默认地址：release 构建在 `--dart-define` 缺失时回退生产网关（原回退 localhost 导致 CI 变量缺失时登录失败）
+
+## [0.1.8] - 2026-08-23
 
 ### Added
 - 学员端登录：接入 qtcloud-auth password token 接口，token 持久化到 `shared_preferences`
@@ -12,6 +16,28 @@
 ### Changed
 - 播放器视频源支持 `http(s)` 网络 URL，保留本地 asset 兼容
 - studio 部署域名切换为 `learn.cloud.quanttide.com`，构建注入 `QTCLASS_AUTH_API_URL`
+
+## [0.1.7] - 2026-08-18
+
+### Fixed
+- `PathStep.fromJson` 容错：服务端契约 `title` 与旧数据 `label` 兼容
+
+## [0.1.6] - 2026-08-17
+
+### Added
+- 学员端播放器接入生产实习内容
+
+### Fixed
+- 课程播放数据改为从 `courses` endpoint 加载
+- 修复播放已加载课程的片段选择（select loaded course player segment）
+
+## [0.1.5] - 2026-08-16
+
+### Added
+- 学员端 MVP 闭环：m5 立项表单（5问+姓名栏）+ 进度上报
+
+### Changed
+- CI 构建注入 `QTCLASS_LEARN_API_URL`（学习云进度/立项 API）
 
 ## [0.1.4] - 2026-08-14
 
@@ -24,6 +50,37 @@
 
 ### Changed
 - 修复 course_data.dart 重复 import（pre-existing lint）
+
+## [0.1.3] - 2026-08-14
+
+### Fixed
+- API 分支 catch 全捕获（fromJson 抛 Error 未被 on Exception 捕获致初始化崩溃白屏）+ 请求超时 30s
+
+## [0.1.2] - 2026-08-13
+
+### Fixed
+- `load()` 全面捕获异常（asset 404 抛 Error，on Exception 漏捕获致白屏）+ 网关超时 60s
+
+### Docs
+- 移除已删原型文档并更新 ROADMAP 引用；新增课程列表与详情页规格文档
+
+## [0.1.1] - 2026-08-12
+
+### Removed
+- 移除本地课程资源（course.json/视频）——数据来自课程云 API，清理存储桶旧数据
+
+### Fixed
+- pubspec 移除已删资源声明（course.json/videos）
+
+## [0.1.0] - 2026-08-12
+
+### Changed
+- 课程数据改为 API 拉取（`QTCLASS_COURSE_API_URL`，本地资产 fallback）
+- CI 构建注入 `QTCLASS_COURSE_API_URL`（课程数据来自课程云 API）
+- 首页拆分为 widgets/home 组件（对齐 home.md 组件清单）
+
+### Docs
+- 文档重构为 docs/dev-guide（产品定位、BRD、架构设计）
 
 ## [0.1.0-beta.5] - 2026-08-08
 

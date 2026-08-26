@@ -26,6 +26,16 @@
 - 移除 Vue 3 相关依赖和文件
 - 移除学习资料区模块
 
+## [0.1.1] - 2026-08-23
+
+### Fixed
+
+- 学员端跳转地址改为 `studio.class.quanttide.com`（原误指 `learn.cloud`）
+
+### Changed
+
+- 部署工作流域名对齐（deploy-site / deploy-studio）
+
 ## [0.1.0] - 2026-08-25
 
 ### Added
