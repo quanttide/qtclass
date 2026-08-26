@@ -15,3 +15,32 @@ variable "environment" {
   type        = string
   default     = "prod"
 }
+
+variable "image" {
+  description = "FC 容器镜像（ACR 地址）。由 CI 注入"
+  type        = string
+}
+
+variable "course_api_url" {
+  description = "课程云基址（QTCLASS_COURSE_API_URL）"
+  type        = string
+  default     = "https://api.quanttide.com/qtcloud-course"
+}
+
+variable "learn_api_url" {
+  description = "学习云网关基址（QTCLASS_LEARN_API_URL）"
+  type        = string
+  default     = "https://api.quanttide.com/qtcloud-learn"
+}
+
+variable "fc_memory" {
+  description = "FC 函数内存（MB）"
+  type        = number
+  default     = 512
+}
+
+variable "fc_timeout" {
+  description = "FC 函数超时（秒）"
+  type        = number
+  default     = 60
+}

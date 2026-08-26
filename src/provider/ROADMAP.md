@@ -35,7 +35,7 @@ Studio 验收达成 ─────────────────→ [完�
 #### Phase 1：服务骨架（进行中）
 
 - [x] Go 标准库 + `/healthz`（技术栈对齐 qtcloud-course provider）
-- [ ] FC 部署 manifests 与 CI 发布管道（测试门禁 CI 已就绪：`.github/workflows/test-provider.yml`）
+- [x] FC 部署 manifests 与发布管道：`deploy-provider.yml`（质量门禁 job 前置——vet/test 不过不构建镜像；terraform 状态键 qtclass/terraform.tfstate）
 
 #### Phase 2：播放器数据组装 ✅
 

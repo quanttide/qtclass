@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.1.0-alpha.2] - 2026-08-28
+
+### Added
+
+- FC 部署管道：deploy-provider 工作流（质量门禁前置 → ACR 镜像构建 → Terraform Apply）+ manifests/terraform 统一基础设施栈新增 FC 资源（函数、HTTP 触发器、上游基址注入）——与 site/studio 静态托管同栈管理
+- 移除独立 test-provider.yml——质量门禁并入部署工作流作为前置 job
+
 ## [0.1.0-alpha.1] - 2026-08-28
 
 ### Added
