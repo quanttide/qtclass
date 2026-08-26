@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.1.0-alpha.4] - 2026-08-28
+
+### Fixed
+
+- 部署管线：qtclass-studio 桶为历史手动创建、不在 terraform 状态——追加 import 块纳管，消除 apply 时「桶名已被占用」冲突
+
 ## [0.1.0-alpha.3] - 2026-08-28
 
 ### Changed

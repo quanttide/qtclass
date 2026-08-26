@@ -5,6 +5,13 @@
 # 静态网站托管：Web 版作为默认首页（class.quanttide.com 根路径），Linux 包位于 /studio/ 目录。
 # 部署流水线：.github/workflows/deploy-studio.yml（tag 触发 → flutter build → ossutil cp → 刷新 CDN）。
 
+# qtclass-studio 桶为历史手动创建，未在本状态中——用 import 块纳管。
+# 首次 apply 完成纳管后此块即为无操作；删除桶重建时需同步移除。
+import {
+  to = alicloud_oss_bucket.studio
+  id = "qtclass-studio"
+}
+
 resource "alicloud_oss_bucket" "studio" {
   bucket = "qtclass-studio"
 
