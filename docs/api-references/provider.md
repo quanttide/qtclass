@@ -9,7 +9,7 @@ qtclass provider 的 HTTP 接口清单。应用侧集成层：上游聚合课程
 - 请求与响应均为 JSON；错误响应统一为 `{"error":"..."}`；
 - 状态码含义：400 参数非法或引用不存在、401 缺少认证、404 资源不存在、502 上游不可用；
 - 认证仅回写接口需要，透传至学习云；
-- 环境变量：`QTCLASS_COURSE_API_URL`、`QTCLASS_LEARN_API_URL`、`LISTEN_ADDR`。
+- 环境变量：`QTCLASS_API_BASE_URL`（上游网关基址，派生 /qtcloud-course 与 /qtcloud-learn）、`LISTEN_ADDR`。
 
 ## 课程目录
 
@@ -62,6 +62,15 @@ GET /player-data            # 兼容入口：首个已发布课程的播放器�
   "interactionNodes": []
 }
 ```
+
+## 学习云代理
+
+客户端对学习云的调用一律经本服务转发（认证与请求体透传），上游路径不变：
+
+| 方法 | 路径 | 上游 | 说明 |
+|------|------|------|------|
+| POST | `/progress` | `/api/courses/prod/progress` | 进度上报 {moduleId, name} → {max, last} |
+| POST | `/proposals` | `/api/proposals` | 提交立项（5 问 + 方向类型 + 组队信息） |
 
 ## 完成回写
 

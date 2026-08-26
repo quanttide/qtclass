@@ -11,7 +11,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // 课程目录（列表页数据源；失败时保留空列表）
   await CourseService.load(
-    apiUrl: const String.fromEnvironment('QTCLASS_COURSE_API_URL'),
+    apiUrl: const String.fromEnvironment('QTCLASS_API_BASE_URL'),
   );
   // 播放器单课数据在进入课时时按课程加载；启动阶段只准备内置 fallback。
   await CourseData.load();

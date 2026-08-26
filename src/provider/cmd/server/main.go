@@ -12,7 +12,7 @@ import (
 func main() {
 	cfg := config.Load()
 	mux := buildRouter(cfg)
-	log.Printf("qtclass-provider starting on %s (course=%s learn=%s)", cfg.Addr, cfg.CourseAPI, cfg.LearnAPI)
+	log.Printf("qtclass-provider starting on %s (course=%s learn=%s)", cfg.Addr, cfg.CourseBase(), cfg.LearnBase())
 	if err := http.ListenAndServe(cfg.Addr, mux); err != nil {
 		log.Fatalf("server error: %v", err)
 	}
@@ -21,11 +21,12 @@ func main() {
 // buildRouter 组装路由。本服务无独立存储：读请求实时聚合课程云，
 // 完成回写透传学习云（learner × criterion 幂等）。
 func buildRouter(cfg *config.Config) *http.ServeMux {
-	course := upstream.NewCourseClient(cfg.CourseAPI)
-	learn := upstream.NewLearnClient(cfg.LearnAPI)
+	course := upstream.NewCourseClient(cfg.CourseBase())
+	learn := upstream.NewLearnClient(cfg.LearnBase())
 
 	playerHandler := handler.NewPlayerHandler(course)
 	completionProxy := handler.NewCompletionProxy(course, learn)
+	learnProxy := handler.NewLearnProxy(cfg.LearnBase())
 
 	mux := http.NewServeMux()
 
@@ -38,6 +39,10 @@ func buildRouter(cfg *config.Config) *http.ServeMux {
 
 	// 完成回写代理
 	mux.HandleFunc("POST /completions", completionProxy.ServeHTTP)
+
+	// 学习云代理（进度上报 / 立项）
+	mux.HandleFunc("POST /progress", learnProxy.ServeHTTP)
+	mux.HandleFunc("POST /proposals", learnProxy.ServeHTTP)
 
 	// Health
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {

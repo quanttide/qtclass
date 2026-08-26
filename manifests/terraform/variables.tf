@@ -21,16 +21,10 @@ variable "image" {
   type        = string
 }
 
-variable "course_api_url" {
-  description = "课程云基址（QTCLASS_COURSE_API_URL）"
+variable "api_base_url" {
+  description = "上游 API 网关基址（QTCLASS_API_BASE_URL）：课程云与学习云分别派生 /qtcloud-course、/qtcloud-learn"
   type        = string
-  default     = "https://api.quanttide.com/qtcloud-course"
-}
-
-variable "learn_api_url" {
-  description = "学习云网关基址（QTCLASS_LEARN_API_URL）"
-  type        = string
-  default     = "https://api.quanttide.com/qtcloud-learn"
+  default     = "https://api.quanttide.com"
 }
 
 variable "fc_memory" {

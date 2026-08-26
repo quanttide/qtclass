@@ -57,7 +57,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
     try {
       final apiUrl =
           widget.courseApiUrl ??
-          const String.fromEnvironment('QTCLASS_COURSE_API_URL');
+          const String.fromEnvironment('QTCLASS_API_BASE_URL');
       if (apiUrl.isNotEmpty) {
         final baseUrl = apiUrl.replaceFirst(RegExp(r'/$'), '');
         final courseData = await CourseData.loadFromUrl(

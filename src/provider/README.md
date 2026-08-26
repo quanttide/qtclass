@@ -6,8 +6,7 @@ qtclass 的应用侧集成层：对接课程云内容实体与学习云完成记
 
 ```bash
 LISTEN_ADDR=:8080 \
-QTCLASS_COURSE_API_URL=https://api.quanttide.com/qtcloud-course \
-QTCLASS_LEARN_API_URL=https://api.quanttide.com/qtcloud-learn \
+QTCLASS_API_BASE_URL=https://api.quanttide.com \
 go run ./cmd/server
 ```
 

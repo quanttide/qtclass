@@ -5,8 +5,9 @@ import 'package:http/http.dart' as http;
 
 import 'auth_api.dart';
 
-/// 学习云 API（qtcloud-learn）：进度上报 + 提交立项。
-/// 基址经 --dart-define=QTCLASS_LEARN_API_URL 注入（生产 = 网关 /qtcloud-learn）。
+/// 学习服务 API：进度上报 + 提交立项。
+/// 客户端只依赖 qtclass 服务端；学习云作为上游被服务端代理，对客户端透明。
+/// 基址经 --dart-define=QTCLASS_API_BASE_URL 注入。
 class LearnApi {
   LearnApi({
     http.Client? client,
@@ -21,16 +22,16 @@ class LearnApi {
   final String baseUrl;
 
   static String defaultBaseUrl() {
-    const String fromEnv = String.fromEnvironment('QTCLASS_LEARN_API_URL');
+    const String fromEnv = String.fromEnvironment('QTCLASS_API_BASE_URL');
     if (fromEnv.isNotEmpty) {
       return fromEnv;
     }
     // release 构建默认生产网关，避免 CI 变量缺失时回退 localhost（debug 开发默认本地）
-    if (kReleaseMode) return 'https://api.quanttide.com/qtcloud-learn';
+    if (kReleaseMode) return 'https://api.quanttide.com/qtclass';
     return 'http://localhost:8080';
   }
 
-  /// 上报进度：POST /api/courses/prod/progress {moduleId, name} → {max, last}
+  /// 上报进度：POST /progress {moduleId, name} → {max, last}（服务端代理学习云）
   Future<({int max, String last})> reportProgress({
     required String moduleId,
     required String name,
@@ -38,7 +39,7 @@ class LearnApi {
     final headers = await _authHeaders();
     final resp = await _client
         .post(
-          Uri.parse('$baseUrl/api/courses/prod/progress'),
+          Uri.parse('$baseUrl/progress'),
           headers: headers,
           body: jsonEncode({'moduleId': moduleId, 'name': name}),
         )
@@ -51,7 +52,7 @@ class LearnApi {
     return (max: body['max'] as int? ?? 0, last: body['last'] as String? ?? '');
   }
 
-  /// 提交立项：POST /api/proposals（5 问 + 方向类型 + 组队姓名栏）
+  /// 提交立项：POST /proposals（5 问 + 方向类型 + 组队姓名栏，服务端代理学习云）
   Future<void> submitProposal({
     required String projectName,
     required String opportunity,
@@ -67,7 +68,7 @@ class LearnApi {
     final headers = await _authHeaders();
     final resp = await _client
         .post(
-          Uri.parse('$baseUrl/api/proposals'),
+          Uri.parse('$baseUrl/proposals'),
           headers: headers,
           body: jsonEncode({
             'projectName': projectName,

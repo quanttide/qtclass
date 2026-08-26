@@ -5,7 +5,7 @@
 
 ## 背景
 
-学习云 v0.2 起取消 Criterion 模型：验收标准由课程云定义（Lesson/Scene 的 `criteria` 引用列表），学习云不再注册副本，完成记录直接使用课程域课时 ID。
+学习云 v0.2 起取消本地 Criterion 模型：标准由课程云定义（Lesson/Scene 的 `criteria` 引用列表），完成记录的 `criterion_id` 直指课程域 Criterion.id。
 
 由此本服务的两项核心职责：
 
@@ -47,6 +47,7 @@ Studio 验收达成 ─────────────────→ [完�
 
 - [x] Completion 代理：透传认证 → 学习云 `POST /completions`；白名单校验 criterion_id（仅接受课程云定义过的标准）+ learner × criterion 幂等（已有记录走 PUT 翻状态）
 - [x] status 枚举校验与错误响应归一
+- [x] 学习云代理扩容：进度上报（/progress）与立项（/proposals）经本服务转发——客户端单依赖本服务
 
 #### 质量门禁
 

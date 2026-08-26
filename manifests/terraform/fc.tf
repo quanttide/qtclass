@@ -1,7 +1,7 @@
 # ============================================================
 # provider（qtclass 学员端集成层）—— 阿里云 FC 3.0 容器部署
 # 无独立存储：读请求实时聚合课程云；完成回写透传学习云。
-# 上游地址经环境变量注入（QTCLASS_COURSE_API_URL / QTCLASS_LEARN_API_URL，
+# 上游基址经环境变量注入（QTCLASS_API_BASE_URL，派生 /qtcloud-course 与 /qtcloud-learn），
 # 默认指向 API 网关统一接入路径；变更时在 terraform.tfvars 覆盖）。
 # ============================================================
 
@@ -43,8 +43,7 @@ resource "alicloud_fcv3_function" "this" {
   }
 
   environment_variables = {
-    QTCLASS_COURSE_API_URL = var.course_api_url
-    QTCLASS_LEARN_API_URL  = var.learn_api_url
+    QTCLASS_API_BASE_URL = var.api_base_url
   }
 
   tags = {

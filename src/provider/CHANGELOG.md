@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.1.0-alpha.3] - 2026-08-28
+
+### Changed
+
+- 客户端单依赖契约落地：学习云调用改经本服务代理（`POST /progress`、`POST /proposals`），Studio 环境变量收敛为 `QTCLASS_API_BASE_URL`；上游派生 `/qtcloud-course` 与 `/qtcloud-learn`
+- **修复**：部署管线 studio.tf 的 `block_public_access` 参数不被 alicloud provider 支持——validate 挂起的根因
+
 ## [0.1.0-alpha.2] - 2026-08-28
 
 ### Added

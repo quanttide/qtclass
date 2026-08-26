@@ -1,6 +1,6 @@
 # qtclass provider：多阶段构建（零外部依赖）。
-# 运行时从环境变量读取上游基址（QTCLASS_COURSE_API_URL / QTCLASS_LEARN_API_URL，
-# 由 FC 环境变量注入，见 manifests/terraform/fc.tf）。
+# 运行时从环境变量读取上游 API 网关基址（QTCLASS_API_BASE_URL，
+# 由 FC 环境变量注入，见 manifests/terraform/fc.tf；派生 /qtcloud-course 与 /qtcloud-learn）。
 
 FROM golang:1.26-alpine AS build
 
