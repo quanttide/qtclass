@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.1.0-alpha.5] - 2026-08-27
+
+### Changed
+
+- 内容实体复用 course-toolkit（packages/go alpha.3）：type alias 替代 upstream 重复定义；课程域 URL 改引 Route* 常量与路径构造函数
+- Dockerfile 构建首次引入外部 Go module（toolkit 公开仓库拉取）
+
 ## [0.1.0-alpha.4] - 2026-08-28
 
 ### Fixed
