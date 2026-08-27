@@ -1,5 +1,5 @@
-// Package upstream 定义课程云与学习云的 HTTP 客户端与内容实体类型。
-// 实体 JSON 字段名对齐各领域 provider 的响应契约（同源直连 id）。
+// Package upstream 定义课程云与学习云的 HTTP 客户端。
+// 内容实体复用 course-toolkit 的领域模型（type alias），与服务端 API 字段一一对应。
 package upstream
 
 import (
@@ -8,51 +8,20 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	course "github.com/quanttide/quanttide-course-toolkit/packages/go/pkg"
 )
 
-// Course 是课程云课程实体（只声明本服务消费的字段）。
-type Course struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Slug        string `json:"slug"`
-	Description string `json:"description,omitempty"`
-	Status      string `json:"status,omitempty"`    // draft / published
-	SortOrder   int    `json:"sortOrder,omitempty"` // 目录阶梯顺序
-}
-
-// Lesson 是课程域课时实体。
-type Lesson struct {
-	ID           string   `json:"id"`
-	CourseID     string   `json:"courseId"`
-	Title        string   `json:"title"`
-	Slug         string   `json:"slug"`
-	Description  string   `json:"description,omitempty"`
-	Duration     int      `json:"duration,omitempty"`
-	SortOrder    int      `json:"sortOrder,omitempty"`
-	Status       string   `json:"status,omitempty"`
-	StartSceneID string   `json:"startSceneId,omitempty"`
-	Criteria     []string `json:"criteria,omitempty"` // 引用的 Criterion ID 列表
-}
-
-// Scene 是课程域场景实体。
-type Scene struct {
-	ID        string   `json:"id"`
-	LessonID  string   `json:"lessonId"`
-	Title     string   `json:"title,omitempty"`
-	Slug      string   `json:"slug"`
-	VideoURL  string   `json:"videoUrl,omitempty"`
-	VerifyTip string   `json:"verifyTip,omitempty"`
-	Criteria  []string `json:"criteria,omitempty"`
-}
-
-// Criterion 是课程域验收标准实体。
-type Criterion struct {
-	ID          string `json:"id"`
-	LessonID    string `json:"lessonId"`
-	SceneID     string `json:"sceneId,omitempty"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-}
+type (
+	// Course 是课程云课程实体。
+	Course = course.Course
+	// Lesson 是课程域课时实体（Criteria 引用的 Criterion ID 列表）。
+	Lesson = course.Lesson
+	// Scene 是课程域场景实体。
+	Scene = course.Scene
+	// Criterion 是课程域验收标准实体。
+	Criterion = course.Criterion
+)
 
 func trimSlash(s string) string { return strings.TrimRight(s, "/") }
 

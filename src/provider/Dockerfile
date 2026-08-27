@@ -1,4 +1,4 @@
-# qtclass provider：多阶段构建（零外部依赖）。
+# qtclass provider：多阶段构建（引入 course-toolkit 领域模型）。
 # 运行时从环境变量读取上游 API 网关基址（QTCLASS_API_BASE_URL，
 # 由 FC 环境变量注入，见 manifests/terraform/fc.tf；派生 /qtcloud-course 与 /qtcloud-learn）。
 

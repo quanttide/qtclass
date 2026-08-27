@@ -2,6 +2,8 @@
 
 qtclass 的应用侧集成层：对接课程云内容实体与学习云完成记录，为 Studio / Site 提供统一数据通道。不设独立存储。
 
+领域模型复用 [course-toolkit](https://github.com/quanttide/quanttide-course-toolkit)（Go 包），与服务端 API 字段一一对应。
+
 ## 运行
 
 ```bash
