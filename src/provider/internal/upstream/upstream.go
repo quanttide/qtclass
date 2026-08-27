@@ -54,25 +54,25 @@ func NewCourseClient(baseURL string) *CourseClient {
 
 func (c *CourseClient) Courses(ctx context.Context) ([]Course, error) {
 	var out []Course
-	err := fetchJSON(ctx, c.HTTP, c.BaseURL+"/courses", &out)
+	err := fetchJSON(ctx, c.HTTP, c.BaseURL+course.RouteCourses, &out)
 	return out, err
 }
 
 func (c *CourseClient) Lessons(ctx context.Context, courseID string) ([]Lesson, error) {
 	var out []Lesson
-	err := fetchJSON(ctx, c.HTTP, c.BaseURL+"/courses/"+courseID+"/lessons", &out)
+	err := fetchJSON(ctx, c.HTTP, c.BaseURL+course.CourseLessonsPath(courseID), &out)
 	return out, err
 }
 
 func (c *CourseClient) Scenes(ctx context.Context, lessonID string) ([]Scene, error) {
 	var out []Scene
-	err := fetchJSON(ctx, c.HTTP, c.BaseURL+"/lessons/"+lessonID+"/scenes", &out)
+	err := fetchJSON(ctx, c.HTTP, c.BaseURL+course.LessonScenesPath(lessonID), &out)
 	return out, err
 }
 
 // Criteria 返回全局标准清单（快照注册管道的数据源同款接口）。
 func (c *CourseClient) Criteria(ctx context.Context) ([]Criterion, error) {
 	var out []Criterion
-	err := fetchJSON(ctx, c.HTTP, c.BaseURL+"/criteria", &out)
+	err := fetchJSON(ctx, c.HTTP, c.BaseURL+course.RouteCriteria, &out)
 	return out, err
 }
