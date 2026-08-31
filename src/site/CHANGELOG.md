@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.2-alpha.2] - 2026-08-31
+
 ### Added
 
 - 「学习」一级导航与 `/learn` 页面：列出学习档案的训练营（schedules）与任务（tasks），支持 markdown 详情查看
