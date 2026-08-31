@@ -2,9 +2,11 @@
 
 ## [Unreleased]
 
+## [0.1.2-beta.1] - 2026-08-31
+
 ### Changed
 
-- 学习页数据源支持 YAML frontmatter：卡片标题与描述优先读取 frontmatter（title / description）
+- 学习页卡片补充描述：优先读取 frontmatter（title / description），无元数据时回退从 markdown 正文提取
 - 训练营与任务 markdown 增加 YAML 元数据（title / description）
 
 ## [0.1.2-alpha.4] - 2026-08-31

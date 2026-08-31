@@ -1,6 +1,6 @@
 {
   "name": "qtclass-site",
-  "version": "0.1.2-alpha.4",
+  "version": "0.1.2-beta.1",
   "private": true,
   "type": "module",
   "scripts": {
