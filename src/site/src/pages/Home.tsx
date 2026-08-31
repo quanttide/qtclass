@@ -39,6 +39,24 @@ const courses = [
   },
 ]
 
+function renderCard(course: (typeof courses)[number]) {
+  return (
+    <>
+      <div className="courseTop">
+        <h3>{course.name}</h3>
+        <span>{course.level}</span>
+      </div>
+      <p className="audience">{course.audience}</p>
+      <p className="summary">{course.summary}</p>
+      <div className="moduleList">
+        {course.modules.map((module) => (
+          <span key={module}>{module}</span>
+        ))}
+      </div>
+    </>
+  )
+}
+
 function Home() {
   return (
     <main>
@@ -50,27 +68,18 @@ function Home() {
           </div>
         </div>
 
-        <div className="courseGrid">
-          {courses.map((course) => (
-            <article key={course.name} className="courseCard">
-              <div className="courseTop">
-                <h3>{course.name}</h3>
-                <span>{course.level}</span>
+        <div className="learnGrid">
+          {courses.map((course) =>
+            course.slug ? (
+              <Link key={course.name} to={`/courses/${course.slug}`} className="learnCard">
+                {renderCard(course)}
+              </Link>
+            ) : (
+              <div key={course.name} className="learnCard">
+                {renderCard(course)}
               </div>
-              <p className="audience">{course.audience}</p>
-              <p className="summary">{course.summary}</p>
-              <div className="moduleList">
-                {course.modules.map((module) => (
-                  <span key={module}>{module}</span>
-                ))}
-              </div>
-              {course.slug && (
-                <Link to={`/courses/${course.slug}`} className="primaryLink" style={{ marginTop: '16px' }}>
-                  查看课程
-                </Link>
-              )}
-            </article>
-          ))}
+            ),
+          )}
         </div>
       </section>
     </main>

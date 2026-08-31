@@ -31,19 +31,12 @@ function Learn() {
 
           <div className="learnGrid">
             {itemsIn(section.key).map((item) => (
-              <article key={item.slug} className="learnCard">
+              <Link key={item.slug} to={`/learn/${section.key}/${item.slug}`} className="learnCard">
                 <div className="courseTop">
                   <h3>{item.title}</h3>
                 </div>
                 {item.description && <p className="summary">{item.description}</p>}
-                <Link
-                  to={`/learn/${section.key}/${item.slug}`}
-                  className="primaryLink"
-                  style={{ marginTop: '12px' }}
-                >
-                  查看
-                </Link>
-              </article>
+              </Link>
             ))}
           </div>
         </section>
