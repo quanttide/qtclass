@@ -29,9 +29,9 @@ function Learn() {
             <p className="sectionDesc">{section.description}</p>
           </div>
 
-          <div className="courseGrid">
+          <div className="learnGrid">
             {itemsIn(section.key).map((item) => (
-              <article key={item.slug} className="courseCard">
+              <article key={item.slug} className="learnCard">
                 <div className="courseTop">
                   <h3>{item.title}</h3>
                 </div>
@@ -39,7 +39,7 @@ function Learn() {
                 <Link
                   to={`/learn/${section.key}/${item.slug}`}
                   className="primaryLink"
-                  style={{ marginTop: '16px' }}
+                  style={{ marginTop: '12px' }}
                 >
                   查看
                 </Link>
