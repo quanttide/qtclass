@@ -17,6 +17,8 @@ function extractTitle(md: string): string {
   return line ? line.slice(2).trim() : '未命名'
 }
 
+export { extractTitle }
+
 export function itemsIn(dir: 'schedules' | 'tasks'): LearningItem[] {
   return Object.keys(learningModules)
     .filter((key) => key.includes(`/${dir}/`))
