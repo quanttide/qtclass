@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.1.2-alpha.3] - 2026-08-31
+
+### Changed
+
+- 学习页训练营（schedules）数据同步：三营 Task 编排与归属调整（源自 data/profile）
+
 ## [0.1.2-alpha.2] - 2026-08-31
 
 ### Added
