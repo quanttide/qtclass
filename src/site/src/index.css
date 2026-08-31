@@ -48,6 +48,11 @@ p {
   font-size: 32px;
 }
 
+.sectionHead .sectionDesc {
+  margin: 0;
+  color: #56615a;
+}
+
 .primaryLink {
   display: inline-flex;
   align-items: center;

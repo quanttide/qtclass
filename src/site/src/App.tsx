@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
 import Home from './pages/Home'
+import Learn from './pages/Learn'
+import ItemDetail from './pages/learning/ItemDetail'
 import ProductionInternship from './pages/ProductionInternship'
 import ProductionInternshipCourse from './pages/courses/ProductionInternshipCourse'
 import './App.css'
@@ -18,6 +20,9 @@ function App() {
               <NavLink to="/courses/production-internship" className={({ isActive }) => (isActive ? 'active' : '')}>
                 生产实习
               </NavLink>
+              <NavLink to="/learn" className={({ isActive }) => (isActive ? 'active' : '')}>
+                学习
+              </NavLink>
             </div>
           </div>
         </nav>
@@ -30,6 +35,8 @@ function App() {
         <div className="content">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/learn" element={<Learn />} />
+            <Route path="/learn/:type/:slug" element={<ItemDetail />} />
             <Route path="/courses/production-internship" element={<ProductionInternship />} />
             <Route path="/courses/production-internship/lessons/:lessonSlug" element={<ProductionInternshipCourse />} />
           </Routes>
