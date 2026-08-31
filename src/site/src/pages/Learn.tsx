@@ -35,6 +35,7 @@ function Learn() {
                 <div className="courseTop">
                   <h3>{item.title}</h3>
                 </div>
+                {item.description && <p className="summary">{item.description}</p>}
                 <Link
                   to={`/learn/${section.key}/${item.slug}`}
                   className="primaryLink"

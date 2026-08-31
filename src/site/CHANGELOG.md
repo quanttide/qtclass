@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- 学习页卡片补充描述：从 markdown 正文提取标题后的第一段展示
+
 ## [0.1.2-alpha.4] - 2026-08-31
 
 ### Changed
