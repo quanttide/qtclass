@@ -13,15 +13,34 @@ export const learningModules = import.meta.glob('../data/learning/**/*.md', {
   import: 'default',
 }) as Record<string, string>
 
+// 解析 YAML frontmatter（title / description），失败返回 null
+function parseFrontmatter(md: string): { title: string; description: string } | null {
+  const m = md.match(/^---\n([\s\S]*?)\n---/)
+  if (!m) return null
+  const fm = m[1]
+  const get = (key: string): string => {
+    const line = fm.split('\n').find((l) => l.startsWith(`${key}:`))
+    return line ? line.slice(key.length + 1).trim() : ''
+  }
+  const title = get('title')
+  const description = get('description')
+  if (!title && !description) return null
+  return { title, description }
+}
+
 function extractTitle(md: string): string {
+  const fm = parseFrontmatter(md)
+  if (fm?.title) return fm.title
   const line = md.split('\n').find((l) => l.startsWith('# '))
   return line ? line.slice(2).trim() : '未命名'
 }
 
 export { extractTitle }
 
-// 提取标题后的第一段正文作为卡片描述
+// 提取标题后的第一段正文作为卡片描述（无 frontmatter 时回退）
 function extractDescription(md: string): string {
+  const fm = parseFrontmatter(md)
+  if (fm?.description) return fm.description
   const lines = md.split('\n')
   let inCode = false
   for (const line of lines) {

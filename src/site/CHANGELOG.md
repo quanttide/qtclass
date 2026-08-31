@@ -4,7 +4,8 @@
 
 ### Changed
 
-- 学习页卡片补充描述：从 markdown 正文提取标题后的第一段展示
+- 学习页数据源支持 YAML frontmatter：卡片标题与描述优先读取 frontmatter（title / description）
+- 训练营与任务 markdown 增加 YAML 元数据（title / description）
 
 ## [0.1.2-alpha.4] - 2026-08-31
 
