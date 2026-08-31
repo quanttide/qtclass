@@ -7,6 +7,10 @@
 - 「学习」一级导航与 `/learn` 页面：列出学习档案的训练营（schedules）与任务（tasks），支持 markdown 详情查看
 - markdown 渲染逻辑提取为共享模块（`src/utils/markdown.ts`）
 
+### Changed
+
+- 导航精简为「课程」「学习」两个页面，取消「生产实习」一级导航（课程内容仍可从课程体系进入）
+
 ## [0.1.2-alpha.1] - 2026-08-25
 
 ### Changed

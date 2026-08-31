@@ -15,10 +15,7 @@ function App() {
             <a className="site-brand" href="/">量潮课堂</a>
             <div className="site-links">
               <NavLink to="/" end className={({ isActive }) => (isActive ? 'active' : '')}>
-                课程体系
-              </NavLink>
-              <NavLink to="/courses/production-internship" className={({ isActive }) => (isActive ? 'active' : '')}>
-                生产实习
+                课程
               </NavLink>
               <NavLink to="/learn" className={({ isActive }) => (isActive ? 'active' : '')}>
                 学习
