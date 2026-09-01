@@ -14,13 +14,13 @@ function enrichTaskRefs(md: string): string {
 const badgeLabels: Record<string, string> = {
   schedules: '训练营',
   tasks: '任务',
-  careers: '成长通道',
   prices: '价格',
 }
 
 function ItemDetail() {
   const { type, slug } = useParams()
-  const dir = (['schedules', 'tasks', 'careers', 'prices'].includes(type ?? '') ? type : 'schedules') as LearningSection
+  const sections: LearningSection[] = ['schedules', 'tasks', 'prices']
+  const dir = (sections.includes(type as LearningSection) ? (type as LearningSection) : 'schedules') as LearningSection
   const item = itemsIn(dir).find((i) => i.slug === slug)
   const key = Object.keys(learningModules).find((k) => k.includes(`/${dir}/${slug}.md`))
   const markdownContent = key ? learningModules[key] : ''

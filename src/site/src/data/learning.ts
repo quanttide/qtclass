@@ -62,7 +62,7 @@ function extractDescription(md: string): string {
   return ''
 }
 
-export type LearningSection = 'schedules' | 'tasks' | 'careers' | 'prices'
+export type LearningSection = 'schedules' | 'tasks' | 'prices'
 
 export function itemsIn(dir: LearningSection): LearningItem[] {
   return Object.keys(learningModules)
