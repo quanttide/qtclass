@@ -5,7 +5,7 @@ const sections = [
   {
     key: 'schedules' as const,
     title: '训练营',
-    subtitle: 'Schedule',
+    subtitle: 'Schedules',
     description: '按学习路径推进的训练计划。',
   },
   {
@@ -13,6 +13,18 @@ const sections = [
     title: '任务',
     subtitle: 'Tasks',
     description: '面向协作者开放的实践任务，通过 Issue 和 PR 协作完成。',
+  },
+  {
+    key: 'careers' as const,
+    title: '成长通道',
+    subtitle: 'Careers',
+    description: '从首次参与到可入职：进度条、成长速度参考与考核规则。',
+  },
+  {
+    key: 'prices' as const,
+    title: '价格',
+    subtitle: 'Prices',
+    description: '一对一咨询定价与超额申请额度；代金券的挣取渠道。',
   },
 ]
 

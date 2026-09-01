@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { learningModules, itemsIn, extractTitle } from '../../data/learning'
+import { learningModules, itemsIn, extractTitle, type LearningSection } from '../../data/learning'
 import { markdownToHtml } from '../../utils/markdown'
 
 // 训练营详情：把「来源：tasks/<slug>.md」转换为指向具体任务的链接
@@ -11,9 +11,16 @@ function enrichTaskRefs(md: string): string {
   })
 }
 
+const badgeLabels: Record<string, string> = {
+  schedules: '训练营',
+  tasks: '任务',
+  careers: '成长通道',
+  prices: '价格',
+}
+
 function ItemDetail() {
   const { type, slug } = useParams()
-  const dir = type === 'tasks' ? 'tasks' : 'schedules'
+  const dir = (['schedules', 'tasks', 'careers', 'prices'].includes(type ?? '') ? type : 'schedules') as LearningSection
   const item = itemsIn(dir).find((i) => i.slug === slug)
   const key = Object.keys(learningModules).find((k) => k.includes(`/${dir}/${slug}.md`))
   const markdownContent = key ? learningModules[key] : ''
@@ -42,7 +49,7 @@ function ItemDetail() {
 
       <article className="lesson-content">
         <header className="lesson-header">
-          <span className="lesson-badge">{dir === 'tasks' ? '任务' : '训练营'}</span>
+          <span className="lesson-badge">{badgeLabels[dir] ?? dir}</span>
           <h1>{item.title}</h1>
         </header>
 

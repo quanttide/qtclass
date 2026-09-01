@@ -62,7 +62,9 @@ function extractDescription(md: string): string {
   return ''
 }
 
-export function itemsIn(dir: 'schedules' | 'tasks'): LearningItem[] {
+export type LearningSection = 'schedules' | 'tasks' | 'careers' | 'prices'
+
+export function itemsIn(dir: LearningSection): LearningItem[] {
   return Object.keys(learningModules)
     .filter((key) => key.includes(`/${dir}/`))
     .map((key) => {
