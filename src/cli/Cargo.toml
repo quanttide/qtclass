@@ -1,0 +1,10 @@
+[package]
+name = "qtclass-cli"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "qtclass"
+path = "src/main.rs"
+
+[dependencies]
