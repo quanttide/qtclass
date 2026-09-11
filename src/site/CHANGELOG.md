@@ -1,5 +1,7 @@
 # CHANGELOG
 
+## [Unreleased]
+
 ## [0.1.2-beta.7] - 2026-09-11
 
 ### Added
@@ -106,7 +108,7 @@
 
 - 部署工作流域名对齐（deploy-site / deploy-studio）
 
-## [0.1.0] - 2026-08-25
+## [0.1.0] - 2026-08-23
 
 ### Added
 
