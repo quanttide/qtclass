@@ -1,4 +1,4 @@
-import { load as parseYaml } from 'js-yaml'
+import { parseFrontmatter, stripFrontmatter } from '../utils/frontmatter'
 
 // 学习页数据：源自 quanttide-learn 数据仓 data/profile（schedules/ 训练营、tasks/ 任务）的静态副本
 // 同步方式：将上游对应目录的 *.md 复制到本包 data/learning/ 对应目录
@@ -25,26 +25,6 @@ function parseLearningPath(path: string): { section: string; slug: string } | nu
   const [section, slug] = segments
   if (!section || !slug) return null
   return { section, slug }
-}
-
-// 解析 YAML frontmatter（title / description），无元数据或解析失败返回 null
-export function parseFrontmatter(md: string): { title: string; description: string } | null {
-  const match = md.replace(/\r\n/g, '\n').match(/^---\n([\s\S]*?)\n---/)
-  if (!match) return null
-
-  let data: unknown
-  try {
-    data = parseYaml(match[1])
-  } catch {
-    return null
-  }
-  if (typeof data !== 'object' || data === null) return null
-
-  const text = (value: unknown) => (typeof value === 'string' ? value.trim() : '')
-  const { title, description } = data as Record<string, unknown>
-  const parsed = { title: text(title), description: text(description) }
-  if (!parsed.title && !parsed.description) return null
-  return parsed
 }
 
 function extractTitle(md: string): string {
@@ -126,7 +106,7 @@ export const learningEntries: LearningEntry[] = Object.entries(learningModules)
       slug: parsed.slug,
       title: extractTitle(content),
       description: extractDescription(content),
-      content,
+      content: stripFrontmatter(content),
     }
   })
   .filter((entry): entry is LearningEntry => entry !== null)

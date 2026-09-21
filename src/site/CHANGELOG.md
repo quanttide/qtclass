@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- markdown 渲染改用 `react-markdown` 加 `remark-gfm`（GFM 表格、嵌套列表、自动链接），删除自研渲染器与 `DOMPurify`
+- 元数据解析与剥离集中到 `src/utils/frontmatter.ts`，正文在装载层先剥离再交给渲染
+
 ## [0.1.2-rc.2] - 2026-09-21
 
 ### Fixed

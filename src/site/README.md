@@ -46,7 +46,8 @@ src/
 ├── main.tsx             # 入口文件
 ├── App.css / index.css  # 样式
 ├── components/
-│   └── Layout.tsx       # 站点外框（导航 + 页头 + 内容区）
+│   ├── Layout.tsx       # 站点外框（导航 + 页头 + 内容区）
+│   └── Markdown.tsx     # markdown 渲染（react-markdown + remark-gfm）
 ├── models/              # 数据结构与装载
 │   ├── home.ts          # 首页内容装载
 │   └── learning.ts      # 学习资料扫描、元数据解析、板块定义
@@ -57,7 +58,7 @@ src/
 │   └── learning/
 │       └── ItemDetail.tsx  # 学习资料详情
 └── utils/
-    └── markdown.ts      # markdown 渲染
+    └── frontmatter.ts   # 元数据解析与剥离
 ```
 
 ## 内容数据

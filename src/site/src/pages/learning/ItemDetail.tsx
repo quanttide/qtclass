@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
+import Markdown from '../../components/Markdown'
 import { getLearningEntry, isLearningSection, sectionOf } from '../../models/learning'
-import { markdownToHtml } from '../../utils/markdown'
 import { learnItemPath, ROUTE_PATHS } from '../../routes'
 
 // 训练营详情：把「来源：tasks/<slug>.md」转换为指向具体任务的链接
@@ -44,14 +44,11 @@ function ItemDetail() {
           <h1>{entry.title}</h1>
         </header>
 
-        <div
-          className="lesson-body"
-          dangerouslySetInnerHTML={{
-            __html: markdownToHtml(
-              section.key === 'schedules' ? enrichTaskRefs(entry.content) : entry.content,
-            ),
-          }}
-        />
+        <div className="lesson-body">
+          <Markdown>
+            {section.key === 'schedules' ? enrichTaskRefs(entry.content) : entry.content}
+          </Markdown>
+        </div>
       </article>
     </main>
   )

@@ -1,3 +1,5 @@
+import { stripFrontmatter } from '../utils/frontmatter'
+
 // 首页内容：源自 quanttide-tech 数据仓 data/brochure/qtclass/index.md 的静态副本
 // 同步方式：上游改动后复制到本包 data/home/index.md
 
@@ -10,4 +12,4 @@ const homeModules = import.meta.glob('/data/home/*.md', {
   import: 'default',
 }) as Record<string, string>
 
-export const homeIntro = homeModules[HOME_INTRO_PATH] ?? ''
+export const homeIntro = stripFrontmatter(homeModules[HOME_INTRO_PATH] ?? '')
