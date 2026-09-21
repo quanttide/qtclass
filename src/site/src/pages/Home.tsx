@@ -1,80 +1,8 @@
-const courses = [
-  {
-    name: '知识工作',
-    level: '入门',
-    audience: '新同学、实习生、业务协作成员',
-    summary: '建立文档、信息收集、结构化表达和复盘的基本工作习惯。',
-    modules: ['文档即资产', '信息收集与整理', '知识输出'],
-  },
-  {
-    name: '氛围编程',
-    level: '入门',
-    audience: '需要用 AI 提升研发和自动化效率的成员',
-    summary: '从开发环境搭建到 API Key、编辑器 Agent 配置，完成可运行的 AI 编程闭环。',
-    modules: ['开发环境搭建', '工具配置', '任务拆解'],
-  },
-  {
-    name: '大数据导论',
-    level: '进阶',
-    audience: '数据岗位入门、业务分析协作成员',
-    summary: '理解数据采集、治理、分析和应用的基本链路。',
-    modules: ['数据资产', '分析流程', '业务指标'],
-  },
-  {
-    name: '数据工程',
-    level: '高阶',
-    audience: '数据工程、平台建设和交付实施成员',
-    summary: '面向真实项目的数据建模、管道、质量和交付规范。',
-    modules: ['数据建模', '工程管道', '质量与运维'],
-  },
-  {
-    name: '生产实习',
-    level: '实训',
-    audience: '公司内部培训、实训基地学员',
-    summary: '以微型创业和真实交付为牵引，完成学习、Demo、进度和立项闭环。',
-    modules: ['理解业务', '识别机会', '验证 Demo', '提交立项'],
-  },
-]
+import Course from './Course'
 
-function renderCard(course: (typeof courses)[number]) {
-  return (
-    <>
-      <div className="courseTop">
-        <h3>{course.name}</h3>
-        <span>{course.level}</span>
-      </div>
-      <p className="audience">{course.audience}</p>
-      <p className="summary">{course.summary}</p>
-      <div className="moduleList">
-        {course.modules.map((module) => (
-          <span key={module}>{module}</span>
-        ))}
-      </div>
-    </>
-  )
-}
-
+// 首页：站点首屏。课程体系已独立成页（/courses），首页暂以课程体系作为首屏内容
 function Home() {
-  return (
-    <main>
-      <section className="courseSection" aria-labelledby="courses-title">
-        <div className="sectionHead">
-          <div>
-            <p>Courses</p>
-            <h2 id="courses-title">五门课</h2>
-          </div>
-        </div>
-
-        <div className="learnGrid">
-          {courses.map((course) => (
-            <div key={course.name} className="learnCard">
-              {renderCard(course)}
-            </div>
-          ))}
-        </div>
-      </section>
-    </main>
-  )
+  return <Course />
 }
 
 export default Home

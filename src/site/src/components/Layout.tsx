@@ -10,7 +10,7 @@ function Layout({ children }: { children: ReactNode }) {
         <div className="nav-inner">
           <a className="site-brand" href={ROUTE_PATHS.home}>量潮课堂</a>
           <div className="site-links">
-            <NavLink to={ROUTE_PATHS.home} end className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink to={ROUTE_PATHS.course} className={({ isActive }) => (isActive ? 'active' : '')}>
               课程
             </NavLink>
             <NavLink to={ROUTE_PATHS.learn} className={({ isActive }) => (isActive ? 'active' : '')}>

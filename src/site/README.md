@@ -49,7 +49,8 @@ src/
 ├── models/              # 数据结构与装载
 │   └── learning.ts      # 学习资料扫描、元数据解析、板块定义
 ├── pages/
-│   ├── Home.tsx         # 首页（课程体系）
+│   ├── Home.tsx         # 首页
+│   ├── Course.tsx       # 课程页（课程体系）
 │   ├── Learn.tsx        # 学习页
 │   └── learning/
 │       └── ItemDetail.tsx  # 学习资料详情

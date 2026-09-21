@@ -5,6 +5,7 @@ export function learnItemPath(type: string, slug: string): string {
 
 export const ROUTE_PATHS = {
   home: '/',
+  course: '/courses',
   learn: '/learn',
   learnItem: '/learn/:type/:slug',
 } as const

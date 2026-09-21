@@ -16,6 +16,7 @@
 - markdown 渲染输出经 `DOMPurify` 清洗后再注入
 - markdown 表格渲染补 `<table>`、`<thead>`、`<tbody>` 包裹并补 `<th>` 样式——此前只输出裸 `<tr>`，表格样式一直未生效
 - 首页课程卡片取消跳转，五门课统一为纯展示卡片
+- 课程体系移出首页：新增 `src/pages/Course.tsx` 与 `/courses` 路由，导航「课程」指向该页；首页暂以课程体系为首屏内容
 - 站点图标改为 `public/favicon.svg`
 
 ### Fixed

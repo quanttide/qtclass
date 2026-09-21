@@ -7,6 +7,7 @@ import App from './App'
 describe('页面渲染冒烟', () => {
   const routes = [
     { path: '/', text: '五门课' },
+    { path: '/courses', text: '五门课' },
     { path: '/learn', text: '按学习路径推进的训练计划。' },
     { path: '/learn/schedules/agent-engineer', text: '智能体工程师训练营' },
     { path: '/learn/tasks/data-roadmap', text: '更新数据工程路线图' },
