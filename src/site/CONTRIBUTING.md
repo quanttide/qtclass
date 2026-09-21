@@ -28,7 +28,7 @@ qtclass 站点包（`apps/qtclass/src/site`）的文件规范与维护规范。�
 
 ### 内容文件格式
 
-学习资料（`data/learning/` 下）首部必须带 frontmatter 的 `title` 与 `description`：列表卡片取这两项，缺失时回退到正文章节的标题与首个段落。frontmatter 用 `js-yaml` 解析（见 `src/models/learning.ts` 的 `parseFrontmatter`），值中含「: 」时必须加引号，否则整段解析失败并按无元数据处理。
+学习资料（`data/learning/` 下）首部必须带 frontmatter 的 `title` 与 `description`：列表卡片取这两项，缺失时回退到正文章节的标题与首个段落。元数据由装载层解析，渲染正文前会被剥离，不出现在页面上。frontmatter 用 `js-yaml` 解析（见 `src/models/learning.ts` 的 `parseFrontmatter`），值中含「: 」时必须加引号，否则整段解析失败并按无元数据处理。
 
 正文标题用一级，章节用二级、三级，不支持四级及以下。段落之间空一行，列表、引用块、代码块各自独立成段，代码块标注语言。表格必须有分隔行，否则首行不会被识别为表头。
 

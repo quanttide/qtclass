@@ -24,6 +24,18 @@ describe('markdown 渲染', () => {
     expect(html.indexOf('</ul>')).toBeLessThan(html.indexOf('<table>'))
   })
 
+  it('剥离首部元数据，不进入正文', () => {
+    const html = markdownToHtml('---\ntitle: 标题\ndescription: 说明\n---\n\n正文')
+    expect(html).toBe('<p>正文</p>')
+  })
+
+  it('首行仅为分隔线时不当作元数据', () => {
+    const html = markdownToHtml('---\n\n正文\n\n---\n\n末尾')
+    expect(html).toContain('<hr>')
+    expect(html).toContain('<p>正文</p>')
+    expect(html).toContain('<p>末尾</p>')
+  })
+
   it('清洗注入内容', () => {
     const html = markdownToHtml('正文 <script>alert(1)</script> 与 <img src=x onerror="alert(1)">')
     expect(html).not.toContain('<script')

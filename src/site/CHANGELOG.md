@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- 元数据不再渲染进正文：渲染前剥离首部 YAML frontmatter，首页与学习详情页此前会显示 `title:`、`description:` 两行及多余分隔线
+
 ## [0.1.2-rc.1] - 2026-09-21
 
 ### Added

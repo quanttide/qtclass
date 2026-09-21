@@ -1,8 +1,22 @@
 import DOMPurify from 'dompurify'
 
+// 首部 YAML frontmatter：元数据由 src/models 解析使用，不进入正文
+const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*\r?\n?/
+
+function stripFrontmatter(md: string): string {
+  const match = md.match(FRONTMATTER_RE)
+  // 块内无键值行时视为普通分隔线，不作元数据剥离
+  if (!match || !/^[A-Za-z_][\w-]*\s*:/m.test(match[1])) return md
+  return md.slice(match[0].length)
+}
+
 // 简单的 markdown 到 HTML 转换器（与课程详情页共用）
-// 输出经 DOMPurify 清洗后交给 dangerouslySetInnerHTML
+// 先剥离元数据，输出经 DOMPurify 清洗后交给 dangerouslySetInnerHTML
 export function markdownToHtml(md: string): string {
+  return DOMPurify.sanitize(renderMarkdown(stripFrontmatter(md)))
+}
+
+function renderMarkdown(md: string): string {
   const lines = md.split('\n')
   const htmlLines: string[] = []
   let inCodeBlock = false
@@ -174,5 +188,5 @@ export function markdownToHtml(md: string): string {
     htmlLines.push(`<blockquote>${blockquoteContent.trim()}</blockquote>`)
   }
 
-  return DOMPurify.sanitize(htmlLines.join('\n'))
+  return htmlLines.join('\n')
 }

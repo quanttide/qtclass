@@ -27,6 +27,16 @@ describe('页面渲染冒烟', () => {
     render(<App />)
     expect(screen.getByText('内容未找到')).toBeInTheDocument()
   })
+
+  it('首页与学习详情不渲染元数据', () => {
+    for (const path of ['/', '/learn/schedules/agent-engineer']) {
+      window.history.pushState({}, '', path)
+      render(<App />)
+      expect(screen.queryByText(/^title:/), path).toBeNull()
+      expect(screen.queryByText(/^description:/), path).toBeNull()
+      cleanup()
+    }
+  })
 })
 
 afterEach(cleanup)
