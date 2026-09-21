@@ -1,31 +1,11 @@
 import { Link } from 'react-router-dom'
-import { itemsIn } from '../data/learning'
-
-const sections = [
-  {
-    key: 'schedules' as const,
-    title: '训练营',
-    subtitle: 'Schedules',
-    description: '按学习路径推进的训练计划。',
-  },
-  {
-    key: 'tasks' as const,
-    title: '任务',
-    subtitle: 'Tasks',
-    description: '面向协作者开放的实践任务，通过 Issue 和 PR 协作完成。',
-  },
-  {
-    key: 'prices' as const,
-    title: '价格',
-    subtitle: 'Prices',
-    description: '任务参与免费；一对一咨询按专家职级定价。',
-  },
-]
+import { LEARNING_SECTIONS, itemsIn } from '../models/learning'
+import { learnItemPath } from '../routes'
 
 function Learn() {
   return (
     <main>
-      {sections.map((section) => (
+      {LEARNING_SECTIONS.map((section) => (
         <section key={section.key} className="courseSection">
           <div className="sectionHead">
             <div>
@@ -37,7 +17,7 @@ function Learn() {
 
           <div className="learnGrid">
             {itemsIn(section.key).map((item) => (
-              <Link key={item.slug} to={`/learn/${section.key}/${item.slug}`} className="learnCard">
+              <Link key={item.slug} to={learnItemPath(section.key, item.slug)} className="learnCard">
                 <div className="courseTop">
                   <h3>{item.title}</h3>
                 </div>

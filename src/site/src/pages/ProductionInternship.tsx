@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { productionInternship } from '../data/courses'
+import { productionInternship } from '../models/courses'
+import { lessonPath } from '../routes'
 
 function ProductionInternship() {
   let lessonIndex = 0
@@ -21,11 +22,7 @@ function ProductionInternship() {
                 {chapter.lessons.map((lesson) => {
                   lessonIndex++
                   return (
-                    <Link
-                      key={lesson.id}
-                      to={`/courses/production-internship/lessons/${lesson.slug}`}
-                      className="lesson-card"
-                    >
+                    <Link key={lesson.id} to={lessonPath(lesson.slug)} className="lesson-card">
                       <span className="lesson-number">{lessonIndex}</span>
                       <div className="lesson-info">
                         <h4>{lesson.title}</h4>

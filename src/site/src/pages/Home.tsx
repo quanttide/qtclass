@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { coursePath } from '../routes'
 
 const courses = [
   {
@@ -71,7 +72,7 @@ function Home() {
         <div className="learnGrid">
           {courses.map((course) =>
             course.slug ? (
-              <Link key={course.name} to={`/courses/${course.slug}`} className="learnCard">
+              <Link key={course.name} to={coursePath(course.slug)} className="learnCard">
                 {renderCard(course)}
               </Link>
             ) : (

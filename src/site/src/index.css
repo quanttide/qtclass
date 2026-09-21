@@ -394,6 +394,13 @@ p {
   border: 1px solid rgba(21, 35, 27, 0.14);
 }
 
+.lesson-body th {
+  padding: 8px 12px;
+  border: 1px solid rgba(21, 35, 27, 0.14);
+  background: rgba(36, 86, 62, 0.06);
+  text-align: left;
+}
+
 /* 课程导航 */
 .lesson-footer {
   display: flex;

@@ -1,13 +1,13 @@
-// 学习页数据：源自 data/profile 子模块（schedules/ 训练营、tasks/ 任务）的静态副本
-// 同步方式：将 data/profile 下对应目录的 *.md 复制到 src/data/learning/ 对应目录
+// 学习页数据：源自 quanttide-learn 数据仓 data/profile（schedules/ 训练营、tasks/ 任务）的静态副本
+// 同步方式：将上游对应目录的 *.md 复制到本包 data/learning/ 对应目录
 export interface LearningItem {
   slug: string
   title: string
   description: string
 }
 
-// 使用 Vite 的 raw import 功能加载 markdown 文件
-export const learningModules = import.meta.glob('../data/learning/**/*.md', {
+// 根锚定路径（相对 Vite 项目根）：CI 与本地一致
+export const learningModules = import.meta.glob('/data/learning/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default',
@@ -62,7 +62,37 @@ function extractDescription(md: string): string {
   return ''
 }
 
-export type LearningSection = 'schedules' | 'tasks' | 'prices'
+// 学习板块：标题、英文副题与说明的唯一来源
+export const LEARNING_SECTIONS = [
+  {
+    key: 'schedules',
+    title: '训练营',
+    subtitle: 'Schedules',
+    description: '按学习路径推进的训练计划。',
+  },
+  {
+    key: 'tasks',
+    title: '任务',
+    subtitle: 'Tasks',
+    description: '面向协作者开放的实践任务，通过 Issue 和 PR 协作完成。',
+  },
+  {
+    key: 'prices',
+    title: '价格',
+    subtitle: 'Prices',
+    description: '任务参与免费；一对一咨询按专家职级定价。',
+  },
+] as const
+
+export type LearningSection = (typeof LEARNING_SECTIONS)[number]['key']
+
+export function isLearningSection(value: unknown): value is LearningSection {
+  return LEARNING_SECTIONS.some((section) => section.key === value)
+}
+
+export function sectionOf(key: LearningSection) {
+  return LEARNING_SECTIONS.find((section) => section.key === key)!
+}
 
 export function itemsIn(dir: LearningSection): LearningItem[] {
   return Object.keys(learningModules)

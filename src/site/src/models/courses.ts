@@ -90,5 +90,3 @@ export const productionInternship: Course = {
     },
   ],
 }
-
-export const courses: Course[] = [productionInternship]

@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+### Added
+
+- 测试：引入 Vitest（jsdom + Testing Library），覆盖全部路由渲染与 markdown 渲染，13 例
+
+### Changed
+
+- 内容数据移出 `src/`：学习资料与课时教案 markdown 归入包级 `data/`，`src/data` 更名 `src/models`（只保留数据结构与装载）
+- 学习板块（训练营 / 任务 / 价格）的标题、英文副题与说明合并为单一常量，页面不再各自硬编码
+- 站点外框（导航 + 页头）抽为 `src/components/Layout.tsx`；路由路径与链接地址集中到 `src/routes.ts`
+- markdown 表格渲染补 `<table>`、`<thead>`、`<tbody>` 包裹并补 `<th>` 样式——此前只输出裸 `<tr>`，表格样式一直未生效
+
+### Fixed
+
+- 学习页非法板块参数不再回退到「训练营」，改为渲染「内容未找到」
+
+### Removed
+
+- 移除 `src/models/courses.ts` 中未使用的 `courses` 导出
+
 ## [0.1.2-beta.8] - 2026-09-18
 
 ### Added
@@ -13,6 +32,7 @@
 ### Added
 
 - 学习任务书新增《试用量潮工作云命令行工具》——从学习管理档案同步
+
 
 ## [0.1.2-beta.6] - 2026-09-02
 

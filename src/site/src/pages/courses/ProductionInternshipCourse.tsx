@@ -1,9 +1,10 @@
 import { useParams, Link } from 'react-router-dom'
-import { productionInternship } from '../../data/courses'
+import { productionInternship } from '../../models/courses'
 import { markdownToHtml } from '../../utils/markdown'
+import { lessonPath, ROUTE_PATHS } from '../../routes'
 
-// 使用 Vite 的 raw import 功能加载 markdown 文件
-const lessonModules = import.meta.glob('../../data/lessons/*.md', { eager: true, query: '?raw', import: 'default' }) as Record<string, string>
+// 根锚定路径（相对 Vite 项目根）：CI 与本地一致
+const lessonModules = import.meta.glob('/data/lessons/*.md', { eager: true, query: '?raw', import: 'default' }) as Record<string, string>
 
 // 查找课程和章节信息
 function findLessonInfo(slug: string) {
@@ -30,7 +31,7 @@ function ProductionInternshipCourse() {
         <div className="not-found">
           <h2>课程内容未找到</h2>
           <p>请返回课程列表查看所有课程。</p>
-          <Link to="/courses/production-internship" className="primaryLink">
+          <Link to={ROUTE_PATHS.productionInternship} className="primaryLink">
             返回课程列表
           </Link>
         </div>
@@ -55,7 +56,7 @@ function ProductionInternshipCourse() {
   return (
     <main>
       <nav className="lesson-nav">
-        <Link to="/courses/production-internship" className="back-link">
+        <Link to={ROUTE_PATHS.productionInternship} className="back-link">
           ← 返回课程列表
         </Link>
       </nav>
@@ -75,7 +76,7 @@ function ProductionInternshipCourse() {
         <footer className="lesson-footer">
           {prevLesson && (
             <Link
-              to={`/courses/production-internship/lessons/${prevLesson.slug}`}
+              to={lessonPath(prevLesson.slug)}
               className="nav-button prev"
             >
               ← 上一课
@@ -83,7 +84,7 @@ function ProductionInternshipCourse() {
           )}
           {nextLesson && (
             <Link
-              to={`/courses/production-internship/lessons/${nextLesson.slug}`}
+              to={lessonPath(nextLesson.slug)}
               className="nav-button next"
             >
               下一课 →

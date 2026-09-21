@@ -9,6 +9,16 @@ export function markdownToHtml(md: string): string {
   let blockquoteContent = ''
   let listType: 'ul' | 'ol' | null = null
   let listItems: string[] = []
+  let tableRows: string[] | null = null
+
+  const processInline = (text: string): string => {
+    return text
+      .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+  }
 
   const flushList = () => {
     if (listType && listItems.length > 0) {
@@ -23,13 +33,38 @@ export function markdownToHtml(md: string): string {
     }
   }
 
-  const processInline = (text: string): string => {
-    return text
-      .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/`([^`]+)`/g, '<code>$1</code>')
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+  // 表格行以 `|` 起止；第二行是分隔行时，首行作表头
+  const tableCells = (row: string): string[] =>
+    row.slice(1, -1).split('|').map(cell => processInline(cell.trim()))
+
+  const flushTable = () => {
+    if (!tableRows) return
+    const rows = tableRows
+    tableRows = null
+
+    const isSeparator = (row: string) => /^\|[\s:|-]+\|$/.test(row)
+    const hasHeader = rows.length > 1 && isSeparator(rows[1])
+    const header = hasHeader ? rows[0] : null
+    const body = hasHeader ? rows.slice(2) : rows
+
+    htmlLines.push('<table>')
+    if (header) {
+      htmlLines.push('  <thead>')
+      htmlLines.push(`    <tr>${tableCells(header).map(cell => `<th>${cell}</th>`).join('')}</tr>`)
+      htmlLines.push('  </thead>')
+    }
+    htmlLines.push('  <tbody>')
+    body.forEach(row => {
+      htmlLines.push(`    <tr>${tableCells(row).map(cell => `<td>${cell}</td>`).join('')}</tr>`)
+    })
+    htmlLines.push('  </tbody>')
+    htmlLines.push('</table>')
+  }
+
+  // 块级结构（列表、表格、引用）在遇到新的块之前收尾
+  const flushBlocks = () => {
+    flushList()
+    flushTable()
   }
 
   for (const line of lines) {
@@ -41,7 +76,7 @@ export function markdownToHtml(md: string): string {
         codeContent = ''
         codeLang = ''
       } else {
-        flushList()
+        flushBlocks()
         inCodeBlock = true
         codeLang = line.slice(3).trim()
       }
@@ -55,7 +90,7 @@ export function markdownToHtml(md: string): string {
 
     // 空行处理
     if (line.trim() === '') {
-      flushList()
+      flushBlocks()
       if (inBlockquote) {
         htmlLines.push(`<blockquote>${blockquoteContent.trim()}</blockquote>`)
         inBlockquote = false
@@ -66,17 +101,17 @@ export function markdownToHtml(md: string): string {
 
     // 标题
     if (line.startsWith('### ')) {
-      flushList()
+      flushBlocks()
       htmlLines.push(`<h3>${processInline(line.slice(4))}</h3>`)
       continue
     }
     if (line.startsWith('## ')) {
-      flushList()
+      flushBlocks()
       htmlLines.push(`<h2>${processInline(line.slice(3))}</h2>`)
       continue
     }
     if (line.startsWith('# ')) {
-      flushList()
+      flushBlocks()
       htmlLines.push(`<h1>${processInline(line.slice(2))}</h1>`)
       continue
     }
@@ -93,6 +128,7 @@ export function markdownToHtml(md: string): string {
     if (line.match(/^- /)) {
       if (listType !== 'ul') {
         flushList()
+        flushTable()
         listType = 'ul'
       }
       listItems.push(line.slice(2))
@@ -103,6 +139,7 @@ export function markdownToHtml(md: string): string {
     if (line.match(/^\d+\. /)) {
       if (listType !== 'ol') {
         flushList()
+        flushTable()
         listType = 'ol'
       }
       listItems.push(line.replace(/^\d+\. /, ''))
@@ -111,27 +148,25 @@ export function markdownToHtml(md: string): string {
 
     // 水平线
     if (line.match(/^---+$/)) {
-      flushList()
+      flushBlocks()
       htmlLines.push('<hr />')
       continue
     }
 
-    // 表格行（简单处理）
+    // 表格行（表头与分隔行在 flushTable 内识别）
     if (line.startsWith('|') && line.endsWith('|')) {
       flushList()
-      // 跳过分隔行
-      if (line.match(/^\|[-\s|]+\|$/)) continue
-      const cells = line.split('|').filter(c => c.trim()).map(c => `<td>${processInline(c.trim())}</td>`).join('')
-      htmlLines.push(`<tr>${cells}</tr>`)
+      if (!tableRows) tableRows = []
+      tableRows.push(line)
       continue
     }
 
     // 普通段落
-    flushList()
+    flushBlocks()
     htmlLines.push(`<p>${processInline(line)}</p>`)
   }
 
-  flushList()
+  flushBlocks()
   if (inBlockquote) {
     htmlLines.push(`<blockquote>${blockquoteContent.trim()}</blockquote>`)
   }
