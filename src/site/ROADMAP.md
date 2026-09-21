@@ -13,9 +13,9 @@
 约束与影响：
 
 - CI 跨仓访问：`deploy-site.yml` 只有 `actions/checkout@v4`（单仓），构建期取源需改 workflow 并配跨仓权限
-- `prices/` 无上游：上游无 `data/profile/prices/`，同步脚本会删掉现有两份价格文件
-- 章节归属无出处：`chapter → lesson` 映射只存在于 `courses.ts`，markdown 内没有章节信息
-- lessons 无生成源：8 个课时文件均无 frontmatter，且无法追溯上游
+- `prices/` 源在别域：职级档位表在 `quanttide-pay/data/profile/qtclass/spend/one-on-one-consultation.md`，代金券规则在 `voucher-pricing.json`，学习域无对应目录；同步脚本需决定是纳入支付域还是另择源
+- 章节归属无出处：`chapter → lesson` 映射只存在于 `models/courses.ts`，markdown 内没有章节信息
+- lessons 生成源不全：8 个课时文件中仅 2 个可对应 `docs/tutorial/qtclass/`（文件名还不同），其余无出处
 
 达成标志：`data/learning/` 与 `data/lessons/` 的内容可由一条命令从上游重建，重建结果与仓库内副本一致。
 
