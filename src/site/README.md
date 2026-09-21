@@ -38,7 +38,8 @@ npm run preview
 ## 项目结构
 
 ```
-data/                    # 内容数据（markdown 原件，置于 src 之外）
+data/                    # 内容数据（置于 src 之外）
+├── courses/             # 课程结构契约（JSON）
 ├── learning/            # 学习资料：训练营（schedules）、任务（tasks）、价格（prices）
 └── lessons/             # 生产实习课时教案
 src/
@@ -49,7 +50,7 @@ src/
 ├── components/
 │   └── Layout.tsx       # 站点外框（导航 + 页头 + 内容区）
 ├── models/              # 数据结构与装载
-│   ├── courses.ts       # 课程结构
+│   ├── courses.ts       # 课程结构类型与装载
 │   └── learning.ts      # 学习资料扫描、元数据解析、板块定义
 ├── pages/
 │   ├── Home.tsx         # 首页（课程体系）
