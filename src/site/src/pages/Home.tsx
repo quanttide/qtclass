@@ -1,8 +1,20 @@
-import Course from './Course'
+import { homeIntro } from '../models/home'
+import { markdownToHtml } from '../utils/markdown'
 
-// 首页：站点首屏。课程体系已独立成页（/courses），首页暂以课程体系作为首屏内容
+// 首页：量潮课堂介绍。课程体系在 /courses，学习资料在 /learn
 function Home() {
-  return <Course />
+  return (
+    <main>
+      <section className="courseSection">
+        <div className="lesson-content">
+          <div
+            className="lesson-body"
+            dangerouslySetInnerHTML={{ __html: markdownToHtml(homeIntro) }}
+          />
+        </div>
+      </section>
+    </main>
+  )
 }
 
 export default Home

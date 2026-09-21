@@ -10,6 +10,7 @@ qtclass 站点包（`apps/qtclass/src/site`）的文件规范与维护规范。�
 
 | 路径 | 放什么 |
 |------|--------|
+| `data/home/*.md` | 首页介绍，上游 brochure 的静态副本 |
 | `data/learning/schedules/*.md` | 训练营，上游学习管理档案的静态副本 |
 | `data/learning/tasks/*.md` | 任务，同上 |
 | `data/learning/prices/*.md` | 价格，源在支付域 |
@@ -59,7 +60,7 @@ qtclass 站点包（`apps/qtclass/src/site`）的文件规范与维护规范。�
 2. 逐文件比对确认一致：`diff -rq <上游目录> data/learning`
 3. 同步结果记入 CHANGELOG
 
-站点与上游不得各改一份：内容改动先改上游，再回流站点。价格类内容的源在支付域（`quanttide-pay/data/profile/qtclass/`），学习域没有对应目录。
+站点与上游不得各改一份：内容改动先改上游，再回流站点。价格类内容的源在支付域（`quanttide-pay/data/profile/qtclass/`），学习域没有对应目录；首页介绍的源在 `quanttide-tech` 数据仓的 `data/brochure/qtclass/`。
 
 ### 验证
 

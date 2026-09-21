@@ -38,6 +38,7 @@ npm run preview
 
 ```
 data/                    # 内容数据（置于 src 之外）
+├── home/                # 首页介绍（源自 quanttide-tech 数据仓 brochure）
 └── learning/            # 学习资料：训练营（schedules）、任务（tasks）、价格（prices）
 src/
 ├── App.tsx              # 路由装配
@@ -47,6 +48,7 @@ src/
 ├── components/
 │   └── Layout.tsx       # 站点外框（导航 + 页头 + 内容区）
 ├── models/              # 数据结构与装载
+│   ├── home.ts          # 首页内容装载
 │   └── learning.ts      # 学习资料扫描、元数据解析、板块定义
 ├── pages/
 │   ├── Home.tsx         # 首页
