@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.1.2-rc.3] - 2026-09-21
+
 ### Changed
 
 - markdown 渲染改用 `react-markdown` 加 `remark-gfm`（GFM 表格、嵌套列表、自动链接），删除自研渲染器与 `DOMPurify`
