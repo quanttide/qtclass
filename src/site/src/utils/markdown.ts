@@ -1,4 +1,7 @@
+import DOMPurify from 'dompurify'
+
 // 简单的 markdown 到 HTML 转换器（与课程详情页共用）
+// 输出经 DOMPurify 清洗后交给 dangerouslySetInnerHTML
 export function markdownToHtml(md: string): string {
   const lines = md.split('\n')
   const htmlLines: string[] = []
@@ -171,5 +174,5 @@ export function markdownToHtml(md: string): string {
     htmlLines.push(`<blockquote>${blockquoteContent.trim()}</blockquote>`)
   }
 
-  return htmlLines.join('\n')
+  return DOMPurify.sanitize(htmlLines.join('\n'))
 }

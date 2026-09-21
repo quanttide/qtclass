@@ -27,13 +27,13 @@ qtclass 站点包（`apps/qtclass/src/site`）的文件规范与维护规范。�
 
 ### 内容文件格式
 
-学习资料（`data/learning/` 下）首部必须带 frontmatter 的 `title` 与 `description`：列表卡片取这两项，缺失时回退到正文章节的标题与首个段落。
+学习资料（`data/learning/` 下）首部必须带 frontmatter 的 `title` 与 `description`：列表卡片取这两项，缺失时回退到正文章节的标题与首个段落。frontmatter 用 `js-yaml` 解析（见 `src/models/learning.ts` 的 `parseFrontmatter`），值中含「: 」时必须加引号，否则整段解析失败并按无元数据处理。
 
 正文标题用一级，章节用二级、三级，不支持四级及以下。段落之间空一行，列表、引用块、代码块各自独立成段，代码块标注语言。表格必须有分隔行，否则首行不会被识别为表头。
 
 渲染器为自研（`src/utils/markdown.ts`），仅支持标题、无序与有序列表、引用块、代码块、表格、水平线，以及行内加粗、斜体、行内代码与链接。不支持嵌套列表、图片、脚注、任务列表。内容以渲染器实际支持的范围为准，需要新语法时先扩渲染器与测试，再写内容。
 
-渲染结果经 `dangerouslySetInnerHTML` 注入且未做 sanitize，`data/` 内容必须来自可信来源。
+渲染输出交 `dangerouslySetInnerHTML` 前经 `DOMPurify` 清洗，脚本与事件属性会被去除；清洗不代替来源把关，`data/` 内容仍须来自可信来源。
 
 ### 内容装载
 
@@ -47,7 +47,7 @@ qtclass 站点包（`apps/qtclass/src/site`）的文件规范与维护规范。�
 
 ### 测试
 
-路由新增或变更时，在 `src/App.test.tsx` 的 routes 表增删对应行；渲染逻辑变更时补 `src/utils/markdown.test.ts`。测试环境为 jsdom 加 Testing Library，配置见 `vitest.config.ts`。
+路由新增或变更时，在 `src/App.test.tsx` 的 routes 表增删对应行；渲染逻辑变更时补 `src/utils/markdown.test.ts`；元数据解析变更时补 `src/models/learning.test.ts`。测试环境为 jsdom 加 Testing Library，配置见 `vitest.config.ts`。
 
 ## 维护规范
 

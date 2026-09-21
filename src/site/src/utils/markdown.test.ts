@@ -24,6 +24,19 @@ describe('markdown 渲染', () => {
     expect(html.indexOf('</ul>')).toBeLessThan(html.indexOf('<table>'))
   })
 
+  it('清洗注入内容', () => {
+    const html = markdownToHtml('正文 <script>alert(1)</script> 与 <img src=x onerror="alert(1)">')
+    expect(html).not.toContain('<script')
+    expect(html).not.toContain('onerror')
+  })
+
+  it('保留链接、行内代码与代码块语言类名', () => {
+    const html = markdownToHtml('[文档](/x) 用 `a`\n\n```ts\nconst a = 1\n```')
+    expect(html).toContain('<a href="/x">文档</a>')
+    expect(html).toContain('<code>a</code>')
+    expect(html).toContain('language-ts')
+  })
+
   it('标题、列表、引用块、代码块', () => {
     const html = markdownToHtml('# 标题\n\n- 甲\n\n> 引用\n\n```ts\nconst a = 1\n```')
     expect(html).toContain('<h1>标题</h1>')

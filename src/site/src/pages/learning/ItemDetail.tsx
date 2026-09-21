@@ -1,13 +1,12 @@
 import { useParams, Link } from 'react-router-dom'
-import { learningModules, itemsIn, extractTitle, isLearningSection, sectionOf } from '../../models/learning'
+import { getLearningEntry, isLearningSection, sectionOf } from '../../models/learning'
 import { markdownToHtml } from '../../utils/markdown'
 import { learnItemPath, ROUTE_PATHS } from '../../routes'
 
 // 训练营详情：把「来源：tasks/<slug>.md」转换为指向具体任务的链接
 function enrichTaskRefs(md: string): string {
   return md.replace(/来源：tasks\/([\w-]+)\.md/g, (_match, slug) => {
-    const key = Object.keys(learningModules).find((k) => k.includes(`/tasks/${slug}.md`))
-    const title = key ? extractTitle(learningModules[key]) : slug
+    const title = getLearningEntry('tasks', slug)?.title ?? slug
     return `来源：[${title}](${learnItemPath('tasks', slug)})`
   })
 }
@@ -15,13 +14,9 @@ function enrichTaskRefs(md: string): string {
 function ItemDetail() {
   const { type, slug } = useParams()
   const section = isLearningSection(type) ? sectionOf(type) : null
-  const item = section && slug ? itemsIn(section.key).find((i) => i.slug === slug) : undefined
-  const key =
-    section && slug
-      ? Object.keys(learningModules).find((k) => k.includes(`/${section.key}/${slug}.md`))
-      : undefined
+  const entry = section && slug ? getLearningEntry(section.key, slug) : undefined
 
-  if (!section || !item || !key) {
+  if (!section || !entry) {
     return (
       <main>
         <div className="not-found">
@@ -46,14 +41,14 @@ function ItemDetail() {
       <article className="lesson-content">
         <header className="lesson-header">
           <span className="lesson-badge">{section.title}</span>
-          <h1>{item.title}</h1>
+          <h1>{entry.title}</h1>
         </header>
 
         <div
           className="lesson-body"
           dangerouslySetInnerHTML={{
             __html: markdownToHtml(
-              section.key === 'schedules' ? enrichTaskRefs(learningModules[key]) : learningModules[key],
+              section.key === 'schedules' ? enrichTaskRefs(entry.content) : entry.content,
             ),
           }}
         />
