@@ -64,7 +64,7 @@ p {
   color: #24563e;
 }
 
-/* 卡片（学习页/课程页共用）：更宽更矮，整卡可点击 */
+/* 卡片（学习页）：更宽更矮，整卡可点击 */
 .learnGrid {
   width: min(1120px, 100%);
   margin: 0 auto;
@@ -140,100 +140,6 @@ p {
   font-size: 12px;
 }
 
-/* 课程详情页面 */
-.course-hero {
-  background: linear-gradient(135deg, #2d4a3e 0%, #1a241d 100%);
-  color: #fff;
-  padding: 60px 32px;
-  text-align: center;
-}
-
-.course-hero h1 {
-  margin: 0;
-  font-size: 40px;
-  font-weight: 800;
-}
-
-.course-hero p {
-  margin: 16px 0 0;
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.course-content {
-  width: min(960px, 100%);
-  margin: 0 auto;
-  padding: 40px 32px;
-}
-
-.course-content > h2 {
-  margin: 0 0 32px;
-  font-size: 28px;
-}
-
-/* 章节列表 */
-.chapter-list {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-.chapter {
-  border: 1px solid rgba(21, 35, 27, 0.14);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.82);
-  overflow: hidden;
-}
-
-.chapter-title {
-  margin: 0;
-  padding: 16px 20px;
-  font-size: 18px;
-  font-weight: 700;
-  background: #e8ece2;
-  color: #24563e;
-}
-
-.lesson-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.lesson-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 20px;
-  text-decoration: none;
-  color: inherit;
-  border-top: 1px solid rgba(21, 35, 27, 0.08);
-  transition: background 0.2s;
-}
-
-.lesson-card:hover {
-  background: rgba(220, 233, 213, 0.3);
-}
-
-.lesson-number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: #dce9d5;
-  color: #24563e;
-  border-radius: 50%;
-  font-weight: 800;
-  font-size: 13px;
-  flex-shrink: 0;
-}
-
-.lesson-info h4 {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 600;
-}
-
 /* 课程内容页面 */
 .not-found {
   text-align: center;
@@ -277,8 +183,7 @@ p {
   border-bottom: 1px solid rgba(21, 35, 27, 0.14);
 }
 
-.lesson-badge,
-.chapter-badge {
+.lesson-badge {
   display: inline-block;
   padding: 4px 12px;
   border-radius: 999px;
@@ -291,11 +196,6 @@ p {
 .lesson-badge {
   background: #dce9d5;
   color: #24563e;
-}
-
-.chapter-badge {
-  background: #f3f0df;
-  color: #8b7a3e;
 }
 
 .lesson-header h1 {
@@ -401,33 +301,6 @@ p {
   text-align: left;
 }
 
-/* 课程导航 */
-.lesson-footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 40px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(21, 35, 27, 0.14);
-}
-
-.nav-button {
-  display: inline-flex;
-  align-items: center;
-  padding: 10px 20px;
-  border: 1px solid #24563e;
-  border-radius: 6px;
-  color: #24563e;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
-  transition: background 0.2s, color 0.2s;
-}
-
-.nav-button:hover {
-  background: #24563e;
-  color: #fff;
-}
-
 /* 响应式设计 */
 @media (max-width: 980px) {
   .learnGrid {
@@ -449,20 +322,7 @@ p {
     grid-template-columns: 1fr;
   }
 
-  .course-content {
-    padding: 32px 20px;
-  }
-
   .lesson-content {
     padding: 20px;
-  }
-
-  .lesson-footer {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .nav-button {
-    justify-content: center;
   }
 }

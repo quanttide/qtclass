@@ -5,7 +5,6 @@
 ## 功能
 
 - 课程体系展示
-- 生产实习课程教案
 - 学习资料（训练营 / 任务 / 价格）展示与详情
 
 ## 开发
@@ -39,9 +38,7 @@ npm run preview
 
 ```
 data/                    # 内容数据（置于 src 之外）
-├── courses/             # 课程结构契约（JSON）
-├── learning/            # 学习资料：训练营（schedules）、任务（tasks）、价格（prices）
-└── lessons/             # 生产实习课时教案
+└── learning/            # 学习资料：训练营（schedules）、任务（tasks）、价格（prices）
 src/
 ├── App.tsx              # 路由装配
 ├── routes.ts            # 路由路径与链接地址
@@ -50,14 +47,10 @@ src/
 ├── components/
 │   └── Layout.tsx       # 站点外框（导航 + 页头 + 内容区）
 ├── models/              # 数据结构与装载
-│   ├── courses.ts       # 课程结构类型与装载
 │   └── learning.ts      # 学习资料扫描、元数据解析、板块定义
 ├── pages/
 │   ├── Home.tsx         # 首页（课程体系）
 │   ├── Learn.tsx        # 学习页
-│   ├── ProductionInternship.tsx  # 生产实习课程页
-│   ├── courses/
-│   │   └── ProductionInternshipCourse.tsx  # 课时详情
 │   └── learning/
 │       └── ItemDetail.tsx  # 学习资料详情
 └── utils/

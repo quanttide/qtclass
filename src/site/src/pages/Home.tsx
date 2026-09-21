@@ -1,6 +1,3 @@
-import { Link } from 'react-router-dom'
-import { coursePath } from '../routes'
-
 const courses = [
   {
     name: '知识工作',
@@ -36,7 +33,6 @@ const courses = [
     audience: '公司内部培训、实训基地学员',
     summary: '以微型创业和真实交付为牵引，完成学习、Demo、进度和立项闭环。',
     modules: ['理解业务', '识别机会', '验证 Demo', '提交立项'],
-    slug: 'production-internship',
   },
 ]
 
@@ -70,17 +66,11 @@ function Home() {
         </div>
 
         <div className="learnGrid">
-          {courses.map((course) =>
-            course.slug ? (
-              <Link key={course.name} to={coursePath(course.slug)} className="learnCard">
-                {renderCard(course)}
-              </Link>
-            ) : (
-              <div key={course.name} className="learnCard">
-                {renderCard(course)}
-              </div>
-            ),
-          )}
+          {courses.map((course) => (
+            <div key={course.name} className="learnCard">
+              {renderCard(course)}
+            </div>
+          ))}
         </div>
       </section>
     </main>

@@ -10,11 +10,9 @@ qtclass 站点包（`apps/qtclass/src/site`）的文件规范与维护规范。�
 
 | 路径 | 放什么 |
 |------|--------|
-| `data/courses/*.json` | 课程结构契约，文件名即课程 slug |
 | `data/learning/schedules/*.md` | 训练营，上游学习管理档案的静态副本 |
 | `data/learning/tasks/*.md` | 任务，同上 |
 | `data/learning/prices/*.md` | 价格，源在支付域 |
-| `data/lessons/*.md` | 生产实习课时教案，文件名即课时 slug |
 | `src/models/` | 数据结构、类型与装载，不含页面逻辑 |
 | `src/pages/` | 页面组件，一条路由一个文件；同类多页面建子目录 |
 | `src/components/` | 跨页面复用组件 |
@@ -39,7 +37,7 @@ qtclass 站点包（`apps/qtclass/src/site`）的文件规范与维护规范。�
 
 ### 内容装载
 
-内容一律经 `src/models/` 装载，页面不直接读文件。`import.meta.glob` 使用根锚定路径（`/data/...`），相对路径在 CI 与本地容易不一致。课时教案的 glob 现仍写在 `src/pages/courses/ProductionInternshipCourse.tsx` 内，是待收敛的例外。
+内容一律经 `src/models/` 装载，页面不直接读文件。`import.meta.glob` 使用根锚定路径（`/data/...`），相对路径在 CI 与本地容易不一致。
 
 学习板块（训练营、任务、价格）在 `src/models/learning.ts` 的 `LEARNING_SECTIONS` 单一定义，标题、英文副题与说明同源；新增板块只改这一处，再建对应 `data/learning/<板块>/` 目录。
 
