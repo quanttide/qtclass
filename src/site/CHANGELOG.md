@@ -12,6 +12,7 @@
 - 学习板块（训练营 / 任务 / 价格）的标题、英文副题与说明合并为单一常量，页面不再各自硬编码
 - 站点外框（导航 + 页头）抽为 `src/components/Layout.tsx`；路由路径与链接地址集中到 `src/routes.ts`
 - markdown 表格渲染补 `<table>`、`<thead>`、`<tbody>` 包裹并补 `<th>` 样式——此前只输出裸 `<tr>`，表格样式一直未生效
+- 生产实习课程结构由 `src/models/courses.ts` 的硬编码常量改为 `data/courses/production-internship.json` 契约，装载在模型层
 
 ### Fixed
 

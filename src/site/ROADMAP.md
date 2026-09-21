@@ -7,14 +7,14 @@
 站点继续内嵌内容副本，还是构建期从上游取源。方向未定，以下三处改动均取决于此：
 
 - [ ] 内容同步脚本：从 `domains/quanttide-learn/data/profile/` 生成 `data/learning/`，取代手工复制
-- [ ] 课程章节与课时标题改为从 markdown 元数据生成，删除 `src/models/courses.ts:21-92` 的硬编码副本
+- [ ] 课程章节与课时标题改为从 markdown 元数据生成，取代 `data/courses/*.json` 契约
 - [ ] 文件定位去掉 `key.includes(...)` 字符串匹配，见 `src/models/learning.ts:101`、`src/pages/learning/ItemDetail.tsx:8,25`、`src/pages/courses/ProductionInternshipCourse.tsx:45`
 
 约束与影响：
 
 - CI 跨仓访问：`deploy-site.yml` 只有 `actions/checkout@v4`（单仓），构建期取源需改 workflow 并配跨仓权限
 - `prices/` 源在别域：职级档位表在 `quanttide-pay/data/profile/qtclass/spend/one-on-one-consultation.md`，代金券规则在 `voucher-pricing.json`，学习域无对应目录；同步脚本需决定是纳入支付域还是另择源
-- 章节归属无出处：`chapter → lesson` 映射只存在于 `models/courses.ts`，markdown 内没有章节信息
+- 章节归属无出处：`chapter → lesson` 映射只存在于 `data/courses/*.json`，markdown 内没有章节信息
 - lessons 生成源不全：8 个课时文件中仅 2 个可对应 `docs/tutorial/qtclass/`（文件名还不同），其余无出处
 
 达成标志：`data/learning/` 与 `data/lessons/` 的内容可由一条命令从上游重建，重建结果与仓库内副本一致。
