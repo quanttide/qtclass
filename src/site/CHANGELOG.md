@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 
+## [0.1.2-rc.1] - 2026-09-21
+
 ### Added
 
-- 测试：引入 Vitest（jsdom + Testing Library），覆盖路由渲染、markdown 渲染与 frontmatter 解析，24 例
+- 首页：量潮课堂介绍，内容源自 `quanttide-tech` 数据仓 `data/brochure/qtclass/`（新增 `data/home/index.md` 与 `src/models/home.ts`）
+- 课程页：课程体系从首页独立为 `src/pages/Course.tsx` 与 `/courses` 路由，导航「课程」指向该页
+- 测试：引入 Vitest（jsdom + Testing Library），覆盖路由渲染、markdown 渲染与 frontmatter 解析，25 例
 
 ### Changed
 
@@ -16,8 +20,6 @@
 - markdown 渲染输出经 `DOMPurify` 清洗后再注入
 - markdown 表格渲染补 `<table>`、`<thead>`、`<tbody>` 包裹并补 `<th>` 样式——此前只输出裸 `<tr>`，表格样式一直未生效
 - 首页课程卡片取消跳转，五门课统一为纯展示卡片
-- 课程体系移出首页：新增 `src/pages/Course.tsx` 与 `/courses` 路由，导航「课程」指向该页；首页暂以课程体系为首屏内容
-- 首页改为量潮课堂介绍（内容源自 `quanttide-tech` 数据仓 `data/brochure/qtclass/`），新增 `data/home/index.md` 与 `src/models/home.ts`
 - 站点图标改为 `public/favicon.svg`
 
 ### Fixed
