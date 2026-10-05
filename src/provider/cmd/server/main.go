@@ -37,10 +37,13 @@ func buildRouter(cfg *config.Config) *http.ServeMux {
 		playerHandler.PlayerData(w, r, r.PathValue("id"))
 	})
 
-	// 完成回写代理
-	mux.HandleFunc("POST /completions", completionProxy.ServeHTTP)
+	_ = completionProxy // 旧 Criterion 完成代理暂保留代码，路由已切新学习云 Completion 契约。
 
-	// 学习云代理（进度上报 / 立项）
+	// 学习云代理（Schedule / Task / Completion / Learner + 旧进度上报 / 立项）
+	for _, resource := range []string{"schedules", "tasks", "completions", "learners"} {
+		mux.HandleFunc("/"+resource, learnProxy.ServeHTTP)
+		mux.HandleFunc("/"+resource+"/{id}", learnProxy.ServeHTTP)
+	}
 	mux.HandleFunc("POST /progress", learnProxy.ServeHTTP)
 	mux.HandleFunc("POST /proposals", learnProxy.ServeHTTP)
 

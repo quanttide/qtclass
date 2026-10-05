@@ -2,6 +2,8 @@ package handler
 
 import (
 	"bytes"
+	"io"
+	"net/http"
 	"net/http/httptest"
 	"testing"
 
@@ -99,5 +101,59 @@ func TestCompletionProxy_MissingFields(t *testing.T) {
 	}
 	if len(cap.created) != 0 || len(cap.putStatusByID) != 0 {
 		t.Fatal("校验失败的请求不应触达学习云")
+	}
+}
+
+func TestLearnProxy_ForwardsNewLearningEndpoints(t *testing.T) {
+	var gotMethod, gotPath, gotAuth, gotBody string
+	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		gotMethod = r.Method
+		gotPath = r.URL.RequestURI()
+		gotAuth = r.Header.Get("Authorization")
+		raw, _ := io.ReadAll(r.Body)
+		gotBody = string(raw)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"ok":true}`))
+	}))
+	t.Cleanup(upstream.Close)
+
+	proxy := NewLearnProxy(upstream.URL)
+	proxy.HTTP = upstream.Client()
+	r := httptest.NewRequest("PUT", "/tasks/task-1?draft=1", bytes.NewReader([]byte(`{"title":"任务"}`)))
+	r.Header.Set("Authorization", "Bearer token-1")
+	r.Header.Set("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	proxy.ServeHTTP(w, r)
+
+	if w.Code != http.StatusOK || !bytes.Contains(w.Body.Bytes(), []byte(`"ok":true`)) {
+		t.Fatalf("status = %d; body = %s", w.Code, w.Body.String())
+	}
+	if gotMethod != "PUT" || gotPath != "/tasks/task-1?draft=1" {
+		t.Fatalf("upstream = %s %s", gotMethod, gotPath)
+	}
+	if gotAuth != "Bearer token-1" {
+		t.Fatalf("auth = %q", gotAuth)
+	}
+	if gotBody != `{"title":"任务"}` {
+		t.Fatalf("body = %s", gotBody)
+	}
+}
+
+func TestLearnProxy_PropagatesUpstream404(t *testing.T) {
+	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(`{"error":"missing"}`))
+	}))
+	t.Cleanup(upstream.Close)
+
+	proxy := NewLearnProxy(upstream.URL)
+	proxy.HTTP = upstream.Client()
+	w := httptest.NewRecorder()
+	proxy.ServeHTTP(w, httptest.NewRequest("GET", "/schedules/not-found", nil))
+
+	if w.Code != http.StatusNotFound || !bytes.Contains(w.Body.Bytes(), []byte(`"missing"`)) {
+		t.Fatalf("status = %d; body = %s", w.Code, w.Body.String())
 	}
 }

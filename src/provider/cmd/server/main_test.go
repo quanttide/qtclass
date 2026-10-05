@@ -29,6 +29,15 @@ func startMockUpstreams(t *testing.T) *httptest.Server {
 	})
 
 	learn := http.NewServeMux()
+	learn.HandleFunc("GET /schedules", func(w http.ResponseWriter, _ *http.Request) {
+		w.Write([]byte(`[{"id":"schedule-agent-engineer","title":"智能体工程师训练营","tasks":[]}]`))
+	})
+	learn.HandleFunc("GET /tasks", func(w http.ResponseWriter, _ *http.Request) {
+		w.Write([]byte(`[{"id":"task-data-second-brain","title":"熟悉数据工程第二大脑","description":"提交一条改进建议"}]`))
+	})
+	learn.HandleFunc("GET /learners", func(w http.ResponseWriter, _ *http.Request) {
+		w.Write([]byte(`[{"id":"lea-1","user_id":"user-1"}]`))
+	})
 	learn.HandleFunc("GET /completions", func(w http.ResponseWriter, _ *http.Request) {
 		w.Write([]byte(`[]`))
 	})
@@ -86,16 +95,24 @@ func TestRouter_EndToEnd(t *testing.T) {
 		}
 	}
 
-	// 完成回写（白名单内 criterion，透传认证创建）
-	w = do("POST", "/completions", `{"learner_id":"learner-001","criterion_id":"cri-1"}`)
-	if w.Code != 200 || !strings.Contains(w.Body.String(), `"id":"com-new"`) {
-		t.Fatalf("POST /completions: %d %s", w.Code, w.Body.String())
+	// 学习云新端点代理
+	w = do("GET", "/schedules", "")
+	if w.Code != 200 || !strings.Contains(w.Body.String(), `schedule-agent-engineer`) {
+		t.Fatalf("GET /schedules: %d %s", w.Code, w.Body.String())
+	}
+	w = do("GET", "/tasks", "")
+	if w.Code != 200 || !strings.Contains(w.Body.String(), `task-data-second-brain`) {
+		t.Fatalf("GET /tasks: %d %s", w.Code, w.Body.String())
+	}
+	w = do("GET", "/learners", "")
+	if w.Code != 200 || !strings.Contains(w.Body.String(), `"user_id":"user-1"`) {
+		t.Fatalf("GET /learners: %d %s", w.Code, w.Body.String())
 	}
 
-	// 白名单外引用被拒
-	w = do("POST", "/completions", `{"learner_id":"l-1","criterion_id":"not-defined"}`)
-	if w.Code != 400 {
-		t.Fatalf("unknown criterion status = %d", w.Code)
+	// 完成回写（新学习管理 Completion 契约：learner × task）
+	w = do("POST", "/completions", `{"learner_id":"learner-001","task_id":"task-data-second-brain","status":"completed"}`)
+	if w.Code != 200 || !strings.Contains(w.Body.String(), `"id":"com-new"`) {
+		t.Fatalf("POST /completions: %d %s", w.Code, w.Body.String())
 	}
 
 	// 进度上报代理（学习云上游收到并返回）
