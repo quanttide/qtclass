@@ -96,6 +96,19 @@ export interface LearningEntry extends LearningItem {
   content: string
 }
 
+interface LearnApiTask {
+  id: string
+  title: string
+  description: string
+}
+
+interface LearnApiSchedule {
+  id: string
+  title: string
+  description?: string
+  tasks: LearnApiTask[]
+}
+
 // 学习资料索引：路径一次解析为板块与 slug，不再按路径子串匹配
 export const learningEntries: LearningEntry[] = Object.entries(learningModules)
   .map(([path, content]): LearningEntry | null => {
@@ -112,15 +125,83 @@ export const learningEntries: LearningEntry[] = Object.entries(learningModules)
   .filter((entry): entry is LearningEntry => entry !== null)
   .sort((a, b) => a.section.localeCompare(b.section) || a.slug.localeCompare(b.slug))
 
+function apiBaseUrl(): string {
+  const env = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env
+  return (env?.VITE_QTCLOUD_LEARN_API_URL ?? 'https://learn.cloud.quanttide.com').replace(/\/$/, '')
+}
+
+function slugFromId(id: string, prefix: string): string {
+  return id.startsWith(prefix) ? id.slice(prefix.length) : id
+}
+
+function taskEntry(task: LearnApiTask): LearningEntry {
+  return {
+    section: 'tasks',
+    slug: slugFromId(task.id, 'task-'),
+    title: task.title,
+    description: task.description,
+    content: `# ${task.title}\n\n${task.description}`,
+  }
+}
+
+function scheduleEntry(schedule: LearnApiSchedule): LearningEntry {
+  const tasks = schedule.tasks
+    .map((task, index) => {
+      const slug = slugFromId(task.id, 'task-')
+      return `## Task ${index + 1}: ${task.title}\n\n${task.description}\n\n来源：tasks/${slug}.md`
+    })
+    .join('\n\n')
+  const description = schedule.description ?? ''
+  return {
+    section: 'schedules',
+    slug: slugFromId(schedule.id, 'schedule-'),
+    title: schedule.title,
+    description,
+    content: `# ${schedule.title}\n\n${description}${tasks ? `\n\n${tasks}` : ''}`,
+  }
+}
+
+export function learningEntriesFromApi(
+  schedules: LearnApiSchedule[],
+  tasks: LearnApiTask[],
+): LearningEntry[] {
+  const priceEntries = learningEntries.filter((entry) => entry.section === 'prices')
+  return [
+    ...schedules.map(scheduleEntry),
+    ...tasks.map(taskEntry),
+    ...priceEntries,
+  ].sort((a, b) => a.section.localeCompare(b.section) || a.slug.localeCompare(b.slug))
+}
+
+export async function loadLearningEntries(fetcher: typeof fetch = fetch): Promise<LearningEntry[]> {
+  const baseUrl = apiBaseUrl()
+  try {
+    const [schedulesResp, tasksResp] = await Promise.all([
+      fetcher(`${baseUrl}/schedules`),
+      fetcher(`${baseUrl}/tasks`),
+    ])
+    if (!schedulesResp.ok || !tasksResp.ok) return learningEntries
+    const schedules = (await schedulesResp.json()) as LearnApiSchedule[]
+    const tasks = (await tasksResp.json()) as LearnApiTask[]
+    return learningEntriesFromApi(schedules, tasks)
+  } catch {
+    return learningEntries
+  }
+}
+
 export function getLearningEntry(
   section: LearningSection,
   slug: string,
+  entries: LearningEntry[] = learningEntries,
 ): LearningEntry | undefined {
-  return learningEntries.find((entry) => entry.section === section && entry.slug === slug)
+  return entries.find((entry) => entry.section === section && entry.slug === slug)
 }
 
-export function itemsIn(dir: LearningSection): LearningItem[] {
-  return learningEntries
+export function itemsIn(
+  dir: LearningSection,
+  entries: LearningEntry[] = learningEntries,
+): LearningItem[] {
+  return entries
     .filter((entry) => entry.section === dir)
     .map(({ slug, title, description }) => ({ slug, title, description }))
     .sort((a, b) => a.title.localeCompare(b.title, 'zh'))

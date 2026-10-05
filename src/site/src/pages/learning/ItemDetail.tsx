@@ -1,20 +1,40 @@
 import { useParams, Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import Markdown from '../../components/Markdown'
-import { getLearningEntry, isLearningSection, sectionOf } from '../../models/learning'
+import {
+  getLearningEntry,
+  isLearningSection,
+  learningEntries,
+  loadLearningEntries,
+  sectionOf,
+  type LearningEntry,
+} from '../../models/learning'
 import { learnItemPath, ROUTE_PATHS } from '../../routes'
 
 // 训练营详情：把「来源：tasks/<slug>.md」转换为指向具体任务的链接
-function enrichTaskRefs(md: string): string {
+function enrichTaskRefs(md: string, entries: LearningEntry[]): string {
   return md.replace(/来源：tasks\/([\w-]+)\.md/g, (_match, slug) => {
-    const title = getLearningEntry('tasks', slug)?.title ?? slug
+    const title = getLearningEntry('tasks', slug, entries)?.title ?? slug
     return `来源：[${title}](${learnItemPath('tasks', slug)})`
   })
 }
 
 function ItemDetail() {
   const { type, slug } = useParams()
+  const [entries, setEntries] = useState<LearningEntry[]>(learningEntries)
+
+  useEffect(() => {
+    let alive = true
+    loadLearningEntries().then((next) => {
+      if (alive) setEntries(next)
+    })
+    return () => {
+      alive = false
+    }
+  }, [])
+
   const section = isLearningSection(type) ? sectionOf(type) : null
-  const entry = section && slug ? getLearningEntry(section.key, slug) : undefined
+  const entry = section && slug ? getLearningEntry(section.key, slug, entries) : undefined
 
   if (!section || !entry) {
     return (
@@ -46,7 +66,7 @@ function ItemDetail() {
 
         <div className="lesson-body">
           <Markdown>
-            {section.key === 'schedules' ? enrichTaskRefs(entry.content) : entry.content}
+            {section.key === 'schedules' ? enrichTaskRefs(entry.content, entries) : entry.content}
           </Markdown>
         </div>
       </article>

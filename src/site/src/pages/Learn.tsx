@@ -1,8 +1,21 @@
 import { Link } from 'react-router-dom'
-import { LEARNING_SECTIONS, itemsIn } from '../models/learning'
+import { useEffect, useState } from 'react'
+import { LEARNING_SECTIONS, itemsIn, learningEntries, loadLearningEntries, type LearningEntry } from '../models/learning'
 import { learnItemPath } from '../routes'
 
 function Learn() {
+  const [entries, setEntries] = useState<LearningEntry[]>(learningEntries)
+
+  useEffect(() => {
+    let alive = true
+    loadLearningEntries().then((next) => {
+      if (alive) setEntries(next)
+    })
+    return () => {
+      alive = false
+    }
+  }, [])
+
   return (
     <main>
       {LEARNING_SECTIONS.map((section) => (
@@ -16,7 +29,7 @@ function Learn() {
           </div>
 
           <div className="learnGrid">
-            {itemsIn(section.key).map((item) => (
+            {itemsIn(section.key, entries).map((item) => (
               <Link key={item.slug} to={learnItemPath(section.key, item.slug)} className="learnCard">
                 <div className="courseTop">
                   <h3>{item.title}</h3>
