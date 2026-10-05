@@ -3,6 +3,7 @@ import '../models/course.dart';
 import '../services/course_service.dart';
 import '../widgets/course/course_card.dart';
 import 'course_detail_screen.dart';
+import 'learning_screen.dart';
 
 /// 课程列表页 — 系统默认入口，五门课程的阶梯式导航
 ///
@@ -90,6 +91,17 @@ class CourseListScreen extends StatelessWidget {
                             fontSize: 14,
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
+                        ),
+                        const SizedBox(height: 24),
+                        FilledButton.icon(
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const LearningScreen(),
+                            ),
+                          ),
+                          icon: const Icon(Icons.route),
+                          label: const Text('进入学习'),
                         ),
                         const SizedBox(height: 24),
                         // 课程卡片网格

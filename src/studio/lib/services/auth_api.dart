@@ -32,6 +32,24 @@ class AuthApi {
     return value != null && value.isNotEmpty;
   }
 
+  static Future<String?> userId() async {
+    final value = await token();
+    if (value == null || value.isEmpty) return null;
+    final parts = value.split('.');
+    if (parts.length < 2) return value;
+    try {
+      final payload = utf8.decode(
+        base64Url.decode(base64Url.normalize(parts[1])),
+      );
+      final body = jsonDecode(payload) as Map<String, dynamic>;
+      return body['sub'] as String? ??
+          body['user_id'] as String? ??
+          body['userId'] as String?;
+    } on FormatException {
+      return value;
+    }
+  }
+
   static Future<void> saveToken(String value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(tokenKey, value);
