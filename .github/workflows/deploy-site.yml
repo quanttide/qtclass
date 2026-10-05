@@ -35,6 +35,8 @@ jobs:
 
       - name: Build
         working-directory: src/site
+        env:
+          VITE_QTCLOUD_LEARN_API_URL: https://api.quanttide.com/qtcloud-learn
         run: npm run build
 
       - name: Setup ossutil

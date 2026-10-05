@@ -127,7 +127,7 @@ export const learningEntries: LearningEntry[] = Object.entries(learningModules)
 
 function apiBaseUrl(): string {
   const env = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env
-  return (env?.VITE_QTCLOUD_LEARN_API_URL ?? 'https://learn.cloud.quanttide.com').replace(/\/$/, '')
+  return (env?.VITE_QTCLOUD_LEARN_API_URL ?? 'https://api.quanttide.com/qtcloud-learn').replace(/\/$/, '')
 }
 
 function slugFromId(id: string, prefix: string): string {
