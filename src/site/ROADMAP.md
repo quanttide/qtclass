@@ -6,6 +6,16 @@
 
 任何登录后的功能（我的课程、我的作业、我的成绩）不属于 site——学员的进 lite，教师的进 studio。site 的成功指标只有一个：看的人报不报名。
 
+## 内容分流（2026-11-01 决策）
+
+`data/learning/` 按三端边界拆分：
+
+- **具体任务书归 lite**：`data/learning/tasks/` 10 篇（connect-cli、data-intention、data-roadmap 等）是学员拿到手要做的交付物，随 lite v0.1 立项迁出，成为任务卡的首批载荷
+- **训练营留 site**：`schedules/`（智能体工程师、产品经理）与 `prices/` 是招生信息——岗位定位、培养结构、价格，都是门外受众要读的
+- 连带修正：训练营正文的「来源：tasks/xxx.md」指向随迁出改指 lite（或跨仓链接）
+
+迁出前 `data/learning/tasks/` 不再新增，新任务书直接写到 lite 侧。
+
 ## 需与人对齐的层
 
 以下事项跨出 `src/site` 边界（跨仓取源），先定方向再动手。可直接实施的细节见 [TODO.md](TODO.md)。

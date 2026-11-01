@@ -20,6 +20,7 @@
 - [ ] 任务卡首屏：今日任务、截止、提交入口
 - [ ] 反馈查看：教师评语、通过/退回状态
 - [ ] 登录：复用 studio 已接的 qtcloud-auth
+- [ ] 内容首迁：site `data/learning/tasks/` 10 篇任务书迁入本 scope，成为任务卡的首批载荷（分流决策见 [site ROADMAP](../site/ROADMAP.md)）
 
 明确不做：选课、课表浏览、课程目录、任何配置项。学员的主动查询需求先不满足，全部以推送形态出现。
 
@@ -37,6 +38,13 @@
 
 - 学员向的互动交付形态：studio `doc/screens/` 页面规格随迁出转入本 scope
 - 技术通道对齐 qtcloud lite（Taro 多端），不另行选型；发布链路复用 miniprogram-ci 模式
+
+### studio 组件处置（v0.2 迁出时执行）
+
+- **移动**：player 组（`widgets/stage/`、`services/player_state.dart`）与单元模型（`segment.dart`、`interaction.dart`、`choice_option.dart`）——反馈单元序列的载体
+- **复制**：`auth_api.dart`（同 qtcloud-auth 接口，两端各持一份）
+- **简化实现**：课程/首页展示组（`widgets/course/`、`widgets/home/`）——任务卡首屏不需要 studio 那套完整课程展示层级，按任务卡形状重写
+- **不迁不复制**：`learn_api.dart`、`progress_service.dart`、`learner_service.dart`——上游已断，随 provider 新契约重写
 
 ### 达成标志
 
