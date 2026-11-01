@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-qtclass 站点包（`apps/qtclass/src/site`）的文件规范与维护规范。项目介绍见 [README.md](./README.md)，待办与路标见 [TODO.md](./TODO.md)、[ROADMAP.md](docs/dev-guide/roadmap.md)。
+qtclass 站点包（`apps/qtclass/src/site`）的文件规范与维护规范。项目介绍见 [README.md](./README.md)，待办与路标见 [TODO.md](./TODO.md)、[ROADMAP.md](./ROADMAP.md)。
 
 ## 文件规范
 
