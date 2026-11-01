@@ -1,6 +1,6 @@
 # ROADMAP — qtclass
 
-量潮课堂的仓库路线总纲。各 scope 的细化路线见其根目录 `ROADMAP.md`，状态快照见 [STATUS.md](STATUS.md)。
+量潮课堂的仓库路线总纲。各 scope 的细化路线见其根目录 `ROADMAP.md`，状态快照见 [STATUS.md](STATUS.md)。商业化与付费形态（G/B/C 三端）归意图库 `data/intention/qtclass/business.md`，领域蓝图归 `data/roadmap/qtclass/`——本文件只管工程。
 
 ## 三端分工
 
