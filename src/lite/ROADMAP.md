@@ -29,7 +29,7 @@
 任务卡的载荷从"提交一个交付物"扩展到"走完一串反馈单元"。影游路线按此口径回收：它不是独立功能，是任务的一种货。
 
 - 单元四件套：小需求、学员动作（选/说/写）、判定、反馈——判定和反馈当场给，学员每做一小步被纠一次
-- 播放器与页面规格随 studio 迁出转入本 scope，成为单元序列的载体
+- lite 端播放器自建（Taro），不搬 studio 的 Flutter 代码——跨端共享的是数据契约与页面规格，不是代码；studio 侧保留预览能力，两端各持一份实现
 - AI 工位：学员自由作答的判定与反馈由 AI 承担（预制反馈覆盖不了的部分）；单元的作答与反馈数据同时是淘汰赛与教学改进的凭据
 - 数据归置：分解表（单元结构+反馈语）归课程云，学员单元轨迹归学习云，经 provider 的 criteria/completion 通道回写——每个单元挂一条 criterion，零新管道
 - 素材源：qtdata 复现的卡掉项目拆成反馈单元，是分解表的第一批原料
@@ -39,9 +39,10 @@
 - 学员向的互动交付形态：studio `doc/screens/` 页面规格随迁出转入本 scope
 - 技术通道对齐 qtcloud lite（Taro 多端），不另行选型；发布链路复用 miniprogram-ci 模式
 
-### studio 组件处置（v0.2 迁出时执行）
+### studio 组件处置（v0.2 时执行）
 
-- **移动**：player 组（`widgets/stage/`、`services/player_state.dart`）与单元模型（`segment.dart`、`interaction.dart`、`choice_option.dart`）——反馈单元序列的载体
+- **studio 保留**：player 组（`widgets/stage/`、`services/player_state.dart`）与单元模型（`segment.dart`、`interaction.dart`、`choice_option.dart`）——预览与课堂现场能力，升级不移除
+- **lite 自建**：按同一数据契约实现 Taro 播放器，页面规格 `doc/screens/` 为蓝本（代码不过端，契约过端）
 - **复制**：`auth_api.dart`（同 qtcloud-auth 接口，两端各持一份）
 - **简化实现**：课程/首页展示组（`widgets/course/`、`widgets/home/`）——任务卡首屏不需要 studio 那套完整课程展示层级，按任务卡形状重写
 - **不迁不复制**：`learn_api.dart`、`progress_service.dart`、`learner_service.dart`——上游已断，随 provider 新契约重写
