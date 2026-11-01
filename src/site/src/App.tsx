@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Course from './pages/Course'
-import Learn from './pages/Learn'
+import Prices from './pages/Prices'
 import ItemDetail from './pages/learning/ItemDetail'
 import Layout from './components/Layout'
 import { ROUTE_PATHS } from './routes'
@@ -13,8 +13,8 @@ export function AppRoutes() {
     <Routes>
       <Route path={ROUTE_PATHS.home} element={<Home />} />
       <Route path={ROUTE_PATHS.course} element={<Course />} />
-      <Route path={ROUTE_PATHS.learn} element={<Learn />} />
-      <Route path={ROUTE_PATHS.learnItem} element={<ItemDetail />} />
+      <Route path={ROUTE_PATHS.prices} element={<Prices />} />
+      <Route path={ROUTE_PATHS.scheduleItem} element={<ItemDetail />} />
     </Routes>
   )
 }

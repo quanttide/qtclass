@@ -13,8 +13,8 @@ function Layout({ children }: { children: ReactNode }) {
             <NavLink to={ROUTE_PATHS.course} className={({ isActive }) => (isActive ? 'active' : '')}>
               课程
             </NavLink>
-            <NavLink to={ROUTE_PATHS.learn} className={({ isActive }) => (isActive ? 'active' : '')}>
-              学习
+            <NavLink to={ROUTE_PATHS.prices} className={({ isActive }) => (isActive ? 'active' : '')}>
+              价格
             </NavLink>
           </div>
         </div>
@@ -22,7 +22,7 @@ function Layout({ children }: { children: ReactNode }) {
 
       <header className="hero">
         <h1>量潮课堂</h1>
-        <p>课程体系展示 · 学习资料区框架</p>
+        <p>课程体系展示 · 价格与合作方式</p>
       </header>
 
       <div className="content">{children}</div>

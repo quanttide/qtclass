@@ -4,8 +4,8 @@
 
 ## 功能
 
-- 课程体系展示
-- 学习资料（训练营 / 任务 / 价格）展示与详情
+- 课程体系展示，一级分类理论课 / 实践课；实践课并入训练营，训练营详情页独立
+- 价格页：按付费对象分三档（G 校企合作 / B 企业 / C 个人），C 档明细内联
 
 ## 开发
 
@@ -39,7 +39,7 @@ npm run preview
 ```
 data/                    # 内容数据（置于 src 之外）
 ├── home/                # 首页介绍（源自 quanttide-tech 数据仓 brochure）
-└── learning/            # 学习资料：训练营（schedules）、任务（tasks）、价格（prices）
+└── learning/            # 内容数据：训练营（schedules）、任务（tasks，待迁 lite）、价格（prices）
 src/
 ├── App.tsx              # 路由装配
 ├── routes.ts            # 路由路径与链接地址
@@ -53,10 +53,10 @@ src/
 │   └── learning.ts      # 学习资料扫描、元数据解析、板块定义
 ├── pages/
 │   ├── Home.tsx         # 首页
-│   ├── Course.tsx       # 课程页（课程体系）
-│   ├── Learn.tsx        # 学习页
+│   ├── Course.tsx       # 课程页（理论课 / 实践课）
+│   ├── Prices.tsx       # 价格页（三档 + C 档明细）
 │   └── learning/
-│       └── ItemDetail.tsx  # 学习资料详情
+│       └── ItemDetail.tsx  # 训练营详情（/schedules/:slug）
 └── utils/
     └── frontmatter.ts   # 元数据解析与剥离
 ```

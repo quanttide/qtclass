@@ -6,7 +6,7 @@ import {
   itemsIn,
   type LearningEntry,
 } from '../models/learning'
-import { learnItemPath } from '../routes'
+import { scheduleItemPath } from '../routes'
 
 const courses = [
   {
@@ -123,7 +123,7 @@ function Course() {
             </div>
           ))}
           {schedules.map((item) => (
-            <Link key={item.slug} to={learnItemPath('schedules', item.slug)} className="learnCard">
+            <Link key={item.slug} to={scheduleItemPath(item.slug)} className="learnCard">
               <div className="courseTop">
                 <h3>{item.title}</h3>
                 <span>训练营</span>

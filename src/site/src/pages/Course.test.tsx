@@ -29,7 +29,7 @@ describe('课程页两级分类', () => {
     render(<App />)
     const practice = screen.getByRole('heading', { name: '实践课' }).closest('section') as HTMLElement
     const link = within(practice).getByRole('link', { name: /智能体工程师训练营/ })
-    expect(link).toHaveAttribute('href', '/learn/schedules/agent-engineer')
+    expect(link).toHaveAttribute('href', '/schedules/agent-engineer')
   })
 })
 

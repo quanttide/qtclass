@@ -9,10 +9,9 @@ describe('页面渲染冒烟', () => {
     { path: '/', text: '课程体系' },
     { path: '/courses', text: '理论课' },
     { path: '/courses', text: '实践课' },
-    { path: '/learn', text: '按学习路径推进的训练计划。' },
-    { path: '/learn/schedules/agent-engineer', text: '智能体工程师训练营' },
-    { path: '/learn/tasks/data-roadmap', text: '更新数据工程路线图' },
-    { path: '/learn/prices/consultation', text: '一对一咨询定价' },
+    { path: '/prices', text: 'G 端 · 校企合作' },
+    { path: '/prices', text: '一对一咨询定价' },
+    { path: '/schedules/agent-engineer', text: '智能体工程师训练营' },
   ]
 
   for (const { path, text } of routes) {
@@ -23,14 +22,14 @@ describe('页面渲染冒烟', () => {
     })
   }
 
-  it('未知板块渲染未找到', () => {
-    window.history.pushState({}, '', '/learn/unknown/whatever')
+  it('未知训练营渲染未找到', () => {
+    window.history.pushState({}, '', '/schedules/no-such-such')
     render(<App />)
     expect(screen.getByText('内容未找到')).toBeInTheDocument()
   })
 
-  it('首页与学习详情不渲染元数据', () => {
-    for (const path of ['/', '/learn/schedules/agent-engineer']) {
+  it('首页与训练营详情不渲染元数据', () => {
+    for (const path of ['/', '/schedules/agent-engineer']) {
       window.history.pushState({}, '', path)
       render(<App />)
       expect(screen.queryByText(/^title:/), path).toBeNull()
