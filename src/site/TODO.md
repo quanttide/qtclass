@@ -30,6 +30,8 @@
 
 ## 验收
 
+（流程与分工见 [CONTRIBUTING.md](CONTRIBUTING.md) 验收节；以下为本任务的检查项）
+
 1. `npm run build`、`npm run lint`、`npm test` 三绿（新逻辑必须带测试）
 2. `/courses`：两级分类正确，实践课 = 生产实习 + 2 个训练营，训练营卡片可跳详情
 3. `/learn`：prices 区三档在上、C 档下两篇原页可达；schedules、tasks 板块原样

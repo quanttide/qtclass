@@ -94,6 +94,15 @@ git push
 
 禁止在父仓库直接修改本包文件。
 
+### 验收
+
+一个改动从交回到上线走四步，每步把一道关：
+
+1. **交回前三绿**（交付方）：`npm run build && npm run lint && npm test`。仓库没有 PR CI，这三条不自动跑，交回前必须本地全绿。
+2. **审 diff 对单**（审方，AI 或维护者）：对照 `TODO.md` 清单逐条核，重点两条——`git diff --stat` 不得出现 `data/learning/` 与 `tasks/`（上游副本与待迁内容），新逻辑必须带测试；同时本地实跑三绿。
+3. **本地预览走查**（需求方，merge 前）：交付方起 `npm run dev`，需求方对着 `TODO.md` 验收清单逐条过页面。没过不 merge，改完重来第 1、2 步。
+4. **merge → 切 tag → 线上复核**：merge main 不部署（部署由 `site/*` tag 触发，见下节）；打标签部署后开 `class.quanttide.com` 复核页面正常、入口 URL 返回 200，确认 CDN 入口页已是新版。
+
 ### 版本与发布
 
 版本记在 `src/site/CHANGELOG.md`，未发布的变更写进 `## [Unreleased]` 段。发布时把该段定版为 `## [X.Y.Z] - YYYY-MM-DD`，同步 `package.json` 的 `version`，打 `site/vX.Y.Z` 标签推送。标签触发 `.github/workflows/deploy-site.yml`：构建后上传 OSS 桶 `qtclass-site`，刷新 CDN `class.quanttide.com`。仓库根 `CHANGELOG.md` 只记仓库级大变更，不写本包细节。
