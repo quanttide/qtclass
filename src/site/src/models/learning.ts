@@ -83,6 +83,28 @@ export const LEARNING_SECTIONS = [
 
 export type LearningSection = (typeof LEARNING_SECTIONS)[number]['key']
 
+// 价格三档：定价跟付费对象与商业模式走，不跟课程走。G/B 档为询价入口不标价格，C 档明细见 prices 板块
+export const PRICES_TRACKS = [
+  {
+    key: 'g',
+    label: 'G 端 · 校企合作',
+    summary: '为高校定制完整课程方案——课程体系、讲义实验、授课与考核，教学与教研按合同合作。',
+    action: '经量潮课堂联系洽谈',
+  },
+  {
+    key: 'b',
+    label: 'B 端 · 企业培训与人才交付',
+    summary: '以真实业务任务为教材的团队培训，人才交付附任务轨迹与淘汰赛结果。',
+    action: '报价洽谈',
+  },
+  {
+    key: 'c',
+    label: 'C 端 · 个人学习',
+    summary: '课时包与一对一咨询，群内提问免费；完成任务可得代金券。',
+    action: '明细见下方列表',
+  },
+] as const
+
 export function isLearningSection(value: unknown): value is LearningSection {
   return LEARNING_SECTIONS.some((section) => section.key === value)
 }
