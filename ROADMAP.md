@@ -1,27 +1,26 @@
 # ROADMAP — qtclass
 
-量潮课堂的仓库路线总纲。各 scope 的细化路线见其根目录 `ROADMAP.md`，状态快照见 [STATUS.md](STATUS.md)。商业化与付费形态（G/B/C 三端）归意图库 `data/intention/qtclass/business.md`，领域蓝图归 `data/roadmap/qtclass/`——本文件只管工程。
+量潮课堂的仓库路线总纲，只记工程待办；状态快照见 [STATUS.md](STATUS.md)。商业化与付费归意图库 `data/intention/qtclass/business.md`，领域蓝图归 `data/roadmap/qtclass/`——本文件只管工程。
 
-## 三端分工
+## 分工
 
-| 端 | 角色 | 一句话 |
+| 端 | 角色 | 下一步 |
 |----|------|--------|
-| [Site](src/site/ROADMAP.md) | 招生门面 | 只做门外的事：课程体系、价格、报名；登录后功能一律不进 |
-| [Studio](src/studio/ROADMAP.md) | 教学现场 | 服务方与客户的操作端：教师派任务/批改/合稿/排课，学校/企业/付费个人看进度、课时、教研交付（客户面 v0.2 极简只读）；功能可以重、可以复杂 |
-| [Lite](src/lite/ROADMAP.md) | 学员节拍器 | 学员的被动端（WorkBuddy 模式）：首屏就是任务卡，无选择、无导航、无配置 |
-| [Provider](src/provider/ROADMAP.md) | 集成层 | 下服三端；上游暂为仓内自持（脱钩课程云/学习云，客户端契约不变留回归缝） |
-| [CLI](src/cli/ROADMAP.md) | 骨架 | 命令面未定，有真实命令再长 |
+| [Site](src/site/ROADMAP.md) | 招生门面：课程体系、价格、报名；登录后功能不进 | 实践课改版 + 价格页按对象分档 |
+| [Studio](src/studio/ROADMAP.md) | 教学与客户面：教师派任务批改，客户看交付 | v0.2：派任务 → 批改闭环 |
+| [Lite](src/lite/ROADMAP.md) | 学员任务系统：首屏任务卡，被动端 | 待 studio / provider v0.2 就绪后立项 |
+| [Provider](src/provider/ROADMAP.md) | 数据面：仓内自持，契约不变留回归缝 | v0.2：任务链路 |
+| [CLI](src/cli/ROADMAP.md) | 骨架 | 无规划，有真实命令再长 |
 
-**边界规则**：凡「我」字开头的功能（我的成绩、我的订单、我的班级）按角色分流——学员的进 Lite，教师与客户的进 Studio（我的任务/反馈→Lite；我的方案/课时/交付→Studio，付费个人跨两端），公开的进 Site，找不到主的不做。
+边界规则：「我」字开头的功能按角色分流——学员的进 Lite，教师与客户的进 Studio（我的任务 / 反馈 → Lite；我的方案 / 课时 / 交付 → Studio，付费个人跨两端），公开的进 Site，找不到主的不做。
 
-## 优先级
+优先级：**Studio 先于 Lite**——Studio 不派任务，Lite 首屏就是空的。
 
-1. **Studio 先于 Lite**：Studio 不派任务，Lite 首屏就是空的。教学流程先在 Studio 跑通，Lite 只是把已有任务呈现出来的壳，壳晚一步不伤筋骨。
-2. Lite 首版范围收窄：任务卡首屏、提交、反馈查看；不让学员选择"做什么"、不做配置——被动指派，主动判断：单元内的选择属任务动作（见方向变更记录补充），不属导航自由度。
+## 下一步待办
 
-## 方向变更记录
-
-- 2026-11-01：Studio 原「从教学管理工具到互动影游式课程引擎」的转型路线废止，学员向的互动交付体验归 Lite。播放器**降级**：编排架构废弃，任务流预览与题面媒体嵌入件保留；学员登录、学习入口冻结不加新，Lite v0.1 落地后再定去留；页面规格（`src/studio/doc/screens/`）是 Lite 任务页面蓝本。
-- 2026-11-01（补充）：影游按**反馈教学**口径回收——本体是任务循环（小需求、学员动作、判定、反馈），不是媒体播放。播放器退场，残余并入任务词汇：单元序列→任务列表（有序、过门槛），状态机→任务状态，视频场景→题面可嵌素材；Studio 留任务流预览与题面媒体嵌入件，Lite 建任务系统不建播放器；分解表即课程=任务序列，仓内自持。
-- 2026-11-01（补充）：量潮课堂暂时取消对课程云 / 学习云的依赖，上游改仓内自持（内容进仓、账本自带存储、任务模型仓内定义）；客户端契约不变，回归条件与回灌纪律见 [provider](src/provider/ROADMAP.md)。
-- 2026-11-01（补充）：site 的具体任务书（`data/learning/tasks/` 10 篇）归 lite，成为任务卡首批载荷；训练营与价格留 site。studio 组件处置清单（废/保留嵌入件/自建/复制/简化实现）见 [lite](src/lite/ROADMAP.md)。
+- [ ] **Studio v0.2 教学闭环**：派任务 / 批改、任务流预览、客户面只读、修订回环合稿、学员侧收敛（清单见 [studio](src/studio/ROADMAP.md)）
+- [ ] **Provider v0.2 任务链路**：下发 / 提交 / 回写、任务书与实例分离、仓内自持三线（清单见 [provider](src/provider/ROADMAP.md)）
+- [ ] **Site 实践课改版**：训练营并入课程列表、价格页 G/B/C 分档、价目源同步（清单见 [site](src/site/ROADMAP.md)）
+- [ ] **Lite 立项**：前置 studio / provider v0.2，就绪前不立项（清单见 [lite](src/lite/ROADMAP.md)）
+- [ ] **Studio v0.3 淘汰赛**：班级进度视图、淘汰流程
+- CLI：无待办
