@@ -3,13 +3,12 @@ import { learningEntries, getLearningEntry, itemsIn, learningEntriesFromApi } fr
 
 describe('学习资料索引', () => {
   it('按板块与 slug 取到条目', () => {
-    expect(getLearningEntry('tasks', 'data-roadmap')?.title).toBe('更新数据工程路线图')
     expect(getLearningEntry('schedules', 'agent-engineer')?.title).toBe('智能体工程师训练营')
     expect(getLearningEntry('prices', 'consultation')?.title).toBe('一对一咨询定价')
   })
 
   it('未知 slug 返回 undefined', () => {
-    expect(getLearningEntry('tasks', 'no-such-task')).toBeUndefined()
+    expect(getLearningEntry('schedules', 'no-such-task')).toBeUndefined()
   })
 
   it('每条索引都归属自己的板块列表', () => {

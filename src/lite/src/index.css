@@ -1,0 +1,128 @@
+:root {
+  --ink: #1f2328;
+  --ink-soft: #59636e;
+  --line: #d8dee4;
+  --bg: #f6f8fa;
+  --card: #ffffff;
+  --accent: #0969da;
+  --green: #1a7f37;
+  --red: #cf222e;
+  --amber: #9a6700;
+  font-family: system-ui, -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+h2 {
+  font-size: 1.2rem;
+}
+
+h3 {
+  font-size: 1.05rem;
+}
+
+p {
+  line-height: 1.7;
+}
+
+/* markdown 正文 */
+.taskBody,
+.taskMaterial {
+  line-height: 1.75;
+  font-size: 0.98rem;
+}
+
+.taskBody h1 {
+  font-size: 1.35rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.4rem;
+}
+
+.taskBody h2 {
+  font-size: 1.1rem;
+  margin-top: 1.6rem;
+}
+
+.taskBody h3 {
+  font-size: 1rem;
+  margin-top: 1.3rem;
+}
+
+.taskBody ul,
+.taskBody ol {
+  padding-left: 1.4rem;
+}
+
+.taskBody li {
+  margin: 0.3rem 0;
+}
+
+.taskBody code {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.05rem 0.35rem;
+  font-size: 0.9em;
+}
+
+.taskBody pre {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.9rem;
+  overflow-x: auto;
+}
+
+.taskBody pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.taskBody table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.8rem 0;
+}
+
+.taskBody th,
+.taskBody td {
+  border: 1px solid var(--line);
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+}
+
+.taskBody th {
+  background: var(--bg);
+}
+
+.taskBody blockquote {
+  margin: 0.8rem 0;
+  padding: 0.2rem 0.9rem;
+  border-left: 3px solid var(--line);
+  color: var(--ink-soft);
+}
+
+.taskBody hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 1.4rem 0;
+}
