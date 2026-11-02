@@ -6,10 +6,9 @@ import App from './App'
 // 冒烟测试：每个路由必须渲染出内容。白屏（坏 import、渲染期崩溃、内容定位失败）会在这里失败。
 describe('页面渲染冒烟', () => {
   const routes = [
-    { path: '/', text: '课程体系' },
+    { path: '/', text: '大数据导论' },
     { path: '/courses', text: '大数据导论' },
     { path: '/prices', text: 'G 端 · 校企合作' },
-    { path: '/prices', text: '一对一咨询定价' },
     { path: '/schedules/agent-engineer', text: '智能体工程师训练营' },
   ]
 

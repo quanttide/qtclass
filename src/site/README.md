@@ -4,8 +4,9 @@
 
 ## 功能
 
+- 无首页：`/` 重定向到 `/courses`
 - 课程体系展示：单一课程列表，不区分理论 / 实践；训练营不在课程页，详情页 `/schedules/:slug` 保留深链可达
-- 价格页：按付费对象分三档（G 校企合作 / B 企业 / C 个人），C 档明细内联
+- 价格页：只展示三种服务模式（G 校企合作 / B 企业 / C 个人），不标价格、无明细内容
 
 ## 开发
 
@@ -38,10 +39,10 @@ npm run preview
 
 ```
 data/                    # 内容数据（置于 src 之外）
-├── home/                # 首页介绍（源自 quanttide-tech 数据仓 brochure）
+├── home/                # 首页介绍副本（源自 brochure；首页已下线，不再渲染）
 └── learning/            # 内容数据：训练营（schedules）、任务（tasks，待迁 lite）、价格（prices）
 src/
-├── App.tsx              # 路由装配
+├── App.tsx              # 路由装配（/ 重定向 /courses）
 ├── routes.ts            # 路由路径与链接地址
 ├── main.tsx             # 入口文件
 ├── App.css / index.css  # 样式
@@ -49,12 +50,10 @@ src/
 │   ├── Layout.tsx       # 站点外框（导航 + 页头 + 内容区）
 │   └── Markdown.tsx     # markdown 渲染（react-markdown + remark-gfm）
 ├── models/              # 数据结构与装载
-│   ├── home.ts          # 首页内容装载
 │   └── learning.ts      # 学习资料扫描、元数据解析、板块定义
 ├── pages/
-│   ├── Home.tsx         # 首页
 │   ├── Course.tsx       # 课程页（课程列表）
-│   ├── Prices.tsx       # 价格页（三档 + C 档明细）
+│   ├── Prices.tsx       # 价格页（三档服务模式）
 │   └── learning/
 │       └── ItemDetail.tsx  # 训练营详情（/schedules/:slug）
 └── utils/
