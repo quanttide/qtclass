@@ -50,9 +50,16 @@ export const taskbooks: Taskbook[] = Object.entries(taskbookModules)
     const slug = slugOf(path)
     if (!slug) return null
     const fm = parseFrontmatter(raw)
+    // 标题取 frontmatter，缺则取正文首个一级标题，再回退 slug
+    const h1 = raw
+      .replace(/\r\n/g, '\n')
+      .split('\n')
+      .find((line) => line.startsWith('# '))
+      ?.slice(2)
+      .trim()
     return {
       slug,
-      title: fm?.title ?? slug,
+      title: fm?.title || h1 || slug,
       content: stripFrontmatter(raw),
     }
   })
@@ -63,35 +70,28 @@ export function getTaskbook(slug: string): Taskbook | undefined {
   return taskbooks.find((item) => item.slug === slug)
 }
 
-// 静态任务数据：provider 未就绪期间的载荷。首任务 = 任务书修订（入场即教研）
-export const CURRENT_TASK: Task = {
-  slug: 'revise-docs-bylaw',
-  title: '修订任务书：文档工程章程',
-  description: '读一篇任务书，标出不清楚的地方，提交修订建议。',
-  status: 'todo',
-  deadline: '本周内',
-  prompt: `# 修订任务书：文档工程章程
+// 静态任务数据：provider 未就绪期间的载荷。当前任务 = 小说发行与游戏两个工作室任务（源 academy intention 任务书，与公众号同源）
+export const CURRENT_TASKS: Task[] = [
+  {
+    slug: 'quanttide-fiction-of-founder',
+    title: '小说发行工作室任务',
+    description: '在晋江完成一次完整发行动作，并在小红书发布一条面向读者的推广内容。',
+    status: 'todo',
+    deadline: '见任务书',
+    prompt: `你被指派到小说发行工作室。任务书全文见下方题面素材，按其中的交付、约束与验收标准执行。
 
-你要修订的任务书《文档工程章程》全文见下方题面。
+提交通道将在 provider v0.2 接通后开放，当前只读。`,
+    taskbookSlug: 'quanttide-fiction-of-founder',
+  },
+  {
+    slug: 'qtgame-tycoon',
+    title: '模拟经营游戏工作室任务',
+    description: '摆摊经营类 H5 小游戏：在 4399 平台发布，并为玩家制作一份游戏宣传册。',
+    status: 'todo',
+    deadline: '见任务书',
+    prompt: `你被指派到模拟经营游戏工作室。任务书全文见下方题面素材，按其中的交付、约束与验收标准执行。
 
-## 怎么做
-
-1. 通读任务书全文
-2. 标出读不懂、有歧义、或明显过时的地方
-3. 写下你的修订建议：改哪句、改成什么、为什么
-
-## 为什么
-
-任务书是我们把工作交代给新人的方式。你读不懂的地方，下一个人也读不懂——修订任务书就是教研。
-
-提交通道将在 provider v0.2 接通后开放，当前不收集任何提交。`,
-  taskbookSlug: 'docs-bylaw',
-}
-
-// 反馈（静态）：provider 接通后由真实回写替换
-export const CURRENT_FEEDBACK = {
-  taskTitle: CURRENT_TASK.title,
-  status: CURRENT_TASK.status,
-  comment: '',
-  grader: '',
-}
+提交通道将在 provider v0.2 接通后开放，当前只读。`,
+    taskbookSlug: 'qtgame-tycoon',
+  },
+]

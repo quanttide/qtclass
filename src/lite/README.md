@@ -17,9 +17,9 @@ npm test
 ## 结构
 
 ```
-data/tasks/            # 任务书内容库（源自 site，迁出后不再回流）
+data/tasks/            # 任务书内容库（源自 site 迁出 + academy intention 任务书，与公众号同源）
 src/
-├── models/task.ts     # 任务契约（Task 形状 + 五状态机）与静态数据
+├── models/task.ts     # 任务契约（Task 形状 + 五状态机）与当前任务（小说 / 游戏两个工作室）
 ├── pages/             # 三页：Today（今日任务卡）/ TaskDetail（题面 + 题面素材）/ Feedback（评语与状态）
 ├── components/        # Markdown 渲染（GFM）
 └── utils/             # frontmatter 解析与剥离

@@ -1,12 +1,12 @@
 import { Link, useParams } from 'react-router-dom'
 import Markdown from '../components/Markdown'
-import { CURRENT_TASK, getTaskbook, statusLabel } from '../models/task'
+import { CURRENT_TASKS, getTaskbook, statusLabel } from '../models/task'
 import { ROUTE_PATHS } from '../routes'
 
 // 任务详情：题面（说明 + 指派任务书正文）。提交通道未接通，只读
 function TaskDetail() {
   const { slug } = useParams()
-  const task = slug === CURRENT_TASK.slug ? CURRENT_TASK : null
+  const task = CURRENT_TASKS.find((item) => item.slug === slug) ?? null
 
   if (!task) {
     return (
