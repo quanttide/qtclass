@@ -1,18 +1,7 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import {
-  loadLearningEntries,
-  learningEntries,
-  itemsIn,
-  type LearningEntry,
-} from '../models/learning'
-import { scheduleItemPath } from '../routes'
-
 const courses = [
   {
     name: '知识工作',
     level: '入门',
-    track: 'theory' as const,
     audience: '新同学、实习生、业务协作成员',
     summary: '建立文档、信息收集、结构化表达和复盘的基本工作习惯。',
     modules: ['文档即资产', '信息收集与整理', '知识输出'],
@@ -20,7 +9,6 @@ const courses = [
   {
     name: '氛围编程',
     level: '入门',
-    track: 'theory' as const,
     audience: '需要用 AI 提升研发和自动化效率的成员',
     summary: '从开发环境搭建到 API Key、编辑器 Agent 配置，完成可运行的 AI 编程闭环。',
     modules: ['开发环境搭建', '工具配置', '任务拆解'],
@@ -28,7 +16,6 @@ const courses = [
   {
     name: '大数据导论',
     level: '进阶',
-    track: 'theory' as const,
     audience: '数据岗位入门、业务分析协作成员',
     summary: '理解数据采集、治理、分析和应用的基本链路。',
     modules: ['数据资产', '分析流程', '业务指标'],
@@ -36,7 +23,6 @@ const courses = [
   {
     name: '数据工程',
     level: '高阶',
-    track: 'theory' as const,
     audience: '数据工程、平台建设和交付实施成员',
     summary: '面向真实项目的数据建模、管道、质量和交付规范。',
     modules: ['数据建模', '工程管道', '质量与运维'],
@@ -44,7 +30,6 @@ const courses = [
   {
     name: '生产实习',
     level: '实训',
-    track: 'practice' as const,
     audience: '公司内部培训、实训基地学员',
     summary: '以微型创业和真实交付为牵引，完成学习、Demo、进度和立项闭环。',
     modules: ['理解业务', '识别机会', '验证 Demo', '提交立项'],
@@ -69,67 +54,23 @@ function renderCard(course: (typeof courses)[number]) {
   )
 }
 
-// 课程页：课程体系展示，一级分类理论课 / 实践课；训练营并入实践课（详情在 /learn/schedules）
+// 课程页：课程列表。所有课程都是实践课，不区分理论 / 实践，训练营不在本页
 function Course() {
-  const [entries, setEntries] = useState<LearningEntry[]>(learningEntries)
-
-  useEffect(() => {
-    let alive = true
-    loadLearningEntries().then((next) => {
-      if (alive) setEntries(next)
-    })
-    return () => {
-      alive = false
-    }
-  }, [])
-
-  const theoryCourses = courses.filter((course) => course.track === 'theory')
-  const practiceCourses = courses.filter((course) => course.track === 'practice')
-  const schedules = itemsIn('schedules', entries)
-
   return (
     <main>
-      <section className="courseSection" aria-labelledby="theory-title">
+      <section className="courseSection" aria-labelledby="courses-title">
         <div className="sectionHead">
           <div>
-            <p>Theory</p>
-            <h2 id="theory-title">理论课</h2>
+            <p>Courses</p>
+            <h2 id="courses-title">课程</h2>
           </div>
-          <p className="sectionDesc">以微专业与班级为单位的体系课程。</p>
         </div>
 
         <div className="learnGrid">
-          {theoryCourses.map((course) => (
+          {courses.map((course) => (
             <div key={course.name} className="learnCard">
               {renderCard(course)}
             </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="courseSection" aria-labelledby="practice-title">
-        <div className="sectionHead">
-          <div>
-            <p>Practice</p>
-            <h2 id="practice-title">实践课</h2>
-          </div>
-          <p className="sectionDesc">以实训基地与训练营为单位，在做中学。</p>
-        </div>
-
-        <div className="learnGrid">
-          {practiceCourses.map((course) => (
-            <div key={course.name} className="learnCard">
-              {renderCard(course)}
-            </div>
-          ))}
-          {schedules.map((item) => (
-            <Link key={item.slug} to={scheduleItemPath(item.slug)} className="learnCard">
-              <div className="courseTop">
-                <h3>{item.title}</h3>
-                <span>训练营</span>
-              </div>
-              {item.description && <p className="summary">{item.description}</p>}
-            </Link>
           ))}
         </div>
       </section>
