@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- 创作空间三模型独立实现：Assignment（题目）/ Solution（参考答案）/ SolutionStep（步骤单元，`after` 边组 DAG）——三字段孪生 id/title/content，单元自足（判断标准与注解进 content）；toolkit 暂不引入，稳定后固定回 `dart/course`；模型与 DAG 测试随附（全量 81 测）
 - 学员端新增「学习」入口，展示学习云训练营、任务与完成状态，并支持登录后标记任务完成。
 
 ### Changed

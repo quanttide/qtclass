@@ -20,9 +20,9 @@ studio v0.1 的资产不是页面，是**互动引擎**——节点带交互与�
 
 ### 教学创作空间（源自洞察仓 studio.md，新思路优先）
 
-- [ ] Assignment（大作业）：数据契约三字段——`id`（uuid）/ `title` / `content`；content 当前装 Markdown 长文本（任务书全文），未来拓展视频等格式；类落 `quanttide-tech-toolkit` 的 `dart/course`，studio 引包接入
-- [ ] Solution（参考答案）：三字段孪生，content 装范例交付与正反例对照；定框参考答案非标准答案，可选、一作业一档；类已落 toolkit 同仓
-- [ ] SolutionStep（步骤单元）：一层不嵌套，三字段 + `after`（前置边）组 DAG——投影即 lite 过门槛；判断标准、检查点、"为什么这么安排"全进 content，单元自足。模型已落 toolkit 同仓
+- [ ] Assignment（大作业）：数据契约三字段——`id`（uuid）/ `title` / `content`；content 当前装 Markdown 长文本（任务书全文），未来拓展视频等格式；**独立实现于 `lib/models/`**——toolkit 暂不引入，迭代稳定后固定回 `quanttide-tech-toolkit` 的 `dart/course`
+- [ ] Solution（参考答案）：三字段孪生，content 装范例交付与正反例对照；定框参考答案非标准答案，可选、一作业一档；独立实现于 `lib/models/`（同上口径）
+- [ ] SolutionStep（步骤单元）：一层不嵌套，三字段 + `after`（前置边）组 DAG——投影即 lite 过门槛；判断标准、检查点、"为什么这么安排"全进 content，单元自足。独立实现于 `lib/models/`（同上口径）
 - [ ] 脚手架库：前置思考题、常见坑点、反思触发器——教学经验固化为可复用组件（示例反例位由 Solution 承接）
 - [ ] 修订回环（任务书生产线）：首任务 = 任务书修订，AI 预筛 diff，教师合稿回灌仓内任务书、按修订重排任务序列——教研嵌在任务流里，不设独立仪式
 
