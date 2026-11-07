@@ -2,11 +2,13 @@
 
 教学设计工作台，**单用户**：你作为老师设计教学方案——题目与参考答案、步骤单元（DAG）、脚手架沉淀、任务书生产线。无学员面、无客户面：学员的一切在 lite。
 
-现状：Flutter，v0.1.9 已发布（`studio.class.quanttide.com`）。
+**v0.1 里的角色 = 模板侧模型的主战场**：契约里「模板」那一半的雏形就是本仓的三件模型——Assignment 题目、Solution 参考答案、SolutionStep 步骤单元；创作空间与修订回环继续往契约里喂模板侧素材。学员侧一切不进本仓。
+
+现状：Flutter，v0.1.9 已发布（`studio.class.quanttide.com`）；三件模型已独立实现于 `lib/models/`（toolkit 暂不引入，迭代稳定后固定回 `quanttide-tech-toolkit` 的 `dart/course`）。
 
 ## 核心判断：v0.1 的互动编排引擎是本体
 
-studio v0.1 的资产不是页面，是**互动引擎**——节点带交互与选择的编排模型（`segment / interaction / choice_option` 那套结构）。任务系统的节点上**暂时装的是文档**（任务书、题面），不是视频——视频只是载荷之一，换载荷不动模型。创作空间设计的正是这些载荷：三件孪生同形（`id`(uuid) / `title` / `content`）——**Assignment 题目、Solution 参考答案、SolutionStep 步骤单元**（一层不嵌套，`after` 前置边组成 DAG），判断标准与注解都写进 content，不设挂件。
+studio 的资产不是页面，是**互动引擎**——节点带交互与选择的编排模型（`segment / interaction / choice_option` 那套结构）。任务系统的节点上**暂时装的是文档**（任务书、题面），不是视频——视频只是载荷之一，换载荷不动模型。三件孪生同形（`id`(uuid) / `title` / `content`）：判断标准与注解都写进 content，不设挂件。
 
 冻结的是**学员消费壳**（登录、学习入口、播放器页面）；引擎模型保留为设计对象，不清理。
 
@@ -16,15 +18,15 @@ studio v0.1 的资产不是页面，是**互动引擎**——节点带交互与�
 - **学员交互已有归宿**：学员在 lite（在做不在看）；客户消费的是数据不是界面。退场不产生用户损失
 - **退场 ≠ 永久删除**：开真实教学班、客户要看交付时，按届时需要回补；lite 与 provider 的接口缝不受影响
 
+## 已交付（喂契约的模板侧）
+
+- [x] 三件模型：Assignment / Solution / SolutionStep 独立实现于 `lib/models/`，三字段孪生 + `after` 前置边 DAG，全量测试过——契约「模板」半边的代码化
+
 ## 下一步待办（设计工作台）
 
-### 教学创作空间（源自洞察仓 studio.md，新思路优先）
-
-- [ ] Assignment（大作业）：数据契约三字段——`id`（uuid）/ `title` / `content`；content 当前装 Markdown 长文本（任务书全文），未来拓展视频等格式；**独立实现于 `lib/models/`**——toolkit 暂不引入，迭代稳定后固定回 `quanttide-tech-toolkit` 的 `dart/course`
-- [ ] Solution（参考答案）：三字段孪生，content 装范例交付与正反例对照；定框参考答案非标准答案，可选、一作业一档；独立实现于 `lib/models/`（同上口径）
-- [ ] SolutionStep（步骤单元）：一层不嵌套，三字段 + `after`（前置边）组 DAG——投影即 lite 过门槛；判断标准、检查点、"为什么这么安排"全进 content，单元自足。独立实现于 `lib/models/`（同上口径）
 - [ ] 脚手架库：前置思考题、常见坑点、反思触发器——教学经验固化为可复用组件（示例反例位由 Solution 承接）
 - [ ] 修订回环（任务书生产线）：首任务 = 任务书修订，AI 预筛 diff，教师合稿回灌仓内任务书、按修订重排任务序列——教研嵌在任务流里，不设独立仪式
+- [ ] 创作空间界面：三件模型的编辑与浏览（模型已就位，剩壳）
 
 不做：权限 / 多人协作、AI 生成任务（先手写 2-3 个完整模板）、可视化拖拽（结构化表单 + Markdown 区块够用）。
 
