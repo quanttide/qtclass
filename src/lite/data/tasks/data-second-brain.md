@@ -1,6 +1,9 @@
 ---
 title: 熟悉数据工程第二大脑
 description: 以新人视角通读量潮数据工程领域第二大脑（quanttide-data 主仓库、资产图式章程、发布管理章程），破解内部团队的「知识诅咒」——记录困惑、提出改进建议，让下一个人更容易理解。
+tags:
+  requirement: semi
+  acceptance: open
 ---
 
 # 熟悉数据工程第二大脑

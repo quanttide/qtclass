@@ -1,6 +1,9 @@
 ---
 title: 整理数据工程意图
 description: 从数据工程日志（journal）考古组织意图：参考现有意图文档格式与内容，增加 qtcloud-data 和 qtdata 的最新想法，描绘量潮为什么想要建设数据工程第二大脑。
+tags:
+  requirement: semi
+  acceptance: open
 ---
 
 # 整理数据工程意图

@@ -1,17 +1,9 @@
-import { Link } from 'react-router-dom'
 import { CURRENT_TASKS, statusLabel } from '../models/task'
-import { ROUTE_PATHS } from '../routes'
 
-// 反馈查看：教师评语与状态。当前无已交任务，逐任务展示空态
+// 反馈查看：教师评语与状态。当前无已交任务，逐任务展示空态；回退走顶栏返回
 function Feedback() {
   return (
     <main>
-      <nav className="taskNav">
-        <Link to={ROUTE_PATHS.today} className="liteLink">
-          ← 今日任务
-        </Link>
-      </nav>
-
       {CURRENT_TASKS.map((task) => (
         <section key={task.slug} className="feedbackCard">
           <div className="taskCardTop">

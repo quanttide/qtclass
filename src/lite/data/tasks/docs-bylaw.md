@@ -1,6 +1,9 @@
 ---
 title: 文档工程章程升级
 description: 把使用《文档工程格式章程》的真实感受带回来，升级为「社区版」：对照章程提出顺手、困惑与建议，讨论达成共识后更新章程文件，让后来人直接复用。
+tags:
+  requirement: semi
+  acceptance: open
 ---
 
 # 文档工程章程

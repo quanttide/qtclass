@@ -1,3 +1,11 @@
+---
+title: 量潮小说发行任务书
+description: 在晋江完成一次完整发行动作，并在小红书发布一条面向读者的推广内容。
+tags:
+  requirement: semi
+  acceptance: semi
+---
+
 # 量潮小说发行任务书
 
 ## 项目背景与交付目标

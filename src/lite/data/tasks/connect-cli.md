@@ -1,6 +1,9 @@
 ---
 title: 摸底 lark-cli 与 wecom-cli
 description: 动手试用企业微信 wecom-cli 与飞书 lark-cli，逐个模块摸清能做什么、不能做什么，写出能力契约文档，沉淀到沟通管理参考资料库。
+tags:
+  requirement: semi
+  acceptance: open
 ---
 
 # 摸底 lark-cli 与 wecom-cli

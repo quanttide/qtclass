@@ -27,6 +27,45 @@ export function statusLabel(status: TaskStatus): string {
   return TASK_STATUSES.find((item) => item.key === status)?.label ?? status
 }
 
+// 任务书两把尺：frontmatter `tags:` 下的取值与显示名——筛选器与卡片共用的单一事实源
+export const REQUIREMENTS = [
+  { value: 'fuzzy', label: '模糊' },
+  { value: 'semi', label: '半精确' },
+  { value: 'precise', label: '精确' },
+] as const
+
+export const ACCEPTANCES = [
+  { value: 'closed', label: '封闭' },
+  { value: 'semi', label: '半开放' },
+  { value: 'open', label: '开放' },
+] as const
+
+export type RequirementValue = (typeof REQUIREMENTS)[number]['value']
+export type AcceptanceValue = (typeof ACCEPTANCES)[number]['value']
+export type RequirementFilter = 'all' | RequirementValue
+export type AcceptanceFilter = 'all' | AcceptanceValue
+
+export interface TaskTags {
+  requirement?: RequirementValue
+  acceptance?: AcceptanceValue
+}
+
+export function requirementLabel(value: RequirementValue): string {
+  return REQUIREMENTS.find((item) => item.value === value)?.label ?? value
+}
+
+export function acceptanceLabel(value: AcceptanceValue): string {
+  return ACCEPTANCES.find((item) => item.value === value)?.label ?? value
+}
+
+function asRequirement(value: string | undefined): RequirementValue | undefined {
+  return REQUIREMENTS.some((item) => item.value === value) ? (value as RequirementValue) : undefined
+}
+
+function asAcceptance(value: string | undefined): AcceptanceValue | undefined {
+  return ACCEPTANCES.some((item) => item.value === value) ? (value as AcceptanceValue) : undefined
+}
+
 // 任务书内容库：data/tasks/ 静态副本（源自 site，迁出后不再回流）
 const taskbookModules = import.meta.glob('/data/tasks/**/*.md', {
   eager: true,
@@ -42,6 +81,9 @@ function slugOf(path: string): string | null {
 export interface Taskbook {
   slug: string
   title: string
+  description: string
+  // 两把尺（tags.requirement / tags.acceptance），未标注为 {}
+  tags: TaskTags
   content: string
 }
 
@@ -60,6 +102,11 @@ export const taskbooks: Taskbook[] = Object.entries(taskbookModules)
     return {
       slug,
       title: fm?.title || h1 || slug,
+      description: fm?.description || '',
+      tags: {
+        requirement: asRequirement(fm?.tags?.requirement),
+        acceptance: asAcceptance(fm?.tags?.acceptance),
+      },
       content: stripFrontmatter(raw),
     }
   })

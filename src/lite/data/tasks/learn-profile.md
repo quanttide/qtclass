@@ -1,6 +1,9 @@
 ---
 title: 贡献学习档案
 description: 从自己的角度梳理在量潮课堂的学习历程，与团队一起补充完善学习档案，帮助建立以学习云为中心的学习管理体系。
+tags:
+  requirement: semi
+  acceptance: open
 ---
 
 # 贡献学习档案

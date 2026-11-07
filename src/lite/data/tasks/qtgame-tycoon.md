@@ -1,3 +1,11 @@
+---
+title: 量潮模拟经营游戏任务书
+description: 摆摊经营类 H5 小游戏：在 4399 平台发布，并为玩家制作一份游戏宣传册。
+tags:
+  requirement: semi
+  acceptance: semi
+---
+
 # 量潮模拟经营游戏任务书
 
 ## 项目背景与交付目标

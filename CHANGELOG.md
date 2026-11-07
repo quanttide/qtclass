@@ -1,6 +1,6 @@
 # Changelog
 
-> 组件版本记录在各组件 CHANGELOG：`src/studio/CHANGELOG.md`、`src/site/CHANGELOG.md`。
+> 组件版本记录在各组件 CHANGELOG：`src/studio/CHANGELOG.md`、`src/lite/CHANGELOG.md`、`src/site/CHANGELOG.md`。
 
 ## [0.0.2] - 2026-05-16
 

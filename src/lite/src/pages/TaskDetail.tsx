@@ -13,8 +13,8 @@ function TaskDetail() {
       <main>
         <div className="liteNotFound">
           <h2>任务未找到</h2>
-          <Link to={ROUTE_PATHS.today} className="liteLink">
-            返回今日任务
+          <Link to={ROUTE_PATHS.practice} className="liteLink">
+            返回实践
           </Link>
         </div>
       </main>
@@ -25,12 +25,9 @@ function TaskDetail() {
 
   return (
     <main>
-      <nav className="taskNav">
-        <Link to={ROUTE_PATHS.today} className="liteLink">
-          ← 今日任务
-        </Link>
+      <div className="taskMeta">
         <span className={`taskStatus ${task.status}`}>{statusLabel(task.status)}</span>
-      </nav>
+      </div>
 
       <article className="taskBody">
         <Markdown>{task.prompt}</Markdown>

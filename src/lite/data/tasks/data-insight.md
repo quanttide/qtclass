@@ -1,6 +1,9 @@
 ---
 title: 整理数据工程洞察
 description: 把数据工程语境（context）中与 AI 协作产生的随手记录梳理成可迁移的关键洞察，参考数据工程教程与札记搭建信息结构，为未来知识体系打底。
+tags:
+  requirement: semi
+  acceptance: open
 ---
 
 # 整理数据工程洞察

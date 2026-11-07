@@ -1,6 +1,9 @@
 ---
 title: 共识链识别实验
 description: 概念验证（PoC）：用网页版大模型从真实讨论记录中提取讨论者们依次形成的共识链条，验证「共识链」可被大模型识别——含「悬而未决」类共识，检验沟通云核心功能的可行性。
+tags:
+  requirement: semi
+  acceptance: closed
 ---
 
 # 共识链识别实验

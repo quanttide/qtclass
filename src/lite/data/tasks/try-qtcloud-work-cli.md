@@ -1,6 +1,9 @@
 ---
 title: 试用量潮工作云命令行工具
 description: 请你把量潮工作云命令行用一遍，把挡住你的、看不懂的、缺的地方交回来——提交的 issue 能被复现就算通过。
+tags:
+  requirement: precise
+  acceptance: closed
 ---
 
 # 试用量潮工作云命令行工具
