@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import FilterSheet from '../components/FilterSheet'
 import {
+  ACCEPTANCES,
   CURRENT_TASKS,
+  REQUIREMENTS,
   acceptanceLabel,
   requirementLabel,
   statusLabel,
@@ -12,11 +13,10 @@ import {
 } from '../models/task'
 import { taskItemPath } from '../routes'
 
-// 实践页：任务书库（当前指派在前）+ 顶部两把尺筛选。学员在做，不在看
+// 实践页：任务书库（当前指派在前）+ 顶部两排分段筛选（需求 / 验收各一排，选项常驻可见）
 function Practice() {
   const [requirement, setRequirement] = useState<RequirementFilter>('all')
   const [acceptance, setAcceptance] = useState<AcceptanceFilter>('all')
-  const [sheetOpen, setSheetOpen] = useState(false)
 
   const currentSlugs = CURRENT_TASKS.map((task) => task.slug)
   const ordered = [...taskbooks].sort((a, b) => {
@@ -31,27 +31,57 @@ function Practice() {
       (acceptance === 'all' || book.tags.acceptance === acceptance),
   )
 
-  const summary = [
-    requirement !== 'all' ? `需求：${requirementLabel(requirement)}` : null,
-    acceptance !== 'all' ? `验收：${acceptanceLabel(acceptance)}` : null,
-  ]
-    .filter(Boolean)
-    .join(' · ')
-
   return (
     <main>
       <div className="filterBar">
-        <button
-          type="button"
-          className="filterEntry"
-          aria-label="筛选任务书"
-          onClick={() => setSheetOpen(true)}
-        >
-          {summary || '筛选'}
-          <span className="filterCaret" aria-hidden="true">
-            ▾
-          </span>
-        </button>
+        <div className="filterRow" role="group" aria-label="需求的精确程度">
+          <span className="filterLabel">需求：</span>
+          <div className="filterSegs">
+            <button
+              type="button"
+              className={`filterSeg${requirement === 'all' ? ' active' : ''}`}
+              aria-pressed={requirement === 'all'}
+              onClick={() => setRequirement('all')}
+            >
+              全部
+            </button>
+            {REQUIREMENTS.map((item) => (
+              <button
+                key={item.value}
+                type="button"
+                className={`filterSeg${requirement === item.value ? ' active' : ''}`}
+                aria-pressed={requirement === item.value}
+                onClick={() => setRequirement(item.value)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="filterRow" role="group" aria-label="验收标准的开放程度">
+          <span className="filterLabel">验收：</span>
+          <div className="filterSegs">
+            <button
+              type="button"
+              className={`filterSeg${acceptance === 'all' ? ' active' : ''}`}
+              aria-pressed={acceptance === 'all'}
+              onClick={() => setAcceptance('all')}
+            >
+              全部
+            </button>
+            {ACCEPTANCES.map((item) => (
+              <button
+                key={item.value}
+                type="button"
+                className={`filterSeg${acceptance === item.value ? ' active' : ''}`}
+                aria-pressed={acceptance === item.value}
+                onClick={() => setAcceptance(item.value)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {books.length === 0 && <p className="todayHint">没有符合筛选条件的任务书。</p>}
@@ -76,16 +106,6 @@ function Practice() {
           </Link>
         )
       })}
-
-      {sheetOpen && (
-        <FilterSheet
-          requirement={requirement}
-          acceptance={acceptance}
-          onRequirement={setRequirement}
-          onAcceptance={setAcceptance}
-          onClose={() => setSheetOpen(false)}
-        />
-      )}
     </main>
   )
 }

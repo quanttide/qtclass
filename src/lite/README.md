@@ -22,7 +22,7 @@ src/
 ├── models/task.ts     # 任务契约（Task 形状 + 五状态机）与两把尺枚举（单一事实源）
 ├── pages/             # 页签三页：Practice（任务书库 + 筛选）/ Theory（课程清单，自 site 迁入）/ Mine（个人页骨架）
 │                      # 压入两页：TaskDetail（题面 + 题面素材）/ Feedback（评语与状态），隐藏页签
-├── components/        # AppBar / TabBar / FilterSheet（底部弹层筛选）/ Markdown 渲染（GFM）
+├── components/        # AppBar / TabBar / Markdown 渲染（GFM）
 └── utils/             # frontmatter 解析与剥离（含 tags）
 ```
 

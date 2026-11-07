@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest'
-import { render, screen, cleanup, fireEvent } from '@testing-library/react'
+import { render, screen, cleanup, fireEvent, within } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import App from './App'
 
@@ -53,40 +53,51 @@ describe('页面渲染冒烟', () => {
   })
 })
 
-describe('两把尺筛选', () => {
-  it('弹层选「精确」筛出试用 CLI，入口回显取值', () => {
+describe('两排筛选', () => {
+  it('点「精确」筛出试用 CLI，行内回显选中态', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
 
     // 默认全部可见
     expect(screen.getByText(/摸底 lark-cli/)).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: '筛选任务书' }))
-    const dialog = screen.getByRole('dialog', { name: '筛选' })
-    expect(dialog).toBeInTheDocument()
-    expect(screen.getByText('需求的精确程度')).toBeInTheDocument()
-    expect(screen.getByText('验收标准的开放程度')).toBeInTheDocument()
-
     fireEvent.click(screen.getByRole('button', { name: '精确' }))
-    expect(screen.queryByRole('dialog')).toBeNull()
     expect(screen.getByText(/试用量潮工作云/)).toBeInTheDocument()
     expect(screen.queryByText(/摸底 lark-cli/)).toBeNull()
-    expect(screen.getByRole('button', { name: '筛选任务书' })).toHaveTextContent('需求：精确')
+
+    const row = screen.getByRole('group', { name: '需求的精确程度' })
+    expect(within(row).getByRole('button', { name: '精确' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    expect(within(row).getByRole('button', { name: '全部' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
   })
 
   it('精确 × 开放无交集时给出空态', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
 
-    fireEvent.click(screen.getByRole('button', { name: '筛选任务书' }))
     fireEvent.click(screen.getByRole('button', { name: '精确' }))
-    fireEvent.click(screen.getByRole('button', { name: '筛选任务书' }))
     fireEvent.click(screen.getByRole('button', { name: '开放' }))
 
     expect(screen.getByText('没有符合筛选条件的任务书。')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '筛选任务书' })).toHaveTextContent(
-      '需求：精确 · 验收：开放',
+    const row = screen.getByRole('group', { name: '验收标准的开放程度' })
+    expect(within(row).getByRole('button', { name: '开放' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
     )
+  })
+
+  it('两排选项常驻可见（无弹层）', () => {
+    window.history.pushState({}, '', '/')
+    render(<App />)
+    expect(screen.queryByRole('dialog')).toBeNull()
+    for (const label of ['模糊', '半精确', '封闭', '半开放']) {
+      expect(screen.getByRole('button', { name: label })).toBeInTheDocument()
+    }
   })
 })
 

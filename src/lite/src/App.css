@@ -98,100 +98,56 @@
   font-size: 0.92rem;
 }
 
-/* 实践页：筛选条 */
+/* 实践页：两排分段筛选（需求 / 验收各一排，选项常驻可见） */
 .filterBar {
   display: flex;
-  padding: 0.7rem 0 0.2rem;
-}
-
-.filterEntry {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.95rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--card);
-  color: var(--ink-soft);
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.filterEntry:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.filterCaret {
-  font-size: 0.72rem;
-}
-
-/* 底部弹层（微信式）：两组选项 + 取消 */
-.sheetOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  background: rgba(15, 20, 26, 0.42);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-.sheet {
-  width: 100%;
-  max-width: 760px;
-  background: var(--card);
-  border-radius: 14px 14px 0 0;
-  padding-top: 0.4rem;
-}
-
-.sheetGroup {
-  padding-bottom: 0.35rem;
-  border-bottom: 1px solid var(--line);
-}
-
-.sheetGroupTitle {
-  margin: 0;
-  padding: 0.75rem 1.1rem 0.3rem;
-  color: var(--ink-soft);
-  font-size: 0.8rem;
-}
-
-.sheetOptions {
-  display: flex;
   flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.7rem 0 0.3rem;
 }
 
-.sheetOption {
-  padding: 0.85rem 1.1rem;
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filterLabel {
+  flex-shrink: 0;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.filterSegs {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--card);
+}
+
+.filterSeg {
+  flex: 1;
+  min-width: 0;
+  padding: 0.42rem 0.2rem;
   border: none;
-  background: none;
+  border-right: 1px solid var(--line);
+  background: transparent;
   color: var(--ink);
-  font-size: 1rem;
-  text-align: left;
+  font-size: 0.85rem;
   cursor: pointer;
 }
 
-.sheetOption:active {
-  background: var(--bg);
+.filterSeg:last-child {
+  border-right: none;
 }
 
-.sheetOption.active {
-  color: var(--accent);
+.filterSeg.active {
+  background: var(--accent);
+  color: #fff;
   font-weight: 600;
-}
-
-.sheetCancel {
-  margin: 0.6rem 0.8rem 0.9rem;
-  width: calc(100% - 1.6rem);
-  padding: 0.85rem;
-  border: none;
-  border-radius: 10px;
-  background: var(--bg);
-  color: var(--ink);
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
 }
 
 /* 任务卡（实践页） */
