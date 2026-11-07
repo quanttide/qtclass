@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [Unreleased]
+
+### Added
+
+- 首页 `/` 上线：课程特色（取材宣传册，静态副本 `data/home/index.md`），替原「/ 重定向 /courses」
+- 导航连接引用：lite（`lite.class.quanttide.com`）与 studio（`studio.class.quanttide.com`）站外链接
+
+### Removed
+
+- 课程页 `/courses` 下线——课程清单迁 `src/lite` 理论页
+- 训练营详情 `/schedules/:slug` 下线，`models/learning.ts` 随详情页移除（`PRICES_TRACKS` 就地化入价格页）
+
 ## [0.1.2] - 2026-11-02
 
 ### Added

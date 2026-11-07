@@ -3,13 +3,11 @@ import { render, screen, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import App from './App'
 
-// 冒烟测试：每个路由必须渲染出内容。白屏（坏 import、渲染期崩溃、内容定位失败）会在这里失败。
+// 冒烟：首页与价格页必须渲染出内容，未知路由回首页。白屏会在这里失败
 describe('页面渲染冒烟', () => {
   const routes = [
-    { path: '/', text: '大数据导论' },
-    { path: '/courses', text: '大数据导论' },
+    { path: '/', text: /议事型课堂/ },
     { path: '/prices', text: 'G 端 · 校企合作' },
-    { path: '/schedules/agent-engineer', text: '智能体工程师训练营' },
   ]
 
   for (const { path, text } of routes) {
@@ -20,20 +18,28 @@ describe('页面渲染冒烟', () => {
     })
   }
 
-  it('未知训练营渲染未找到', () => {
-    window.history.pushState({}, '', '/schedules/no-such-such')
+  it('未知路径重定向到首页', () => {
+    window.history.pushState({}, '', '/whatever')
     render(<App />)
-    expect(screen.getByText('内容未找到')).toBeInTheDocument()
+    expect(screen.getAllByText(/议事型课堂/).length).toBeGreaterThan(0)
   })
 
-  it('首页与训练营详情不渲染元数据', () => {
-    for (const path of ['/', '/schedules/agent-engineer']) {
-      window.history.pushState({}, '', path)
-      render(<App />)
-      expect(screen.queryByText(/^title:/), path).toBeNull()
-      expect(screen.queryByText(/^description:/), path).toBeNull()
-      cleanup()
-    }
+  it('首页不渲染元数据', () => {
+    window.history.pushState({}, '', '/')
+    render(<App />)
+    expect(screen.queryByText(/^title:/)).toBeNull()
+    expect(screen.queryByText(/^description:/)).toBeNull()
+  })
+
+  it('导航含 lite 与 studio 连接引用', () => {
+    window.history.pushState({}, '', '/')
+    render(<App />)
+    const lite = screen.getByRole('link', { name: 'Lite' })
+    expect(lite).toHaveAttribute('href', 'https://lite.class.quanttide.com')
+    expect(lite).toHaveAttribute('target', '_blank')
+    const studio = screen.getByRole('link', { name: 'Studio' })
+    expect(studio).toHaveAttribute('href', 'https://studio.class.quanttide.com')
+    expect(studio).toHaveAttribute('target', '_blank')
   })
 })
 

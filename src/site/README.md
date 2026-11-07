@@ -1,12 +1,13 @@
 # 量潮课堂课程展示站
 
-量潮课堂课程体系展示站，基于 React + TypeScript + Vite 构建。
+量潮课堂招生门面站，基于 React + TypeScript + Vite 构建。
 
 ## 功能
 
-- 无首页：`/` 重定向到 `/courses`
-- 课程体系展示：单一课程列表，不区分理论 / 实践；训练营不在课程页，详情页 `/schedules/:slug` 保留深链可达
-- 价格页：只展示三种服务模式（G 校企合作 / B 企业 / C 个人），不标价格、无明细内容
+- 首页 `/`：课程特色（取材宣传册，静态副本 `data/home/index.md`）
+- 价格页 `/prices`：三种服务模式（G 校企合作 / B 企业 / C 个人），不标价格、无明细内容
+- 连接引用：导航含 lite（学员练习端）与 studio（教学设计工作台）站外链接
+- 课程清单已迁 `src/lite` 理论页；`/courses` 与 `/schedules/:slug` 已下线
 
 ## 开发
 
@@ -39,27 +40,23 @@ npm run preview
 
 ```
 data/                    # 内容数据（置于 src 之外）
-├── home/                # 首页介绍副本（源自 brochure；首页已下线，不再渲染）
-└── learning/            # 内容数据：训练营（schedules）、任务（tasks，待迁 lite）、价格（prices）
+├── home/                # 首页内容（课程特色，取材宣传册）
+└── learning/            # 训练营与价格明细静态副本——详情页下线后暂无消费方，待归属
 src/
-├── App.tsx              # 路由装配（/ 重定向 /courses）
-├── routes.ts            # 路由路径与链接地址
+├── App.tsx              # 路由装配（/ 与 /prices，未知回首页）
+├── routes.ts            # 路由路径与站外连接（lite / studio）
 ├── main.tsx             # 入口文件
 ├── App.css / index.css  # 样式
 ├── components/
-│   ├── Layout.tsx       # 站点外框（导航 + 页头 + 内容区）
+│   ├── Layout.tsx       # 站点外框（导航含 lite/studio 引用 + 页头 + 内容区）
 │   └── Markdown.tsx     # markdown 渲染（react-markdown + remark-gfm）
-├── models/              # 数据结构与装载
-│   └── learning.ts      # 学习资料扫描、元数据解析、板块定义
 ├── pages/
-│   ├── Course.tsx       # 课程页（课程列表）
-│   ├── Prices.tsx       # 价格页（三档服务模式）
-│   └── learning/
-│       └── ItemDetail.tsx  # 训练营详情（/schedules/:slug）
+│   ├── Home.tsx         # 首页（课程特色）
+│   └── Prices.tsx       # 价格页（三档服务模式）
 └── utils/
     └── frontmatter.ts   # 元数据解析与剥离
 ```
 
 ## 内容数据
 
-`data/` 下的 markdown 为上游内容的静态副本，页面经 `src/models/*.ts` 扫描文件（根锚定路径 `/data/...`）并解析 frontmatter。来源与同步方法的现状见 `TODO.md`、`ROADMAP.md`。
+`data/` 下的 markdown 为上游内容的静态副本，页面经 `import.meta.glob` 扫描文件（根锚定路径 `/data/...`）并剥离 frontmatter。来源与同步方法的现状见 `TODO.md`、`ROADMAP.md`。
