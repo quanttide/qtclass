@@ -10,8 +10,8 @@ import {
 } from './task'
 
 describe('任务契约与内容', () => {
-  it('18 篇任务书已入库且可解析标题（frontmatter 或正文一级标题）', () => {
-    expect(taskbooks.length).toBe(18)
+  it('19 篇任务书已入库且可解析标题（frontmatter 或正文一级标题）', () => {
+    expect(taskbooks.length).toBe(19)
     for (const book of taskbooks) {
       expect(book.title, book.slug).toBeTruthy()
       expect(book.title, book.slug).not.toBe(book.slug)
@@ -41,8 +41,8 @@ describe('任务契约与内容', () => {
 })
 
 describe('任务书两把尺（frontmatter tags）', () => {
-  it('18 篇全部标注且取值合法', () => {
-    expect(taskbooks.length).toBe(18)
+  it('19 篇全部标注且取值合法', () => {
+    expect(taskbooks.length).toBe(19)
     for (const book of taskbooks) {
       if (book.tags.requirement) {
         expect(REQUIREMENTS.some((r) => r.value === book.tags.requirement), book.slug).toBe(true)
