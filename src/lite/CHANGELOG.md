@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.1.4] - 2026-11-08
+
+### Added
+
+- 任务书 12 → 19 篇：qtcrowd 六篇业务线任务书迁入（`second-brain-init`、`legal-evidence`、`org-management-workflow`、`project-retrospective-system`、`critical-pr-workflow`、`strategic-management-workflow`，源 quanttide-crowd `data/profile`），补 academy 意图 `quanttide-founder-study`（源 `data/intention/quanttide-founder/study.md`）
+- 正文与档案（事实源 `data/profile`）字节一致，frontmatter 补 title / description / 两把尺 tags，19/19 全量标注
+
 ## [0.1.3] - 2026-11-07
 
 ### Changed
