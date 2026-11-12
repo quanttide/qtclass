@@ -120,6 +120,17 @@ export function getTaskbook(slug: string): Taskbook | undefined {
 // 静态任务数据：provider 未就绪期间的载荷。当前任务 = 小说发行与游戏两个工作室任务（源 academy intention 任务书，与公众号同源）
 export const CURRENT_TASKS: Task[] = [
   {
+    slug: 'uibe-recruitment-pilot',
+    title: '对外经济贸易大学招聘宣传合作试点',
+    description: '完成一轮招聘宣传试点，记录需求、合作条件、材料复核、发布和效果复盘。',
+    status: 'todo',
+    deadline: '待安排人确认',
+    prompt: `罗析芸安排杨浩承接本实践任务，待本人确认领取。任务内容及验收要求见下方题面素材。
+
+领取、阶段成果与指导反馈沿用现有内部记录；提交通道接通前，本页只读。`,
+    taskbookSlug: 'uibe-recruitment-pilot',
+  },
+  {
     slug: 'quanttide-fiction-of-founder',
     title: '小说发行工作室任务',
     description: '在晋江完成一次完整发行动作，并在小红书发布一条面向读者的推广内容。',
