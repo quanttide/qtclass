@@ -6,6 +6,8 @@ import App from './App'
 // 冒烟：三个页签、压入页与筛选器必须渲染可用。白屏（坏 import、渲染期崩溃、内容定位失败）会在这里失败
 describe('页面渲染冒烟', () => {
   const routes = [
+    { path: '/', text: '对外经济贸易大学招聘宣传合作试点' },
+    { path: '/tasks/uibe-recruitment-pilot', text: /通过 Issue 沟通任务领取事宜/ },
     { path: '/', text: '小说发行工作室任务' },
     { path: '/', text: '模拟经营游戏工作室任务' },
     { path: '/theory', text: '大数据导论' },
