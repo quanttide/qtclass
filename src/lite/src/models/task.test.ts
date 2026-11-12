@@ -10,8 +10,8 @@ import {
 } from './task'
 
 describe('任务契约与内容', () => {
-  it('20 篇任务书已入库且可解析标题（frontmatter 或正文一级标题）', () => {
-    expect(taskbooks.length).toBe(20)
+  it('19 篇任务书已入库且可解析标题（frontmatter 或正文一级标题）', () => {
+    expect(taskbooks.length).toBe(19)
     for (const book of taskbooks) {
       expect(book.title, book.slug).toBeTruthy()
       expect(book.title, book.slug).not.toBe(book.slug)
@@ -21,9 +21,8 @@ describe('任务契约与内容', () => {
     expect(getTaskbook('quanttide-fiction-of-founder')?.title).toBe('量潮小说发行任务书')
   })
 
-  it('当前任务包含校企合作及两个工作室任务，题面素材均在库', () => {
+  it('当前任务 = 小说与游戏两个工作室任务，题面素材均在库', () => {
     expect(CURRENT_TASKS.map((t) => t.slug)).toEqual([
-      'uibe-recruitment-pilot',
       'quanttide-fiction-of-founder',
       'qtgame-tycoon',
     ])
@@ -42,8 +41,8 @@ describe('任务契约与内容', () => {
 })
 
 describe('任务书两把尺（frontmatter tags）', () => {
-  it('20 篇全部标注且取值合法', () => {
-    expect(taskbooks.length).toBe(20)
+  it('19 篇全部标注且取值合法', () => {
+    expect(taskbooks.length).toBe(19)
     for (const book of taskbooks) {
       if (book.tags.requirement) {
         expect(REQUIREMENTS.some((r) => r.value === book.tags.requirement), book.slug).toBe(true)
