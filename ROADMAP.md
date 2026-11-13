@@ -12,7 +12,7 @@
 | [Studio](src/studio/ROADMAP.md) | 教学设计工作台（单用户） | **模板侧模型主战场**：创作空间与修订回环往契约里喂素材 |
 | [Lite](src/lite/ROADMAP.md) | 学员面（静态探针） | **实践侧已落两笔模型**（两把尺、五状态机）；保持静态，通道等契约 |
 | [Provider](src/provider/ROADMAP.md) | 数据面 | **不超前**：任务链路先收敛模型定义，接口等契约定型再浇筑 |
-| [CLI](src/cli/ROADMAP.md) | 骨架 | 无规划，有真实命令再长 |
+| [CLI](src/cli/README.md) | 骨架 | skill 框架对齐 qtcloud-cli（内置 skills + 安装命令）；首个 skill `qtclass-crowd-task-clarify`（需求澄清扩写任务书） |
 
 边界规则：「我」字开头的功能按角色分流——学员的进 Lite，教师的进 Studio，公开的进 Site，找不到主的不做。**客户面已随 studio 单用户化整体退场**（2026-11-02），开班或接客时按需要回补。
 
@@ -32,4 +32,4 @@ studio 与 lite 的关系：studio 不派发（单用户设计工作台），任
 - [ ] **Provider 等待纪律**：任务链路只收敛模型定义、不铺接口；既有骨架保持运行
 - [ ] **Lite 静态纪律**：不接服务端、不开提交通道；任务书两把尺取值逐本复核
 - [ ] **Site 静态收尾**：价目源同步、副本归属（静态范围内的尾巴）
-- [ ] CLI：无待办
+- [ ] CLI：后续 skill（卡点指引、进度抓取）等契约定型再长，不超前
