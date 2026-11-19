@@ -1,14 +1,14 @@
 import type { Lesson } from '../../src/models/lesson'
 
-// 氛围编程第 3 课。文字与步骤源自教程仓
+// AI编程第 3 课。文字与步骤源自教程仓
 // assets/tutorials/vibe-coding/docs/intro/lesson-3.html（内容不改写，只换载体）
 const lesson: Lesson = {
   name: 'lesson-3-worker',
-  course: '氛围编程',
+  course: 'AI编程',
   title: '这回，你说了不算',
   description: '只给一个模糊想法，让 AI 先出设计方案再实现，玩法规则全变了。',
   status: 'published',
-  kicker: '氛围编程 · 第 3 课',
+  kicker: 'AI编程 · 第 3 课',
   lede: '前两课都是「别人给好的」。这一课，你自己提想法，让 AI 帮你设计成玩法。',
   steps: [
     {

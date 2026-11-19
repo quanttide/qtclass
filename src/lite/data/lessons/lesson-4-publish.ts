@@ -1,14 +1,14 @@
 import type { Lesson } from '../../src/models/lesson'
 
-// 氛围编程第 4 课（本章收官）。文字与步骤源自教程仓
+// AI编程第 4 课（本章收官）。文字与步骤源自教程仓
 // assets/tutorials/vibe-coding/docs/intro/lesson-4.html（内容不改写，只换载体）
 const lesson: Lesson = {
   name: 'lesson-4-publish',
-  course: '氛围编程',
+  course: 'AI编程',
   title: '拿出去，给人玩',
   description: '离开 AI，做宣传册、找真人、听真话。跨 3-7 天，慢慢来。',
   status: 'published',
-  kicker: '氛围编程 · 第 4 课 · 本章收官',
+  kicker: 'AI编程 · 第 4 课 · 本章收官',
   lede: '前三课，你一直在跟 AI 打交道。这一课，你要第一次离开 AI，去找真实的人。',
   steps: [
     {

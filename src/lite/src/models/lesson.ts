@@ -34,7 +34,7 @@ export interface Lesson {
   title: string
   description: string
   status: LessonStatus
-  // 页眉小标签，如「氛围编程 · 第 1 课」
+  // 页眉小标签，如「AI编程 · 第 1 课」
   kicker?: string
   // 页眉下的一句引导
   lede?: string

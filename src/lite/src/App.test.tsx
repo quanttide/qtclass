@@ -10,7 +10,7 @@ describe('页面渲染冒烟', () => {
     { path: '/tasks/uibe-recruitment-pilot', text: /通过 Issue 沟通任务领取事宜/ },
     { path: '/practice', text: '小说发行工作室任务' },
     { path: '/practice', text: '模拟经营游戏工作室任务' },
-    { path: '/', text: '大数据导论' },
+    { path: '/', text: 'AI编程' },
     { path: '/mine', text: /待接入/ },
     { path: '/tasks/qtgame-tycoon', text: /题面素材/ },
     { path: '/tasks/quanttide-fiction-of-founder', text: /4399|晋江/ },
@@ -34,7 +34,7 @@ describe('页面渲染冒烟', () => {
   it('未知路径重定向到课堂', () => {
     window.history.pushState({}, '', '/whatever')
     render(<App />)
-    expect(screen.getAllByText('大数据导论').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('AI编程').length).toBeGreaterThan(0)
   })
 
   it('顶栏标题与底部三页签', () => {

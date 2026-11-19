@@ -1,14 +1,14 @@
 import type { Lesson } from '../../src/models/lesson'
 
-// 氛围编程第二章第 1 课（整体序为第 5 课）。文字与步骤源自教程仓
+// AI编程第二章第 1 课（整体序为第 5 课）。文字与步骤源自教程仓
 // assets/tutorials/vibe-coding/docs/realworld/lesson-1.html（内容不改写，只换载体）
 const lesson: Lesson = {
   name: 'lesson-5-store-dashboard',
-  course: '氛围编程',
+  course: 'AI编程',
   title: '从游戏出发，做一个真实的门店经营看板',
   description: '把你开的咖啡店，从「能玩的游戏」改成「能给店主看的经营看板」——营业额、客流、库存、趋势全是真实门店每天盯的数。',
   status: 'published',
-  kicker: '氛围编程 · 第二章 · 第 1 课',
+  kicker: 'AI编程 · 第二章 · 第 1 课',
   lede: '你开的那家咖啡店，其实每天都在赚钱、来客、卖货。把这些游戏数字换成真实门店的指标，就是一个看板。',
   steps: [
     {

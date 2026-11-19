@@ -1,14 +1,14 @@
 import type { Lesson } from '../../src/models/lesson'
 
-// 氛围编程第 1 课。文字与步骤源自教程仓
+// AI编程第 1 课。文字与步骤源自教程仓
 // assets/tutorials/vibe-coding/docs/intro/hello-world.html（内容不改写，只换载体）
 const lesson: Lesson = {
   name: 'hello-world',
-  course: '氛围编程',
+  course: 'AI编程',
   title: '做出你的第一个游戏',
   description: '照着五步做出并上线你的第一个游戏，全程不用写代码。',
   status: 'published',
-  kicker: '氛围编程 · 第 1 课',
+  kicker: 'AI编程 · 第 1 课',
   lede: '不用懂代码，照着做就行。每一步都告诉你「做完会看到什么」',
   steps: [
     {
