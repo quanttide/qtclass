@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { getLesson, type LessonBlock } from '../models/lesson'
-import { ROUTE_PATHS } from '../routes'
+import { getLesson, publishedLessonsOf, type LessonBlock } from '../models/lesson'
+import { lessonPath, ROUTE_PATHS } from '../routes'
 
 // 一键复制：剪贴板不可用时只回退成「请长按复制」，不假装成功
 function CopyBox({ label, text }: { label: string; text: string }) {
@@ -96,6 +96,11 @@ function LessonDetail() {
     )
   }
 
+  const siblings = publishedLessonsOf(lesson.course)
+  const index = siblings.findIndex((item) => item.name === lesson.name)
+  const prev = index > 0 ? siblings[index - 1] : undefined
+  const next = index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : undefined
+
   return (
     <main>
       <header className="lessonHero">
@@ -122,6 +127,26 @@ function LessonDetail() {
 
         {lesson.tip && <p className="lessonCallout">{lesson.tip}</p>}
         {lesson.foot && <p className="lessonFoot">{lesson.foot}</p>}
+        {(prev || next) && (
+          <nav className="lessonNav" aria-label="课时导航">
+            <div>
+              {prev && (
+                <Link to={lessonPath(prev.name)} className="lessonNavLink">
+                  <span className="lessonNavDir">‹ 上一课</span>
+                  <span className="lessonNavTitle">{prev.title}</span>
+                </Link>
+              )}
+            </div>
+            <div className="lessonNavNext">
+              {next && (
+                <Link to={lessonPath(next.name)} className="lessonNavLink">
+                  <span className="lessonNavDir">下一课 ›</span>
+                  <span className="lessonNavTitle">{next.title}</span>
+                </Link>
+              )}
+            </div>
+          </nav>
+        )}
         <p className="submitHint">课时内容与教程仓同源，改动以教程仓为准。</p>
       </article>
     </main>

@@ -46,4 +46,23 @@ describe('课时详情', () => {
     expect(screen.getAllByText('课时')).toHaveLength(1)
     expect(screen.getByRole('link', { name: /做出你的第一个游戏/ })).toBeInTheDocument()
   })
+
+  it('第 1 课只有下一课入口，第 4 课只有上一课入口', () => {
+    window.history.pushState({}, '', '/lessons/hello-world')
+    render(<App />)
+    expect(screen.getByRole('link', { name: /下一课/ })).toHaveAttribute(
+      'href',
+      '/lessons/lesson-2-coffee-shop',
+    )
+    expect(screen.queryByRole('link', { name: /上一课/ })).toBeNull()
+    cleanup()
+
+    window.history.pushState({}, '', '/lessons/lesson-4-publish')
+    render(<App />)
+    expect(screen.getByRole('link', { name: /上一课/ })).toHaveAttribute(
+      'href',
+      '/lessons/lesson-3-worker',
+    )
+    expect(screen.queryByRole('link', { name: /下一课/ })).toBeNull()
+  })
 })

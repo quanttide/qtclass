@@ -574,6 +574,41 @@
   font-size: 0.86rem;
 }
 
+/* 课时底部：上一课 / 下一课 */
+.lessonNav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+
+.lessonNavNext {
+  min-width: 0;
+}
+
+.lessonNavLink {
+  display: block;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.lessonNavDir {
+  display: block;
+}
+
+.lessonNavTitle {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
 /* 理论页课程卡下的课时入口 */
 .lessonList {
   margin-top: 0.9rem;
