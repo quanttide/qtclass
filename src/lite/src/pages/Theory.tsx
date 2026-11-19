@@ -1,4 +1,4 @@
-// 理论页：课程清单（自 site 课程页迁入，课程文案不改写；训练营不在本页）
+// 理论页：课程清单（氛围编程的文案与课时源自教程仓 intro 讲义，可随教程更新；训练营不在本页）
 // 卡片下方挂该课程已发布的课时入口，课时内容与文案来自 models/lesson，不在此改写
 import { Link } from 'react-router-dom'
 import { publishedLessonsOf } from '../models/lesson'
@@ -14,9 +14,9 @@ const courses = [
   {
     name: '氛围编程',
     level: '入门',
-    audience: '需要用 AI 提升研发和自动化效率的成员',
-    summary: '从开发环境搭建到 API Key、编辑器 Agent 配置，完成可运行的 AI 编程闭环。',
-    modules: ['开发环境搭建', '工具配置', '任务拆解'],
+    audience: '想用 AI 把想法做成作品、不用写代码的成员',
+    summary: '同一个游戏做四遍：做出来、改起来、创出来、推出去。每一步只用一句话指挥 AI，做出能发给朋友玩的上线作品。',
+    modules: ['照着做', '换个壳', '自己设计', '拿出去'],
   },
   {
     name: '大数据导论',
