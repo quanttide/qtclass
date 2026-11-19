@@ -43,7 +43,7 @@ describe('页面渲染冒烟', () => {
     expect(screen.getByRole('heading', { name: '量潮课堂' })).toBeInTheDocument()
     const nav = screen.getByRole('navigation', { name: '主导航' })
     expect(nav).toBeInTheDocument()
-    for (const label of ['理论', '实践', '我的']) {
+    for (const label of ['课堂', '实践', '我的']) {
       expect(screen.getAllByText(label).length).toBeGreaterThan(0)
     }
   })

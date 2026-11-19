@@ -1,6 +1,6 @@
 # 量潮课堂 Lite
 
-学员任务端：微信式外壳——顶部 AppBar「量潮课堂」，底部三页签（理论 / 实践 / 我的）；实践页以两把尺（需求的精确程度、验收标准的开放程度）筛选任务书。学员在做，不在看。课程与实训都是任务序列。
+学员任务端：微信式外壳——顶部 AppBar「量潮课堂」，底部三页签（课堂 / 实践 / 我的）；实践页以两把尺（需求的精确程度、验收标准的开放程度）筛选任务书。学员在做，不在看。课程与实训都是任务序列。
 
 Web 形态（不发小程序），React + Vite + TypeScript，与 `src/site` 同构；部署走 `.github/workflows/deploy-lite.yml`（`lite/*` tag → OSS 桶 `qtclass-lite` + CDN `lite.class.quanttide.com`）。
 

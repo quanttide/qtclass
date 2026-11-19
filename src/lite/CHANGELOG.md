@@ -9,6 +9,10 @@
 - 首课 `hello-world`（做出你的第一个游戏）：文字与步骤源自教程仓 `assets/tutorials/vibe-coding/docs/intro/hello-world.html`，内容不改写只换载体；对照图字节一致拷入 `public/lessons/hello-world/`
 - 课时详情测试 4 例：入口、分步正文与复制指令、未知课时回理论、仅氛围编程卡出入口
 
+### Changed
+
+- 底部导航页签「理论」改名「课堂」（路由 `/theory`、组件名与图标键不动，改路径会断外链与书签）；课时未找到的返回文案、README 与页签断言同步改名
+
 ## [0.1.6] - 2026-11-12
 
 ### Added

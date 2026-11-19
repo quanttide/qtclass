@@ -8,9 +8,9 @@ export const ROUTE_PATHS = {
   feedback: '/feedback',
 } as const
 
-// 底部导航三个页签（顺序即导航顺序：理论、实践、我的）
+// 底部导航三个页签（顺序即导航顺序：课堂、实践、我的）
 export const TABS = [
-  { path: ROUTE_PATHS.theory, label: '理论', icon: 'theory' },
+  { path: ROUTE_PATHS.theory, label: '课堂', icon: 'theory' },
   { path: ROUTE_PATHS.practice, label: '实践', icon: 'practice' },
   { path: ROUTE_PATHS.mine, label: '我的', icon: 'mine' },
 ] as const
