@@ -20,7 +20,7 @@ export function AppRoutes() {
       <Route path={ROUTE_PATHS.taskItem} element={<TaskDetail />} />
       <Route path={ROUTE_PATHS.lessonItem} element={<LessonDetail />} />
       <Route path={ROUTE_PATHS.feedback} element={<Feedback />} />
-      <Route path="*" element={<Navigate to={ROUTE_PATHS.practice} replace />} />
+      <Route path="*" element={<Navigate to={ROUTE_PATHS.theory} replace />} />
     </Routes>
   )
 }

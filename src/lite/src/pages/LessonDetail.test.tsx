@@ -8,7 +8,7 @@ describe('课时详情', () => {
   afterEach(cleanup)
 
   it('理论页氛围编程卡挂出课时入口', () => {
-    window.history.pushState({}, '', '/theory')
+    window.history.pushState({}, '', '/')
     render(<App />)
     const link = screen.getByRole('link', { name: /做出你的第一个游戏/ })
     expect(link).toHaveAttribute('href', '/lessons/hello-world')
@@ -40,7 +40,7 @@ describe('课时详情', () => {
   })
 
   it('只有氛围编程卡出课时入口，其余四张不出', () => {
-    window.history.pushState({}, '', '/theory')
+    window.history.pushState({}, '', '/')
     render(<App />)
     // 「课时」小标题只出现一次，即只有氛围编程挂了课时
     expect(screen.getAllByText('课时')).toHaveLength(1)

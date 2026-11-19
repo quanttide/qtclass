@@ -6,11 +6,11 @@ import App from './App'
 // 冒烟：三个页签、压入页与筛选器必须渲染可用。白屏（坏 import、渲染期崩溃、内容定位失败）会在这里失败
 describe('页面渲染冒烟', () => {
   const routes = [
-    { path: '/', text: '对外经济贸易大学招聘宣传合作试点' },
+    { path: '/practice', text: '对外经济贸易大学招聘宣传合作试点' },
     { path: '/tasks/uibe-recruitment-pilot', text: /通过 Issue 沟通任务领取事宜/ },
-    { path: '/', text: '小说发行工作室任务' },
-    { path: '/', text: '模拟经营游戏工作室任务' },
-    { path: '/theory', text: '大数据导论' },
+    { path: '/practice', text: '小说发行工作室任务' },
+    { path: '/practice', text: '模拟经营游戏工作室任务' },
+    { path: '/', text: '大数据导论' },
     { path: '/mine', text: /待接入/ },
     { path: '/tasks/qtgame-tycoon', text: /题面素材/ },
     { path: '/tasks/quanttide-fiction-of-founder', text: /4399|晋江/ },
@@ -31,10 +31,10 @@ describe('页面渲染冒烟', () => {
     expect(screen.getByText('任务未找到')).toBeInTheDocument()
   })
 
-  it('未知路径重定向到实践', () => {
+  it('未知路径重定向到课堂', () => {
     window.history.pushState({}, '', '/whatever')
     render(<App />)
-    expect(screen.getAllByText('小说发行工作室任务').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('大数据导论').length).toBeGreaterThan(0)
   })
 
   it('顶栏标题与底部三页签', () => {
@@ -57,7 +57,7 @@ describe('页面渲染冒烟', () => {
 
 describe('两排筛选', () => {
   it('点「精确」筛出试用 CLI，行内回显选中态', () => {
-    window.history.pushState({}, '', '/')
+    window.history.pushState({}, '', '/practice')
     render(<App />)
 
     // 默认全部可见
@@ -79,7 +79,7 @@ describe('两排筛选', () => {
   })
 
   it('精确 × 开放无交集时给出空态', () => {
-    window.history.pushState({}, '', '/')
+    window.history.pushState({}, '', '/practice')
     render(<App />)
 
     fireEvent.click(screen.getByRole('button', { name: '精确' }))
@@ -94,7 +94,7 @@ describe('两排筛选', () => {
   })
 
   it('两排选项常驻可见（无弹层）', () => {
-    window.history.pushState({}, '', '/')
+    window.history.pushState({}, '', '/practice')
     render(<App />)
     expect(screen.queryByRole('dialog')).toBeNull()
     for (const label of ['模糊', '半精确', '封闭', '半开放']) {
