@@ -1,4 +1,8 @@
-// 理论页：课程清单（自 site 课程页迁入，内容不改写；训练营不在本页）
+// 理论页：课程清单（自 site 课程页迁入，课程文案不改写；训练营不在本页）
+// 卡片下方挂该课程已发布的课时入口，课时内容与文案来自 models/lesson，不在此改写
+import { Link } from 'react-router-dom'
+import { publishedLessonsOf } from '../models/lesson'
+import { lessonPath } from '../routes'
 const courses = [
   {
     name: '知识工作',
@@ -38,6 +42,8 @@ const courses = [
 ]
 
 function renderCard(course: (typeof courses)[number]) {
+  const courseLessons = publishedLessonsOf(course.name)
+
   return (
     <>
       <div className="courseTop">
@@ -51,6 +57,17 @@ function renderCard(course: (typeof courses)[number]) {
           <span key={module}>{module}</span>
         ))}
       </div>
+      {courseLessons.length > 0 && (
+        <div className="lessonList">
+          <p className="lessonListTitle">课时</p>
+          {courseLessons.map((lesson) => (
+            <Link key={lesson.name} to={lessonPath(lesson.name)} className="lessonLink">
+              <span>{lesson.title}</span>
+              <span aria-hidden="true">›</span>
+            </Link>
+          ))}
+        </div>
+      )}
     </>
   )
 }

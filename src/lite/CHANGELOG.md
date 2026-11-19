@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [0.1.7] - 2026-11-16
+
+### Added
+
+- 课时上架：理论页氛围编程卡挂课时入口，压入页 `/lessons/:name` 分步渲染（页眉 + 一步一动作 + 预期结果 + 课末提示），隐藏页签
+- 课时契约 `models/lesson.ts`：`name`（兼 slug）/ `course` / `title` / `description` / `status` / `steps`，块类型收口为 note / copy / code / link / image；内容库 `data/lessons/` 一文件一课时，`publishedLessonsOf(course)` 出入口，draft 不对外
+- 首课 `hello-world`（做出你的第一个游戏）：文字与步骤源自教程仓 `assets/tutorials/vibe-coding/docs/intro/hello-world.html`，内容不改写只换载体；对照图字节一致拷入 `public/lessons/hello-world/`
+- 课时详情测试 4 例：入口、分步正文与复制指令、未知课时回理论、仅氛围编程卡出入口
+
 ## [0.1.6] - 2026-11-12
 
 ### Added

@@ -5,6 +5,7 @@ import Practice from './pages/Practice'
 import Theory from './pages/Theory'
 import Mine from './pages/Mine'
 import TaskDetail from './pages/TaskDetail'
+import LessonDetail from './pages/LessonDetail'
 import Feedback from './pages/Feedback'
 import { ROUTE_PATHS } from './routes'
 import './App.css'
@@ -17,6 +18,7 @@ export function AppRoutes() {
       <Route path={ROUTE_PATHS.theory} element={<Theory />} />
       <Route path={ROUTE_PATHS.mine} element={<Mine />} />
       <Route path={ROUTE_PATHS.taskItem} element={<TaskDetail />} />
+      <Route path={ROUTE_PATHS.lessonItem} element={<LessonDetail />} />
       <Route path={ROUTE_PATHS.feedback} element={<Feedback />} />
       <Route path="*" element={<Navigate to={ROUTE_PATHS.practice} replace />} />
     </Routes>

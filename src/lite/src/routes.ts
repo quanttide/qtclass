@@ -4,6 +4,7 @@ export const ROUTE_PATHS = {
   theory: '/theory',
   mine: '/mine',
   taskItem: '/tasks/:slug',
+  lessonItem: '/lessons/:name',
   feedback: '/feedback',
 } as const
 
@@ -16,7 +17,7 @@ export const TABS = [
 
 export type TabIcon = (typeof TABS)[number]['icon']
 
-// 页签根路径显示底部导航；任务详情与反馈为压入页，按微信惯例隐藏页签
+// 页签根路径显示底部导航；任务详情、课时详情与反馈为压入页，按微信惯例隐藏页签
 const TAB_PATHS: string[] = [ROUTE_PATHS.practice, ROUTE_PATHS.theory, ROUTE_PATHS.mine]
 
 export function isTabPath(pathname: string): boolean {
@@ -25,4 +26,8 @@ export function isTabPath(pathname: string): boolean {
 
 export function taskItemPath(slug: string): string {
   return `/tasks/${slug}`
+}
+
+export function lessonPath(name: string): string {
+  return `/lessons/${name}`
 }

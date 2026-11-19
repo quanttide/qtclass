@@ -378,3 +378,227 @@
 .feedbackCard .taskCardTop {
   align-items: flex-start;
 }
+
+/* 课时详情：分步正文，一步一动作 + 预期结果 */
+.lessonHero {
+  padding: 0.9rem 0 0.3rem;
+}
+
+.lessonKicker {
+  display: inline-block;
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  color: var(--amber);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.16rem 0.6rem;
+}
+
+.lessonHero h1 {
+  margin: 0.7rem 0 0.3rem;
+  font-size: 1.5rem;
+  line-height: 1.35;
+}
+
+.lessonHero p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.lessonStep {
+  padding: 1.1rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.lessonStep:last-of-type {
+  border-bottom: none;
+}
+
+.lessonHead {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.lessonNum {
+  flex: 0 0 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ff8b3d;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lessonHead h2 {
+  margin: 0.1rem 0 0.25rem;
+  font-size: 1.04rem;
+}
+
+.lessonDo {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.lessonResult {
+  margin: 0.75rem 0 0 2.4rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  border-radius: 8px;
+  padding: 0.7rem 0.8rem;
+}
+
+.lessonLab {
+  margin: 0 0 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--amber);
+}
+
+.mockInput {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.mockStep {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.84rem;
+  line-height: 1.85;
+}
+
+.mockStep p {
+  margin: 0;
+}
+
+.mockStep .run {
+  color: var(--ink-soft);
+}
+
+.mockStep .ok {
+  color: var(--green);
+  font-weight: 600;
+}
+
+.mockLink {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  word-break: break-all;
+  color: var(--accent);
+}
+
+.lessonTip {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.lessonShot {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+/* 一键复制：学员原样粘贴的指令 */
+.copyBox {
+  margin: 0.75rem 0 0 2.4rem;
+  background: var(--card);
+  border: 2px dashed #ff8b3d;
+  border-radius: 10px;
+  padding: 0.8rem;
+}
+
+.copyLabel {
+  margin: 0 0 0.45rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #ff8b3d;
+}
+
+.copyText {
+  margin: 0;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.6rem 0.7rem;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.copyBtn {
+  margin-top: 0.6rem;
+  width: 100%;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 8px;
+  background: #ff8b3d;
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.copyBtn.done {
+  background: var(--green);
+}
+
+.lessonCallout {
+  margin: 1.1rem 0 0;
+  padding: 0.8rem 0.9rem;
+  background: var(--bg);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.lessonFoot {
+  margin: 1rem 0 0;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+}
+
+/* 理论页课程卡下的课时入口 */
+.lessonList {
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.lessonListTitle {
+  margin: 0 0 0.35rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.lessonLink {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  color: var(--accent);
+  font-size: 0.94rem;
+  text-decoration: none;
+}
+
+.lessonLink span:first-child {
+  line-height: 1.5;
+}
