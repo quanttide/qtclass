@@ -1,17 +1,20 @@
 # CHANGELOG
 
-## [0.1.7] - 2026-11-16
+## [0.2.0] - 2026-11-19
 
 ### Added
 
-- 课时上架：理论页氛围编程卡挂课时入口，压入页 `/lessons/:name` 分步渲染（页眉 + 一步一动作 + 预期结果 + 课末提示），隐藏页签
+- 课时上架：课堂页氛围编程卡挂课时入口，压入页 `/lessons/:name` 分步渲染（页眉 + 一步一动作 + 预期结果 + 课末提示），隐藏页签
 - 课时契约 `models/lesson.ts`：`name`（兼 slug）/ `course` / `title` / `description` / `status` / `steps`，块类型收口为 note / copy / code / link / image；内容库 `data/lessons/` 一文件一课时，`publishedLessonsOf(course)` 出入口，draft 不对外
-- 首课 `hello-world`（做出你的第一个游戏）：文字与步骤源自教程仓 `assets/tutorials/vibe-coding/docs/intro/hello-world.html`，内容不改写只换载体；对照图字节一致拷入 `public/lessons/hello-world/`
-- 课时详情测试 4 例：入口、分步正文与复制指令、未知课时回理论、仅氛围编程卡出入口
+- 四课齐备：首课 `hello-world`（做出你的第一个游戏）与第 2-4 课 `lesson-2-coffee-shop`（换个壳，又是新游戏）/ `lesson-3-worker`（这回，你说了不算）/ `lesson-4-publish`（拿出去，给人玩），文字与步骤均源自教程仓 `assets/tutorials/vibe-coding/docs/intro/` 对应讲义，内容不改写只换载体；`lesson-N-` 前缀保证课序与字典序一致；对照图字节一致拷入 `public/lessons/hello-world/`
+- 课时页上一课 / 下一课入口：按 `publishedLessonsOf(course)` 取前后课，首课无上一课、末课无下一课
+- 测试：课时详情 5 例（入口、分步正文与复制指令、未知课时回理论、仅氛围编程卡出入口、首末课导航边界），路由与筛选断言随路径调整
 
 ### Changed
 
-- 底部导航页签「理论」改名「课堂」（路由 `/theory`、组件名与图标键不动，改路径会断外链与书签）；课时未找到的返回文案、README 与页签断言同步改名
+- 课堂页改为入口 `/`，实践页移到 `/practice`；未知路径重定向指向入口
+- 氛围编程课程介绍改为四课主线（适用人群 / 简介 / 模块标签），文案源自教程仓 intro 讲义
+- 底部导航页签「理论」改名「课堂」；课时未找到的返回文案、README 与页签断言同步改名
 
 ## [0.1.6] - 2026-11-12
 
