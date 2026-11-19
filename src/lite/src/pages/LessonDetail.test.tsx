@@ -47,7 +47,7 @@ describe('课时详情', () => {
     expect(screen.getByRole('link', { name: /做出你的第一个游戏/ })).toBeInTheDocument()
   })
 
-  it('第 1 课只有下一课入口，第 4 课只有上一课入口', () => {
+  it('首课只有下一课入口，末课只有上一课入口', () => {
     window.history.pushState({}, '', '/lessons/hello-world')
     render(<App />)
     expect(screen.getByRole('link', { name: /下一课/ })).toHaveAttribute(
@@ -57,12 +57,36 @@ describe('课时详情', () => {
     expect(screen.queryByRole('link', { name: /上一课/ })).toBeNull()
     cleanup()
 
+    // 第一章收官接第二章开篇：lesson-4 的下一课是第二章第 1 课
     window.history.pushState({}, '', '/lessons/lesson-4-publish')
+    render(<App />)
+    expect(screen.getByRole('link', { name: /下一课/ })).toHaveAttribute(
+      'href',
+      '/lessons/lesson-5-store-dashboard',
+    )
+    cleanup()
+
+    window.history.pushState({}, '', '/lessons/lesson-5-store-dashboard')
     render(<App />)
     expect(screen.getByRole('link', { name: /上一课/ })).toHaveAttribute(
       'href',
-      '/lessons/lesson-3-worker',
+      '/lessons/lesson-4-publish',
     )
     expect(screen.queryByRole('link', { name: /下一课/ })).toBeNull()
+  })
+
+  it('第二章第 1 课渲染页眉与分步正文', () => {
+    window.history.pushState({}, '', '/lessons/lesson-5-store-dashboard')
+    render(<App />)
+    expect(screen.getByText('氛围编程 · 第二章 · 第 1 课')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 1, name: '从游戏出发，做一个真实的门店经营看板' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 2, name: '复制这句话，粘贴进去' })).toBeInTheDocument()
+    // 一键复制的指令原样可见，学员不手打
+    expect(
+      screen.getAllByText(/把我做的咖啡店游戏，改成一个真实的门店经营看板/).length,
+    ).toBeGreaterThan(0)
+    expect(screen.getByRole('button', { name: '复制这句话' })).toBeInTheDocument()
   })
 })
