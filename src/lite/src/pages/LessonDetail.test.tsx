@@ -76,6 +76,15 @@ describe('课时详情', () => {
     expect(screen.getByRole('button', { name: '复制这句话' })).toBeInTheDocument()
   })
 
+  it('AI创意课时第 3 步给出可复制的独立提示词', () => {
+    window.history.pushState({}, '', '/lessons/creative-hello-world')
+    render(<App />)
+    expect(screen.getByRole('heading', { level: 1, name: '用 AI 生成你的第一张图' })).toBeInTheDocument()
+    expect(screen.getByText('复制这句提示词')).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: '复制这句话' }).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/暖光咖啡馆，窗外下雨/).length).toBeGreaterThan(0)
+  })
+
   it('课堂页上架课程顺序：AI创意 → AI编程 → AI工作 → AI教学', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
