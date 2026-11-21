@@ -39,19 +39,48 @@ describe('课时详情', () => {
     expect(screen.getByText('课时未找到')).toBeInTheDocument()
   })
 
-  it('只有AI编程卡出课时入口，其余三张不出', () => {
+  it('四张上架卡都出课时入口，未上架四张不出', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
-    // 「课时」小标题只出现一次，即只有AI编程挂了课时
-    expect(screen.getAllByText('课时')).toHaveLength(1)
-    expect(screen.getByRole('link', { name: /做出你的第一个游戏/ })).toBeInTheDocument()
+    // 每张上架卡各挂一个「课时」小标题，未上架卡不渲染
+    expect(screen.getAllByText('课时')).toHaveLength(4)
+    expect(screen.getByRole('link', { name: /做出你的第一个游戏/ })).toHaveAttribute(
+      'href',
+      '/lessons/hello-world',
+    )
+    expect(screen.getByRole('link', { name: /用 AI 生成你的第一张图/ })).toHaveAttribute(
+      'href',
+      '/lessons/creative-hello-world',
+    )
+    expect(screen.getByRole('link', { name: /总裁查岗：一句话摸清家底/ })).toHaveAttribute(
+      'href',
+      '/lessons/work-hello-world',
+    )
+    expect(screen.getByRole('link', { name: /把你熟的一件事，做成一门课/ })).toHaveAttribute(
+      'href',
+      '/lessons/teaching-hello-world',
+    )
   })
 
-  it('课堂页上架课程顺序：氛围创作 → AI编程 → 氛围工作 → 氛围教学', () => {
+  it('AI工作课时渲染页眉与一键复制指令', () => {
+    window.history.pushState({}, '', '/lessons/work-hello-world')
+    render(<App />)
+    expect(screen.getByText('AI工作 · 第 1 课')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 1, name: '总裁查岗：一句话摸清家底' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 2, name: '打开工具，粘贴下面这句话' })).toBeInTheDocument()
+    expect(
+      screen.getAllByText(/访问 game.quanttide.com\/tycoon/).length,
+    ).toBeGreaterThan(0)
+    expect(screen.getByRole('button', { name: '复制这句话' })).toBeInTheDocument()
+  })
+
+  it('课堂页上架课程顺序：AI创意 → AI编程 → AI工作 → AI教学', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
     const cards = screen.getAllByRole('heading', { level: 3 }).map((node) => node.textContent)
-    expect(cards).toEqual(['氛围创作', 'AI编程', '氛围工作', '氛围教学'])
+    expect(cards).toEqual(['AI创意', 'AI编程', 'AI工作', 'AI教学'])
   })
 
   it('首课只有下一课入口，末课只有上一课入口', () => {
