@@ -62,10 +62,10 @@ describe('课时详情', () => {
     )
   })
 
-  it('AI工作课时渲染页眉与一键复制指令', () => {
+  it('AI办公课时渲染页眉与一键复制指令', () => {
     window.history.pushState({}, '', '/lessons/work-hello-world')
     render(<App />)
-    expect(screen.getByText('AI工作 · 第 1 课')).toBeInTheDocument()
+    expect(screen.getByText('AI办公 · 第 1 课')).toBeInTheDocument()
     expect(
       screen.getByRole('heading', { level: 1, name: '总裁查岗：一句话摸清家底' }),
     ).toBeInTheDocument()
@@ -85,11 +85,11 @@ describe('课时详情', () => {
     expect(screen.getAllByText(/用刚才那段提示词，直接生成一张图片/).length).toBeGreaterThan(0)
   })
 
-  it('课堂页上架课程顺序：AI创意 → AI编程 → AI工作 → AI教学', () => {
+  it('课堂页上架课程顺序：AI创意 → AI办公 → AI编程 → AI教学', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
     const cards = screen.getAllByRole('heading', { level: 3 }).map((node) => node.textContent)
-    expect(cards).toEqual(['AI创意', 'AI编程', 'AI工作', 'AI教学'])
+    expect(cards).toEqual(['AI创意', 'AI办公', 'AI编程', 'AI教学'])
   })
 
   it('首课只有下一课入口，末课只有上一课入口', () => {

@@ -1,13 +1,13 @@
 import type { Lesson } from '../../src/models/lesson'
 
-// AI工作第 1 课。文字与步骤源自 data/profile/vibe-working/hello-world.html（内容不改写，只换载体）
+// AI办公第 1 课。文字与步骤源自 data/profile/vibe-working/hello-world.html（内容不改写，只换载体）
 const lesson: Lesson = {
   name: 'work-hello-world',
-  course: 'AI工作',
+  course: 'AI办公',
   title: '总裁查岗：一句话摸清家底',
   description: '当一回总裁：发一句话让 AI 去公开网站采集，交一份能逐条核对的现状报告。',
   status: 'published',
-  kicker: 'AI工作 · 第 1 课',
+  kicker: 'AI办公 · 第 1 课',
   lede: '不用开会、不用问人——发一句话，让 AI 去公开网站上替你查，交一份现状报告。',
   steps: [
     {

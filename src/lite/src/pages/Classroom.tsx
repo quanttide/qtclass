@@ -1,4 +1,4 @@
-// 课堂页：课程清单（AI编程的文案与课时源自教程仓 intro 讲义；AI创意 / AI工作 / AI教学的文案源自 data/profile 各自的 hello-world 课件，可随课件更新；训练营不在本页）
+// 课堂页：课程清单（AI编程的文案与课时源自教程仓 intro 讲义；AI创意 / AI办公 / AI教学的文案源自 data/profile 各自的 hello-world 课件，可随课件更新；训练营不在本页）
 // 卡片下方挂该课程已发布的课时入口，课时内容与文案来自 models/lesson，不在此改写
 import { Link } from 'react-router-dom'
 import { publishedLessonsOf } from '../models/lesson'
@@ -22,19 +22,19 @@ const courses = [
     online: true,
   },
   {
+    name: 'AI办公',
+    level: '入门',
+    audience: '想让 AI 替自己跑公开网站、拿现状报告的成员',
+    summary: '当一回总裁：发一句话让 AI 去公开网站采集部门现状，交一份能逐条核对的报告——查不到的它得老实写查不到，不许编。',
+    modules: ['一句话指令', 'AI 采集', '现状报告', '验收核对'],
+    online: true,
+  },
+  {
     name: 'AI编程',
     level: '入门',
     audience: '想用 AI 把想法做成作品、不用写代码的成员',
     summary: '同一个游戏做四遍：做出来、改起来、创出来、推出去。每一步只用一句话指挥 AI，做出能发给朋友玩的上线作品。',
     modules: ['照着做', '换个壳', '自己设计', '拿出去'],
-    online: true,
-  },
-  {
-    name: 'AI工作',
-    level: '入门',
-    audience: '想让 AI 替自己跑公开网站、拿现状报告的成员',
-    summary: '当一回总裁：发一句话让 AI 去公开网站采集部门现状，交一份能逐条核对的报告——查不到的它得老实写查不到，不许编。',
-    modules: ['一句话指令', 'AI 采集', '现状报告', '验收核对'],
     online: true,
   },
   {
