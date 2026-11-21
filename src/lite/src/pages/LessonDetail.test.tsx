@@ -39,11 +39,13 @@ describe('课时详情', () => {
     expect(screen.getByText('课时未找到')).toBeInTheDocument()
   })
 
-  it('四张上架卡都出课时入口，未上架四张不出', () => {
+  it('四张通识卡都出课时入口，按分级展示并标已上线', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
-    // 每张上架卡各挂一个「课时」小标题，未上架卡不渲染
+    // 分级标题 + 每张卡各挂一个「课时」小标题
+    expect(screen.getByRole('heading', { level: 2, name: '通识课程 · 大一' })).toBeInTheDocument()
     expect(screen.getAllByText('课时')).toHaveLength(4)
+    expect(screen.getAllByText('已上线')).toHaveLength(4)
     expect(screen.getByRole('link', { name: /做出你的第一个游戏/ })).toHaveAttribute(
       'href',
       '/lessons/hello-world',
@@ -83,6 +85,15 @@ describe('课时详情', () => {
     expect(screen.getByRole('heading', { level: 2, name: '复制这句话，发给元宝' })).toBeInTheDocument()
     expect(screen.getAllByRole('button', { name: '复制这句话' }).length).toBeGreaterThan(0)
     expect(screen.getAllByText(/用刚才那段提示词，直接生成一张图片/).length).toBeGreaterThan(0)
+  })
+
+  it('领域课程已移到 qtcloud-course 的课程清单，学员端不出现', () => {
+    window.history.pushState({}, '', '/')
+    render(<App />)
+
+    for (const moved of ['知识工作', '大数据导论', '数据工程', '生产实习']) {
+      expect(screen.queryByText(moved)).toBeNull()
+    }
   })
 
   it('课堂页上架课程顺序：AI创意 → AI办公 → AI编程 → AI教学', () => {

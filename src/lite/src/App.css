@@ -637,3 +637,21 @@
 .lessonLink span:first-child {
   line-height: 1.5;
 }
+
+/* 分级标题：通识课程 · 大一 */
+.trackHead {
+  font-size: 15px;
+  font-weight: 800;
+  color: #10356b;
+  margin: 18px 0 10px;
+}
+
+/* 上线状态（学员端只放已上线的课，状态留作标识） */
+.courseTop .courseStatus {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1c6b3f;
+  background: #e3f5ea;
+  border-radius: 999px;
+  padding: 2px 8px;
+}
