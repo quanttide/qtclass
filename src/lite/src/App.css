@@ -271,7 +271,7 @@
   font-size: 0.88rem;
 }
 
-/* 理论页：课程清单（自 site 迁入） */
+/* 课堂页：课程清单（自 site 迁入） */
 .courseSection {
   padding-top: 0.9rem;
 }
@@ -609,7 +609,7 @@
   font-size: 0.8rem;
 }
 
-/* 理论页课程卡下的课时入口 */
+/* 课堂页课程卡下的课时入口 */
 .lessonList {
   margin-top: 0.9rem;
   padding-top: 0.75rem;

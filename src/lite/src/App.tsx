@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom'
 import AppBar from './components/AppBar'
 import TabBar from './components/TabBar'
 import Practice from './pages/Practice'
-import Theory from './pages/Theory'
+import Classroom from './pages/Classroom'
 import Mine from './pages/Mine'
 import TaskDetail from './pages/TaskDetail'
 import LessonDetail from './pages/LessonDetail'
@@ -15,12 +15,12 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path={ROUTE_PATHS.practice} element={<Practice />} />
-      <Route path={ROUTE_PATHS.theory} element={<Theory />} />
+      <Route path={ROUTE_PATHS.classroom} element={<Classroom />} />
       <Route path={ROUTE_PATHS.mine} element={<Mine />} />
       <Route path={ROUTE_PATHS.taskItem} element={<TaskDetail />} />
       <Route path={ROUTE_PATHS.lessonItem} element={<LessonDetail />} />
       <Route path={ROUTE_PATHS.feedback} element={<Feedback />} />
-      <Route path="*" element={<Navigate to={ROUTE_PATHS.theory} replace />} />
+      <Route path="*" element={<Navigate to={ROUTE_PATHS.classroom} replace />} />
     </Routes>
   )
 }

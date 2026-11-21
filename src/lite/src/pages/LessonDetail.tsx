@@ -88,7 +88,7 @@ function LessonDetail() {
       <main>
         <div className="liteNotFound">
           <h2>课时未找到</h2>
-          <Link to={ROUTE_PATHS.theory} className="liteLink">
+          <Link to={ROUTE_PATHS.classroom} className="liteLink">
             返回课堂
           </Link>
         </div>

@@ -2,9 +2,9 @@ import type { ReactNode } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { TABS, isTabPath, type TabIcon } from '../routes'
 
-// 线性图标：理论=开卷、实践=任务板、我的=人形；当前页着色
+// 线性图标：课堂=开卷、实践=任务板、我的=人形；当前页着色
 const ICONS: Record<TabIcon, ReactNode> = {
-  theory: (
+  classroom: (
     <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
       <path
         d="M4 5.5h6a2 2 0 0 1 2 2v11a2 2 0 0 0-2-1.5H4zM20 5.5h-6a2 2 0 0 0-2 2v11a2 2 0 0 1 2-1.5h6z"

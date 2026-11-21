@@ -1,7 +1,7 @@
 // 路由路径与链接地址的唯一来源
 export const ROUTE_PATHS = {
   practice: '/practice',
-  theory: '/',
+  classroom: '/',
   mine: '/mine',
   taskItem: '/tasks/:slug',
   lessonItem: '/lessons/:name',
@@ -10,7 +10,7 @@ export const ROUTE_PATHS = {
 
 // 底部导航三个页签（顺序即导航顺序：课堂、实践、我的）
 export const TABS = [
-  { path: ROUTE_PATHS.theory, label: '课堂', icon: 'theory' },
+  { path: ROUTE_PATHS.classroom, label: '课堂', icon: 'classroom' },
   { path: ROUTE_PATHS.practice, label: '实践', icon: 'practice' },
   { path: ROUTE_PATHS.mine, label: '我的', icon: 'mine' },
 ] as const
@@ -18,7 +18,7 @@ export const TABS = [
 export type TabIcon = (typeof TABS)[number]['icon']
 
 // 页签根路径显示底部导航；任务详情、课时详情与反馈为压入页，按微信惯例隐藏页签
-const TAB_PATHS: string[] = [ROUTE_PATHS.practice, ROUTE_PATHS.theory, ROUTE_PATHS.mine]
+const TAB_PATHS: string[] = [ROUTE_PATHS.practice, ROUTE_PATHS.classroom, ROUTE_PATHS.mine]
 
 export function isTabPath(pathname: string): boolean {
   return TAB_PATHS.includes(pathname)

@@ -1,4 +1,4 @@
-// 理论页：课程清单（AI编程的文案与课时源自教程仓 intro 讲义；氛围创作 / 氛围工作 / 氛围教学的文案源自 data/profile 各自的 hello-world 课件，可随课件更新；训练营不在本页）
+// 课堂页：课程清单（AI编程的文案与课时源自教程仓 intro 讲义；氛围创作 / 氛围工作 / 氛围教学的文案源自 data/profile 各自的 hello-world 课件，可随课件更新；训练营不在本页）
 // 卡片下方挂该课程已发布的课时入口，课时内容与文案来自 models/lesson，不在此改写
 import { Link } from 'react-router-dom'
 import { publishedLessonsOf } from '../models/lesson'
@@ -102,8 +102,8 @@ function renderCard(course: (typeof courses)[number]) {
   )
 }
 
-// 课程页：课程列表。所有课程都是实践课，不区分理论 / 实践，训练营不在本页
-function Theory() {
+// 课程列表：所有课程都是实践课，不区分理论 / 实践，训练营不在本页
+function Classroom() {
   return (
     <main>
       <section className="courseSection" aria-labelledby="courses-title">
@@ -126,4 +126,4 @@ function Theory() {
   )
 }
 
-export default Theory
+export default Classroom

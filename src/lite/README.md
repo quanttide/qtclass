@@ -22,7 +22,7 @@ data/lessons/          # 课时内容库（一文件一课时，静态载荷，�
 src/
 ├── models/task.ts     # 任务契约（Task 形状 + 五状态机）与两把尺枚举（单一事实源）
 ├── models/lesson.ts   # 课时契约（Lesson 形状 + 步骤块类型）与按课程取已发布课时
-├── pages/             # 页签三页：Practice（任务书库 + 筛选）/ Theory（课程清单，自 site 迁入）/ Mine（个人页骨架）
+├── pages/             # 页签三页：Practice（任务书库 + 筛选）/ Classroom（课堂页课程清单，自 site 迁入）/ Mine（个人页骨架）
 │                      # 压入三页：TaskDetail（题面 + 题面素材）/ LessonDetail（课时分步正文）/ Feedback（评语与状态），隐藏页签
 ├── components/        # AppBar / TabBar / Markdown 渲染（GFM）
 └── utils/             # frontmatter 解析与剥离（含 tags）

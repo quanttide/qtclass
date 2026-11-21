@@ -29,7 +29,7 @@ export interface LessonStep {
 export interface Lesson {
   // 课时名，符合 slug 标准，兼可读路径与编排，不另设 slug 字段
   name: string
-  // 所属课程名，与理论页 courses.name 同源
+  // 所属课程名，与课堂页 courses.name 同源
   course: string
   title: string
   description: string

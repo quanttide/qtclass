@@ -3,11 +3,11 @@ import { render, screen, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import App from '../App'
 
-// 课时链路：理论页出入口 → 课时详情按 name 取到 → 未知名诚实提示
+// 课时链路：课堂页出入口 → 课时详情按 name 取到 → 未知名诚实提示
 describe('课时详情', () => {
   afterEach(cleanup)
 
-  it('理论页AI编程卡挂出课时入口', () => {
+  it('课堂页AI编程卡挂出课时入口', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
     const link = screen.getByRole('link', { name: /做出你的第一个游戏/ })
@@ -33,7 +33,7 @@ describe('课时详情', () => {
     )
   })
 
-  it('未知课时回理论', () => {
+  it('未知课时回课堂', () => {
     window.history.pushState({}, '', '/lessons/no-such')
     render(<App />)
     expect(screen.getByText('课时未找到')).toBeInTheDocument()
