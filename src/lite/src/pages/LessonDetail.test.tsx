@@ -39,12 +39,19 @@ describe('课时详情', () => {
     expect(screen.getByText('课时未找到')).toBeInTheDocument()
   })
 
-  it('只有AI编程卡出课时入口，其余四张不出', () => {
+  it('只有AI编程卡出课时入口，其余三张不出', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
     // 「课时」小标题只出现一次，即只有AI编程挂了课时
     expect(screen.getAllByText('课时')).toHaveLength(1)
     expect(screen.getByRole('link', { name: /做出你的第一个游戏/ })).toBeInTheDocument()
+  })
+
+  it('课堂页上架课程顺序：氛围创作 → AI编程 → 氛围工作 → 氛围教学', () => {
+    window.history.pushState({}, '', '/')
+    render(<App />)
+    const cards = screen.getAllByRole('heading', { level: 3 }).map((node) => node.textContent)
+    expect(cards).toEqual(['氛围创作', 'AI编程', '氛围工作', '氛围教学'])
   })
 
   it('首课只有下一课入口，末课只有上一课入口', () => {
