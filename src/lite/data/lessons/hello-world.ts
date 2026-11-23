@@ -9,13 +9,22 @@ const lesson: Lesson = {
   description: '照着五步做出并上线你的第一个游戏，全程不用写代码。',
   status: 'published',
   kicker: 'AI编程 · 第 1 课',
-  lede: '不用懂代码，照着做就行。每一步都告诉你「做完会看到什么」',
+  lede: '不用懂代码，照着做就行。你要交的只有一个东西：一个自己的网址，点开能玩。',
   steps: [
     {
       num: 1,
       title: '打开 WorkBuddy',
       do: '在手机上打开 WorkBuddy App',
       blocks: [
+        {
+          kind: 'note',
+          label: '先看清这一课要你干什么',
+          lines: [
+            '照着那个网页做一个一模一样的，上线成你自己的网址。',
+            '不用懂代码，也不用改任何东西——先照抄，做出一个能点开玩的。',
+            '最后你会拿到一个链接，那就是你的第一个作品。',
+          ],
+        },
         {
           kind: 'note',
           label: '做完你会看到',
