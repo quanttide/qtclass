@@ -37,11 +37,17 @@ describe('课程主页', () => {
       'href',
       '/lessons/hello-world',
     )
-    // 在读班：期名 + 进行中 + 节奏，无报名入口
+    // 在读班：状态、节奏、限额、窗口、报名条件与入口俱全
     expect(screen.getByRole('heading', { level: 2, name: '首期' })).toBeInTheDocument()
     expect(screen.getByText('进行中')).toBeInTheDocument()
     expect(screen.getByText('每周一个学习周期，可拖到 10 天再结算')).toBeInTheDocument()
-    expect(screen.queryByText(/报名/)).toBeNull()
+    expect(screen.getByText(/免费 3~5 名/)).toBeInTheDocument()
+    expect(screen.getByText(/11 月 23 日起开放/)).toBeInTheDocument()
+    expect(screen.getByText(/按第 1 课交成品/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /发邮件报名/ })).toHaveAttribute(
+      'href',
+      'mailto:class@quanttide.cn',
+    )
   })
 
   it('未开班课程不出班级节', () => {

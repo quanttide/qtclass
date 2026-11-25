@@ -322,13 +322,24 @@
   font-size: 0.88rem;
 }
 
-/* 卡片上的班级一行：状态徽标 + 期名与节奏 */
+/* 卡片上的班级块：状态 + 期名 + 限额 + 报名条件 */
 .cardCohort {
+  margin: 0.75rem 0 0;
+}
+
+.cardCohortTop {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.45rem;
-  margin: 0.75rem 0 0;
   font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.cardCohortApply {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.55;
   color: var(--ink-soft);
 }
 
@@ -723,6 +734,21 @@
   margin: 0.3rem 0 0;
   font-size: 0.85rem;
   color: var(--ink-soft);
+}
+
+/* 限额 / 报名窗口 / 报名条件：标签 + 内容两段式 */
+.cohortField {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.cohortFieldLabel {
+  display: inline-block;
+  min-width: 4.5em;
+  margin-right: 0.4rem;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
 }
 
 .cohortSignup {

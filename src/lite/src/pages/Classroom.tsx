@@ -30,14 +30,18 @@ function renderCard(course: (typeof courses)[number]) {
         ))}
       </div>
       {cohort && (
-        <p className="cardCohort">
-          <span className={`cohortBadge ${cohort.status}`}>
-            {COHORT_STATUS_LABEL[cohort.status]}
-          </span>
-          <span>
-            {cohort.name} · {cohort.schedule}
-          </span>
-        </p>
+        <div className="cardCohort">
+          <div className="cardCohortTop">
+            <span className={`cohortBadge ${cohort.status}`}>
+              {COHORT_STATUS_LABEL[cohort.status]}
+            </span>
+            <span className="cardCohortName">{cohort.name}</span>
+            {cohort.quota && <span className="cardCohortQuota">限额 {cohort.quota}</span>}
+          </div>
+          {cohort.apply && (
+            <p className="cardCohortApply">报名条件：{cohort.apply}</p>
+          )}
+        </div>
       )}
       <span className="courseHomeLink" aria-hidden="true">
         课程主页 ›

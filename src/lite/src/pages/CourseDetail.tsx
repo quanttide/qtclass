@@ -70,6 +70,24 @@ function CourseDetail() {
                   </span>
                 </div>
                 <p className="cohortMeta">{cohort.schedule}</p>
+                {cohort.quota && (
+                  <p className="cohortField">
+                    <span className="cohortFieldLabel">限额</span>
+                    {cohort.quota}
+                  </p>
+                )}
+                {cohort.window && (
+                  <p className="cohortField">
+                    <span className="cohortFieldLabel">报名窗口</span>
+                    {cohort.window}
+                  </p>
+                )}
+                {cohort.apply && (
+                  <p className="cohortField">
+                    <span className="cohortFieldLabel">报名条件</span>
+                    {cohort.apply}
+                  </p>
+                )}
                 {cohort.signup && (
                   <a className="cohortSignup" href={cohort.signup.href}>
                     {cohort.signup.label} ›

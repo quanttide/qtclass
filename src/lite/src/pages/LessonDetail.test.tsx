@@ -46,6 +46,9 @@ describe('课时详情', () => {
     expect(screen.getByRole('heading', { level: 2, name: '通识课程 · 大一' })).toBeInTheDocument()
     expect(screen.getAllByRole('link', { name: /课程主页/ })).toHaveLength(4)
     expect(screen.getAllByText('已上线')).toHaveLength(4)
+    // 班级块：有班的两门卡上带状态与报名条件，限额只有 AI编程有事实
+    expect(screen.getAllByText(/报名条件/)).toHaveLength(2)
+    expect(screen.getByText(/免费 3~5 名/)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'AI创意 课程主页' })).toHaveAttribute(
       'href',
       '/courses/ai-creative',
