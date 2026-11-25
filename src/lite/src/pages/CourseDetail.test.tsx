@@ -7,7 +7,7 @@ import App from '../App'
 describe('课程主页', () => {
   afterEach(cleanup)
 
-  it('在读班课程渲染介绍、课时与班级', () => {
+  it('招生中班级渲染介绍、课时与五件套', () => {
     window.history.pushState({}, '', '/courses/vibe-coding')
     render(<App />)
     expect(screen.getByRole('heading', { level: 1, name: 'AI编程' })).toBeInTheDocument()
@@ -19,9 +19,9 @@ describe('课程主页', () => {
       'href',
       '/lessons/hello-world',
     )
-    // 在读班：状态、节奏、限额、窗口、报名条件与入口俱全
+    // 招生中（AI编程）：状态、节奏、限额、窗口、报名条件与入口俱全
     expect(screen.getByRole('heading', { level: 2, name: '首期' })).toBeInTheDocument()
-    expect(screen.getByText('进行中')).toBeInTheDocument()
+    expect(screen.getByText('招生中')).toBeInTheDocument()
     expect(screen.getByText('每周一个学习周期，可拖到 10 天再结算')).toBeInTheDocument()
     expect(screen.getByText(/免费 3~5 名/)).toBeInTheDocument()
     expect(screen.getByText(/11 月 23 日起开放/)).toBeInTheDocument()
@@ -39,7 +39,7 @@ describe('课程主页', () => {
     expect(screen.queryByText('班级')).toBeNull()
   })
 
-  it('招生中班级带报名入口', () => {
+  it('招生中班级无事实字段时只出状态与入口', () => {
     window.history.pushState({}, '', '/courses/vibe-working')
     render(<App />)
     expect(screen.getByRole('heading', { level: 1, name: 'AI办公' })).toBeInTheDocument()
