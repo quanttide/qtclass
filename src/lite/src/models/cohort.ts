@@ -11,8 +11,8 @@ export interface Cohort {
   // 期名，如「首期」
   name: string
   status: CohortStatus
-  // 学习节奏，如「每周一个学习周期，可拖到 10 天再结算」
-  schedule: string
+  // 开班日期，如「11 月 25 日」；没有事实不写
+  start?: string
   // 限额，如「免费 3~5 名 · 付费 15 名」；没有事实就不写
   quota?: string
   // 报名窗口，如「每月 20 日至次月 10 日」

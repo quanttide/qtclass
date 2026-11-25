@@ -19,11 +19,11 @@ describe('课程主页', () => {
       'href',
       '/lessons/hello-world',
     )
-    // 招生中（AI编程）：状态、节奏、限额、窗口、报名条件与入口俱全
+    // 招生中（AI编程）：状态、限额、窗口、报名条件与入口俱全
     expect(screen.getByRole('heading', { level: 2, name: '首期' })).toBeInTheDocument()
     expect(screen.getByText('招生中')).toBeInTheDocument()
-    expect(screen.getByText('每周一个学习周期，可拖到 10 天再结算')).toBeInTheDocument()
     expect(screen.getByText(/免费 3~5 名/)).toBeInTheDocument()
+    expect(screen.queryByText('开班')).toBeNull()
     expect(screen.getByText(/11 月 23 日起开放/)).toBeInTheDocument()
     expect(screen.getByText(/按第 1 课交成品/)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /发邮件报名/ })).toHaveAttribute(
@@ -43,6 +43,8 @@ describe('课程主页', () => {
     render(<App />)
     expect(screen.getByRole('heading', { level: 1, name: 'AI办公' })).toBeInTheDocument()
     expect(screen.getByText('招生中')).toBeInTheDocument()
+    expect(screen.getByText('开班')).toBeInTheDocument()
+    expect(screen.getByText('11 月 27 日')).toBeInTheDocument()
     const signup = screen.getByRole('link', { name: /发邮件报名/ })
     expect(signup).toHaveAttribute('href', 'mailto:class@quanttide.cn')
     expect(screen.queryByText('示例')).toBeNull()

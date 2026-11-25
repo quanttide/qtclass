@@ -71,7 +71,12 @@ function CourseDetail() {
                     {COHORT_STATUS_LABEL[cohort.status]}
                   </span>
                 </div>
-                <p className="cohortMeta">{cohort.schedule}</p>
+                {cohort.start && (
+                  <p className="cohortField">
+                    <span className="cohortFieldLabel">开班</span>
+                    {cohort.start}
+                  </p>
+                )}
                 {cohort.quota && (
                   <p className="cohortField">
                     <span className="cohortFieldLabel">限额</span>
