@@ -11,7 +11,7 @@ describe('课时详情', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
     const link = screen.getByRole('link', { name: 'AI编程 课程主页' })
-    expect(link).toHaveAttribute('href', '/courses/ai-programming')
+    expect(link).toHaveAttribute('href', '/courses/vibe-coding')
   })
 
   it('课时详情渲染页眉与分步正文', () => {
@@ -51,19 +51,19 @@ describe('课时详情', () => {
     expect(screen.getByText(/免费 3~5 名/)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'AI创意 课程主页' })).toHaveAttribute(
       'href',
-      '/courses/ai-creative',
+      '/courses/vibe-creating',
     )
     expect(screen.getByRole('link', { name: 'AI办公 课程主页' })).toHaveAttribute(
       'href',
-      '/courses/ai-office',
+      '/courses/vibe-working',
     )
     expect(screen.getByRole('link', { name: 'AI编程 课程主页' })).toHaveAttribute(
       'href',
-      '/courses/ai-programming',
+      '/courses/vibe-coding',
     )
     expect(screen.getByRole('link', { name: 'AI教学 课程主页' })).toHaveAttribute(
       'href',
-      '/courses/ai-teaching',
+      '/courses/vibe-teaching',
     )
   })
 

@@ -15,7 +15,7 @@ export interface Course {
 export const courses: Course[] = [
   {
     name: 'AI创意',
-    slug: 'ai-creative',
+    slug: 'vibe-creating',
     track: '通识',
     level: '入门',
     audience: '想把一段文字画出来、第一次用 AI 生图的成员',
@@ -26,7 +26,7 @@ export const courses: Course[] = [
   },
   {
     name: 'AI办公',
-    slug: 'ai-office',
+    slug: 'vibe-working',
     track: '通识',
     level: '入门',
     audience: '想让 AI 替自己跑公开网站、拿现状报告的成员',
@@ -37,7 +37,7 @@ export const courses: Course[] = [
   },
   {
     name: 'AI编程',
-    slug: 'ai-programming',
+    slug: 'vibe-coding',
     track: '通识',
     level: '入门',
     audience: '想用 AI 把想法做成作品、不用写代码的成员',
@@ -48,7 +48,7 @@ export const courses: Course[] = [
   },
   {
     name: 'AI教学',
-    slug: 'ai-teaching',
+    slug: 'vibe-teaching',
     track: '通识',
     level: '入门',
     audience: '会做一件事、有人想学，但没学过教学法的成员',

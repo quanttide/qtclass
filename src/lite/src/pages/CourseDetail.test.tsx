@@ -26,7 +26,7 @@ describe('课程主页', () => {
   afterEach(cleanup)
 
   it('在读班课程渲染介绍、课时与班级', () => {
-    window.history.pushState({}, '', '/courses/ai-programming')
+    window.history.pushState({}, '', '/courses/vibe-coding')
     render(<App />)
     expect(screen.getByRole('heading', { level: 1, name: 'AI编程' })).toBeInTheDocument()
     expect(screen.getByText('课程介绍')).toBeInTheDocument()
@@ -51,14 +51,14 @@ describe('课程主页', () => {
   })
 
   it('未开班课程不出班级节', () => {
-    window.history.pushState({}, '', '/courses/ai-office')
+    window.history.pushState({}, '', '/courses/vibe-working')
     render(<App />)
     expect(screen.getByRole('heading', { level: 1, name: 'AI办公' })).toBeInTheDocument()
     expect(screen.queryByText('班级')).toBeNull()
   })
 
   it('招生中班级带报名入口', () => {
-    window.history.pushState({}, '', '/courses/ai-teaching')
+    window.history.pushState({}, '', '/courses/vibe-teaching')
     render(<App />)
     expect(screen.getByText('招生中')).toBeInTheDocument()
     const signup = screen.getByRole('link', { name: /报名入班/ })

@@ -11,7 +11,7 @@ describe('页面渲染冒烟', () => {
     { path: '/practice', text: '小说发行工作室任务' },
     { path: '/practice', text: '模拟经营游戏工作室任务' },
     { path: '/', text: 'AI编程' },
-    { path: '/courses/ai-programming', text: '课程介绍' },
+    { path: '/courses/vibe-coding', text: '课程介绍' },
     { path: '/mine', text: /待接入/ },
     { path: '/tasks/qtgame-tycoon', text: /题面素材/ },
     { path: '/tasks/quanttide-fiction-of-founder', text: /4399|晋江/ },
