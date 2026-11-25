@@ -7,11 +7,11 @@ import App from '../App'
 describe('课时详情', () => {
   afterEach(cleanup)
 
-  it('课堂页AI编程卡挂出课时入口', () => {
+  it('课堂页AI编程卡导航到课程主页', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
-    const link = screen.getByRole('link', { name: /做出你的第一个游戏/ })
-    expect(link).toHaveAttribute('href', '/lessons/hello-world')
+    const link = screen.getByRole('link', { name: 'AI编程 课程主页' })
+    expect(link).toHaveAttribute('href', '/courses/ai-programming')
   })
 
   it('课时详情渲染页眉与分步正文', () => {
@@ -39,28 +39,28 @@ describe('课时详情', () => {
     expect(screen.getByText('课时未找到')).toBeInTheDocument()
   })
 
-  it('四张通识卡都出课时入口，按分级展示并标已上线', () => {
+  it('四张通识卡都进课程主页，按分级展示并标已上线', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
-    // 分级标题 + 每张卡各挂一个「课时」小标题
+    // 分级标题 + 四张卡整体可点进课程主页；课时列表在课程主页，不在卡片上
     expect(screen.getByRole('heading', { level: 2, name: '通识课程 · 大一' })).toBeInTheDocument()
-    expect(screen.getAllByText('课时')).toHaveLength(4)
+    expect(screen.getAllByRole('link', { name: /课程主页/ })).toHaveLength(4)
     expect(screen.getAllByText('已上线')).toHaveLength(4)
-    expect(screen.getByRole('link', { name: /做出你的第一个游戏/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'AI创意 课程主页' })).toHaveAttribute(
       'href',
-      '/lessons/hello-world',
+      '/courses/ai-creative',
     )
-    expect(screen.getByRole('link', { name: /用 AI 生成你的第一张图/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'AI办公 课程主页' })).toHaveAttribute(
       'href',
-      '/lessons/creative-hello-world',
+      '/courses/ai-office',
     )
-    expect(screen.getByRole('link', { name: /总裁查岗：一句话摸清家底/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'AI编程 课程主页' })).toHaveAttribute(
       'href',
-      '/lessons/work-hello-world',
+      '/courses/ai-programming',
     )
-    expect(screen.getByRole('link', { name: /把你熟的一件事，做成一门课/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'AI教学 课程主页' })).toHaveAttribute(
       'href',
-      '/lessons/teaching-hello-world',
+      '/courses/ai-teaching',
     )
   })
 

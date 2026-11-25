@@ -306,6 +306,44 @@
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 1.1rem 1.2rem;
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+/* 卡片底部：进课程主页的入口行 */
+.courseHomeLink {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 0.88rem;
+}
+
+/* 卡片上的班级一行：状态徽标 + 期名与节奏 */
+.cardCohort {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.cohortBadge {
+  flex-shrink: 0;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  font-size: 0.72rem;
+}
+
+.cohortBadge.running {
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 .courseTop {
@@ -636,6 +674,63 @@
 
 .lessonLink span:first-child {
   line-height: 1.5;
+}
+
+/* 课程主页 · 班级信息 */
+.cohortList {
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.cohortRow {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.cohortRow:last-child {
+  border-bottom: none;
+}
+
+.cohortTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.cohortTop h2 {
+  margin: 0;
+  font-size: 0.98rem;
+}
+
+.cohortStatus {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+
+.cohortStatus.recruiting {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.cohortMeta {
+  margin: 0.3rem 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.cohortSignup {
+  display: inline-flex;
+  margin-top: 0.45rem;
+  color: var(--accent);
+  font-size: 0.9rem;
+  text-decoration: none;
 }
 
 /* 分级标题：通识课程 · 大一 */

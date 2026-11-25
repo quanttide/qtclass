@@ -6,6 +6,7 @@ import Classroom from './pages/Classroom'
 import Mine from './pages/Mine'
 import TaskDetail from './pages/TaskDetail'
 import LessonDetail from './pages/LessonDetail'
+import CourseDetail from './pages/CourseDetail'
 import Feedback from './pages/Feedback'
 import { ROUTE_PATHS } from './routes'
 import './App.css'
@@ -19,6 +20,7 @@ export function AppRoutes() {
       <Route path={ROUTE_PATHS.mine} element={<Mine />} />
       <Route path={ROUTE_PATHS.taskItem} element={<TaskDetail />} />
       <Route path={ROUTE_PATHS.lessonItem} element={<LessonDetail />} />
+      <Route path={ROUTE_PATHS.courseItem} element={<CourseDetail />} />
       <Route path={ROUTE_PATHS.feedback} element={<Feedback />} />
       <Route path="*" element={<Navigate to={ROUTE_PATHS.classroom} replace />} />
     </Routes>
