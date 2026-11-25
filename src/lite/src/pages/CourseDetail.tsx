@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getCourse } from '../models/course'
 import { publishedLessonsOf } from '../models/lesson'
 import { cohortsOf, COHORT_STATUS_LABEL } from '../models/cohort'
+import { examplesOf } from '../models/example'
 import { lessonPath, ROUTE_PATHS } from '../routes'
 
 // 课程主页：课程介绍 + 课时列表 + 班级信息。压入页，隐藏页签
@@ -24,6 +25,7 @@ function CourseDetail() {
 
   const lessons = publishedLessonsOf(course.name)
   const cohorts = cohortsOf(course.name)
+  const examples = examplesOf(course.name)
 
   return (
     <main>
@@ -95,6 +97,27 @@ function CourseDetail() {
                 )}
                 {cohort.note && <p className="cohortMeta">{cohort.note}</p>}
               </div>
+            ))}
+          </section>
+        )}
+
+        {examples.length > 0 && (
+          <section className="exampleList" aria-label="示例">
+            <p className="lessonListTitle">示例</p>
+            {examples.map((example) => (
+              <a
+                key={example.url}
+                className="exampleLink"
+                href={example.url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="exampleText">
+                  <span className="exampleTitle">{example.title}</span>
+                  <span className="exampleNote">{example.note}</span>
+                </span>
+                <span className="exampleAction">{example.action} ›</span>
+              </a>
             ))}
           </section>
         )}

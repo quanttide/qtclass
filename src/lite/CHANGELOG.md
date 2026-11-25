@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [Unreleased]
+
+### Added
+
+- 课程主页第四节「示例」（英文名 example）：官方版参照两条——原版游戏试玩、原版宣传册；数据载荷 `data/examples.ts`，学员作品待署名口径定了再加数据行
+
 ## [0.3.3] - 2026-11-25
 
 ### Removed

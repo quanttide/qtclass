@@ -45,6 +45,21 @@ describe('课程主页', () => {
     expect(screen.getByText('招生中')).toBeInTheDocument()
     const signup = screen.getByRole('link', { name: /发邮件报名/ })
     expect(signup).toHaveAttribute('href', 'mailto:class@quanttide.cn')
+    expect(screen.queryByText('示例')).toBeNull()
+  })
+
+  it('官方示例两条只在有示例的课程出现', () => {
+    window.history.pushState({}, '', '/courses/vibe-coding')
+    render(<App />)
+    expect(screen.getByText('示例')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /试玩游戏/ })).toHaveAttribute(
+      'href',
+      'https://tycoon.game.quanttide.com',
+    )
+    expect(screen.getByRole('link', { name: /查看宣传册/ })).toHaveAttribute(
+      'href',
+      'https://game.quanttide.com/tycoon',
+    )
   })
 
   it('未知课程回课堂', () => {
