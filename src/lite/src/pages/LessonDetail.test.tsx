@@ -76,7 +76,7 @@ describe('课时详情', () => {
     ).toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 2, name: '打开工具，粘贴下面这句话' })).toBeInTheDocument()
     expect(
-      screen.getAllByText(/访问 game.quanttide.com\/tycoon/).length,
+      screen.getAllByText(/tycoon\.game\.quanttide\.com 能不能打开/).length,
     ).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: '复制这句话' })).toBeInTheDocument()
   })

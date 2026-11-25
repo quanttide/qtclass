@@ -1,8 +1,8 @@
 import type { Cohort } from '../src/models/cohort'
 
 // 班级载荷：加一个班 = 加一条记录再发版（lite/v0.x.y）
-// 现状：AI编程、AI创意已开班（在读，滚动插班仍可报名）；AI办公、AI教学未开班，无记录
-// 限额与窗口只有 AI编程有事实（宣传册社会招生页），AI创意暂缺，不编
+// 现状：AI编程、AI创意在读（滚动插班仍可报名）；AI办公招生中；AI教学未开班，无记录
+// 限额与窗口只有 AI编程有事实（宣传册社会招生页），AI创意暂缺；AI办公只开班不写限额，不编
 export const cohorts: Cohort[] = [
   {
     id: 'ai-programming-1',
@@ -22,6 +22,14 @@ export const cohorts: Cohort[] = [
     status: 'running',
     schedule: '每周一个学习周期，可拖到 10 天再结算',
     apply: '按第 1 课交成品：你生成的第一张图，附一段制作说明（怎么做出来的、卡在哪一步）',
+    signup: { label: '发邮件报名', href: 'mailto:class@quanttide.cn' },
+  },
+  {
+    id: 'ai-office-1',
+    course: 'AI办公',
+    name: '首期',
+    status: 'recruiting',
+    schedule: '每周一个学习周期，可拖到 10 天再结算',
     signup: { label: '发邮件报名', href: 'mailto:class@quanttide.cn' },
   },
 ]
