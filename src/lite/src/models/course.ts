@@ -46,17 +46,6 @@ export const courses: Course[] = [
     modules: ['照着做', '换个壳', '自己设计', '拿出去'],
     online: true,
   },
-  {
-    name: 'AI教学',
-    slug: 'vibe-teaching',
-    track: '通识',
-    level: '入门',
-    audience: '会做一件事、有人想学，但没学过教学法的成员',
-    summary:
-      '不用教龄不用证书：挑一件你熟的事，拆成几步，每步写清「做完你会看到」，生成自己的课程闯关图——做一遍就做出来了。',
-    modules: ['想一件事', '拆成几步', '做完你会看到', '生成课程图'],
-    online: true,
-  },
 ]
 
 export function getCourse(slug: string): Course | undefined {

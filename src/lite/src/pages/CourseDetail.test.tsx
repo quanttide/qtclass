@@ -32,11 +32,10 @@ describe('课程主页', () => {
     )
   })
 
-  it('未开班课程不出班级节', () => {
+  it('已下线课程落到未找到', () => {
     window.history.pushState({}, '', '/courses/vibe-teaching')
     render(<App />)
-    expect(screen.getByRole('heading', { level: 1, name: 'AI教学' })).toBeInTheDocument()
-    expect(screen.queryByText('班级')).toBeNull()
+    expect(screen.getByText('课程未找到')).toBeInTheDocument()
   })
 
   it('招生中班级无事实字段时只出状态与入口', () => {

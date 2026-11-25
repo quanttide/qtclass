@@ -39,13 +39,13 @@ describe('课时详情', () => {
     expect(screen.getByText('课时未找到')).toBeInTheDocument()
   })
 
-  it('四张通识卡都进课程主页，按分级展示并标已上线', () => {
+  it('三张通识卡都进课程主页，按分级展示并标已上线', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
-    // 分级标题 + 四张卡整体可点进课程主页；课时列表在课程主页，不在卡片上
+    // 分级标题 + 三张卡整体可点进课程主页；课时列表在课程主页，不在卡片上
     expect(screen.getByRole('heading', { level: 2, name: '通识课程 · 大一' })).toBeInTheDocument()
-    expect(screen.getAllByRole('link', { name: /课程主页/ })).toHaveLength(4)
-    expect(screen.getAllByText('已上线')).toHaveLength(4)
+    expect(screen.getAllByRole('link', { name: /课程主页/ })).toHaveLength(3)
+    expect(screen.getAllByText('已上线')).toHaveLength(3)
     // 班级块：有班的两门卡上带状态与报名条件，限额只有 AI编程有事实
     expect(screen.getAllByText(/报名条件/)).toHaveLength(2)
     expect(screen.getByText(/免费 3~5 名/)).toBeInTheDocument()
@@ -60,10 +60,6 @@ describe('课时详情', () => {
     expect(screen.getByRole('link', { name: 'AI编程 课程主页' })).toHaveAttribute(
       'href',
       '/courses/vibe-coding',
-    )
-    expect(screen.getByRole('link', { name: 'AI教学 课程主页' })).toHaveAttribute(
-      'href',
-      '/courses/vibe-teaching',
     )
   })
 
@@ -99,11 +95,11 @@ describe('课时详情', () => {
     }
   })
 
-  it('课堂页上架课程顺序：AI创意 → AI办公 → AI编程 → AI教学', () => {
+  it('课堂页上架课程顺序：AI创意 → AI办公 → AI编程', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
     const cards = screen.getAllByRole('heading', { level: 3 }).map((node) => node.textContent)
-    expect(cards).toEqual(['AI创意', 'AI办公', 'AI编程', 'AI教学'])
+    expect(cards).toEqual(['AI创意', 'AI办公', 'AI编程'])
   })
 
   it('首课只有下一课入口，末课只有上一课入口', () => {

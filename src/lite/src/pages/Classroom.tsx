@@ -1,4 +1,4 @@
-// 课堂页：课程清单卡（AI编程的文案与课时源自教程仓 intro 讲义；AI创意 / AI办公 / AI教学的文案源自 data/profile 各自的 hello-world 课件，可随课件更新；训练营不在本页）
+// 课堂页：课程清单卡（AI编程的文案与课时源自教程仓 intro 讲义；AI创意 / AI办公的文案源自 data/profile 各自的 hello-world 课件，可随课件更新；训练营不在本页）
 // 卡片整体导航到课程主页（介绍、课时、班级都在那里）；卡片只带一行班级状态
 // 这里只放已上线的通识课；全量清单（含领域课程与上线状态）在 qtcloud-course 的 src/lite
 import { Link } from 'react-router-dom'

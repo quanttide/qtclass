@@ -1,7 +1,7 @@
 import type { Cohort } from '../src/models/cohort'
 
 // 班级载荷：加一个班 = 加一条记录再发版（lite/v0.x.y）
-// 现状：AI办公、AI编程、AI创意均招生中；AI教学未开班，无记录
+// 现状：AI办公、AI编程、AI创意均招生中（AI教学已下线）
 // 限额与窗口只有 AI编程有事实（宣传册社会招生页），AI创意暂缺；AI办公只开班不写限额，不编
 export const cohorts: Cohort[] = [
   {
