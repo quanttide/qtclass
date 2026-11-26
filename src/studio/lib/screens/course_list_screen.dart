@@ -3,7 +3,10 @@ import '../models/course.dart';
 import '../services/course_service.dart';
 import '../widgets/course/course_card.dart';
 import 'course_detail_screen.dart';
+import 'creation_space_screen.dart';
+import 'ledger_screen.dart';
 import 'learning_screen.dart';
+import 'management_screen.dart';
 
 /// 课程列表页 — 系统默认入口，五门课程的阶梯式导航
 ///
@@ -102,6 +105,39 @@ class CourseListScreen extends StatelessWidget {
                           ),
                           icon: const Icon(Icons.route),
                           label: const Text('进入学习'),
+                        ),
+                        const SizedBox(height: 12),
+                        // 管理入口（v0.2.0：自己 + B/G 的只读账与设计面）
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          alignment: WrapAlignment.center,
+                          children: [
+                            OutlinedButton.icon(
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => const ManagementScreen()),
+                              ),
+                              icon: const Icon(Icons.manage_accounts, size: 18),
+                              label: const Text('教学管理'),
+                            ),
+                            OutlinedButton.icon(
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => const LedgerScreen()),
+                              ),
+                              icon: const Icon(Icons.receipt_long, size: 18),
+                              label: const Text('两本账'),
+                            ),
+                            OutlinedButton.icon(
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => const CreationSpaceScreen()),
+                              ),
+                              icon: const Icon(Icons.edit_note, size: 18),
+                              label: const Text('创作空间'),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 24),
                         // 课程卡片网格

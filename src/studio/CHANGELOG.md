@@ -3,12 +3,17 @@
 ## Unreleased
 
 ### Added
+
+- v0.2.0 管理三模型：Learner（参与度四级）/ LearningRecord（四要素）/ Review（三分记账），孪生规矩不破，全量测试
+- v0.2.0 班级状态动作与两道缝：三态只进不退、`CohortSink` 回灌缝；脚手架库 + 修订骨架、`DiffPreFilter` 预筛缝
+- v0.2.0 界面：管理四页签（名册 / 记录 / 评审 / 状态台）、两本账只读页、创作空间五页签、首页三入口
+- v0.2.0 内存仓 `ManagementStore` 种子对齐 lite 三班现状——`flutter analyze` 零告警、全量 122 测全绿
 - 创作空间三模型独立实现：Assignment（题目）/ Solution（参考答案）/ SolutionStep（步骤单元，`after` 边组 DAG）——三字段孪生 id/title/content，单元自足（判断标准与注解进 content）；toolkit 暂不引入，稳定后固定回 `dart/course`；模型与 DAG 测试随附（全量 81 测）
 - 学员端新增「学习」入口，展示学习云训练营、任务与完成状态，并支持登录后标记任务完成。
 
 ### Changed
 - 暂停生产实习旧进度上报与立项入口；对应 `/progress`、`/proposals` 上游已在学习云重构中移除，待产品决策后处理。
-- ROADMAP 按 v0.2.0 口径重写：定位改「自己 + B/G 只读」、分解以 lite 为对象正本（course/lesson/task/cohort/example 一字不动）、三件套归位裁定（task/lesson 设计态，命名归用户）、管理三模型（Learner/LearningRecord/Review）与班级状态动作、两本账只读页入范围；v0.1 精简理由留档，砍单逐条标注复活面
+- ROADMAP 按 v0.2.0 口径重写：定位改「自己 + B/G 只读」、分解以 lite 为对象正本、三件套归位裁定（命名归用户）、管理三模型与两本账入范围、砍单标注复活面
 
 ## [0.1.9] - 2026-08-23
 

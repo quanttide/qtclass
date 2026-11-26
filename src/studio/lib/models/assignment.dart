@@ -6,6 +6,9 @@
 /// - [content]：载荷，当前为 Markdown 长文本（任务书全文）；
 ///   未来拓展视频等格式时只在 content 上引入格式判别，[id] / [title] 不动
 ///
+/// **归位（v0.2.0）**：= lite `task` 的设计态——任务书生产线回灌的就是仓内任务书
+/// （lite `data/tasks/`），同一批文件，studio 是设计面，命名是否对齐 task 归用户。
+///
 /// **独立实现（业务迭代期）**：toolkit 暂不引入本域模型——studio 这份随业务实际
 /// 自由迭代，**稳定后固定到 `quanttide-tech-toolkit` 的 `dart/course`**，届时以 toolkit 为正本收敛。
 ///

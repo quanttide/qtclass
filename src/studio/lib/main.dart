@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'services/course_data.dart';
 import 'services/course_service.dart';
+import 'services/management_store.dart';
 import 'services/player_state.dart';
 import 'screens/course_list_screen.dart';
 import 'screens/login_screen.dart';
@@ -17,7 +18,10 @@ Future<void> main() async {
   await CourseData.load();
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => PlayerState())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => PlayerState()),
+        ChangeNotifierProvider(create: (_) => ManagementStore.seed()),
+      ],
       child: const QtClassApp(),
     ),
   );
