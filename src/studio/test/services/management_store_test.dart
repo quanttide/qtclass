@@ -69,7 +69,7 @@ void main() {
       expect(store.recordCountOf(a), 1);
       expect(store.recordCountOf(b), 0);
       expect(store.deliveryCountOf(a), 1);
-      expect(store.deliveriesByTask(), {'hello-world': 1});
+      expect(store.deliveriesByTask(), {'qtgame-tycoon': 1});
       expect(store.lastSubmittedAt(a), 1764192000000);
       expect(store.lastSubmittedAt(b), 0);
       expect(store.learnerById(a)?.title, '同学 A');

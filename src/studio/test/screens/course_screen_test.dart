@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:qtclass_studio/screens/creation_space_screen.dart';
+import 'package:qtclass_studio/screens/course_screen.dart';
 import 'package:qtclass_studio/services/management_store.dart';
 
 Widget _wrap() => ChangeNotifierProvider(
       create: (_) => ManagementStore.seed(),
-      child: const MaterialApp(home: CreationSpaceScreen()),
+      child: const MaterialApp(home: CourseScreen()),
     );
 
 void main() {
   testWidgets('五页签齐全，题目列表渲染种子', (tester) async {
     await tester.pumpWidget(_wrap());
-    expect(find.text('创作空间'), findsOneWidget);
+    expect(find.text('课程'), findsOneWidget);
     for (final tab in ['题目', '参考答案', '步骤单元', '脚手架', '修订']) {
       expect(find.text(tab), findsOneWidget);
     }

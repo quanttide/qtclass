@@ -7,31 +7,31 @@ import '../models/learning_record.dart';
 import '../models/review.dart';
 import '../services/management_store.dart';
 
-/// 教学管理 — 名册 / 学习记录 / 评审 / 班级状态台（v0.2.0 管理界面）。
+/// 学习 — 管理班级、学习进度和评审学习作品（v0.2.0 管理界面）。
 ///
 /// 只有管理者这一个操作面；学员交互全部在 lite，本页不设学员入口。
-class ManagementScreen extends StatelessWidget {
-  const ManagementScreen({super.key});
+class LearnScreen extends StatelessWidget {
+  const LearnScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('教学管理')),
+      appBar: AppBar(title: const Text('学习')),
       body: DefaultTabController(
         length: 4,
         child: Column(
           children: [
             const TabBar(
               tabs: [
+                Tab(text: '班级'),
                 Tab(text: '名册'),
-                Tab(text: '学习记录'),
+                Tab(text: '学习进度'),
                 Tab(text: '评审'),
-                Tab(text: '班级状态台'),
               ],
             ),
             Expanded(
               child: TabBarView(
-                children: [_RosterTab(), _RecordsTab(), _ReviewsTab(), _CohortTab()],
+                children: [_CohortTab(), _RosterTab(), _RecordsTab(), _ReviewsTab()],
               ),
             ),
           ],
@@ -148,8 +148,27 @@ class _RecordsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = context.watch<ManagementStore>();
+    final theme = Theme.of(context);
     return Column(
       children: [
+        // 课堂账读数：学习记录提交（原「两本」中的课堂一本，随旅程归入学习）
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('学习记录提交', style: theme.textTheme.titleSmall),
+              const SizedBox(height: 4),
+              for (final l in store.learners)
+                Text(
+                  '${l.title} · ${store.recordCountOf(l.id)} 篇'
+                  ' · 最近 ${_fmtDate(store.lastSubmittedAt(l.id))}',
+                  style: theme.textTheme.bodySmall,
+                ),
+            ],
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.all(12),
           child: FilledButton.icon(

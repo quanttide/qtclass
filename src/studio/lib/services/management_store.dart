@@ -37,6 +37,15 @@ class EchoDiffPreFilter implements DiffPreFilter {
       '桩预筛（未接 AI）：请人工复核 before/after 差异后合稿。';
 }
 
+/// PracticeTask（实践项目）— 众包屏的项目清单；id 对齐 lite `data/tasks/` 的 slug，
+/// title 取任务书 frontmatter 的 title（真实事实，不编）。
+class PracticeTask {
+  final String id;
+  final String title;
+
+  const PracticeTask({required this.id, required this.title});
+}
+
 /// ManagementStore — 管理层的内存仓（v0.2.0：不新造存储通道，数据先内存/本地）。
 ///
 /// 对象以 lite 分解为正本（cohort 字段对齐），本仓只装 lite 刻意不建的对象与
@@ -49,6 +58,7 @@ class ManagementStore extends ChangeNotifier {
   final List<ScaffoldItem> scaffolds;
   final List<Revision> revisions;
   final List<Delivery> deliveries;
+  final List<PracticeTask> tasks;
   final List<Assignment> assignments;
   final List<Solution> solutions;
   final List<SolutionStep> steps;
@@ -61,6 +71,7 @@ class ManagementStore extends ChangeNotifier {
     List<ScaffoldItem>? scaffolds,
     List<Revision>? revisions,
     List<Delivery>? deliveries,
+    List<PracticeTask>? tasks,
     List<Assignment>? assignments,
     List<Solution>? solutions,
     List<SolutionStep>? steps,
@@ -71,6 +82,7 @@ class ManagementStore extends ChangeNotifier {
         scaffolds = scaffolds ?? [],
         revisions = revisions ?? [],
         deliveries = deliveries ?? [],
+        tasks = tasks ?? [],
         assignments = assignments ?? [],
         solutions = solutions ?? [],
         steps = steps ?? [];
@@ -124,14 +136,22 @@ class ManagementStore extends ChangeNotifier {
             title: '第 1 周学习记录',
             content: '做了什么：复现摆摊游戏上线\n卡点：提示词总跑偏\n解决：照课时指令逐条抄\n待完善：第 4 步宣发',
             learnerId: 'aaaa1111-2222-4333-8444-555566667777',
-            taskId: 'hello-world',
+            taskId: 'qtgame-tycoon',
             submittedAt: 1764192000000,
           ),
+        ],
+        tasks: const [
+          PracticeTask(id: 'second-brain-init', title: '第二大脑创建插件'),
+          PracticeTask(id: 'qtgame-tycoon', title: '量潮模拟经营游戏任务书'),
+          PracticeTask(id: 'quanttide-fiction-of-founder', title: '量潮小说发行任务书'),
+          PracticeTask(id: 'legal-evidence', title: '评论区侵权「有效取证流水线」解决方案设计'),
+          PracticeTask(id: 'project-retrospective-system', title: '项目复盘系统搭建'),
+          PracticeTask(id: 'learn-profile', title: '贡献学习档案'),
         ],
         deliveries: [
           const Delivery(
             learnerId: 'aaaa1111-2222-4333-8444-555566667777',
-            taskId: 'hello-world',
+            taskId: 'qtgame-tycoon',
             at: 1764192000000,
           ),
         ],

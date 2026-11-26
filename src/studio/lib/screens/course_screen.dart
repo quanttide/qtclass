@@ -8,15 +8,15 @@ import '../models/solution.dart';
 import '../models/solution_step.dart';
 import '../services/management_store.dart';
 
-/// 创作空间 — 三件模型（题目 / 参考答案 / 步骤单元）的编辑与浏览，
-/// 外加脚手架库与修订回环两个页签（v0.2.0 范围存量项的落点）。
-class CreationSpaceScreen extends StatelessWidget {
-  const CreationSpaceScreen({super.key});
+/// 课程 — 设计和上架课程：三件模型（题目 / 参考答案 / 步骤单元）的编辑与浏览，
+/// 外加脚手架与修订（上架前的预筛与合稿留缝）。
+class CourseScreen extends StatelessWidget {
+  const CourseScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('创作空间')),
+      appBar: AppBar(title: const Text('课程')),
       body: DefaultTabController(
         length: 5,
         child: Column(
