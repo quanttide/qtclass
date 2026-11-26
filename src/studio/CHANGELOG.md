@@ -8,6 +8,7 @@
 
 ### Changed
 - 暂停生产实习旧进度上报与立项入口；对应 `/progress`、`/proposals` 上游已在学习云重构中移除，待产品决策后处理。
+- ROADMAP 按 v0.2.0 口径重写：定位改「自己 + B/G 只读」、分解以 lite 为对象正本（course/lesson/task/cohort/example 一字不动）、三件套归位裁定（task/lesson 设计态，命名归用户）、管理三模型（Learner/LearningRecord/Review）与班级状态动作、两本账只读页入范围；v0.1 精简理由留档，砍单逐条标注复活面
 
 ## [0.1.9] - 2026-08-23
 
