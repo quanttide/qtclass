@@ -127,7 +127,7 @@ class CourseListScreen extends StatelessWidget {
                                 MaterialPageRoute(builder: (_) => const LedgerScreen()),
                               ),
                               icon: const Icon(Icons.receipt_long, size: 18),
-                              label: const Text('两本账'),
+                              label: const Text('课堂与实践'),
                             ),
                             OutlinedButton.icon(
                               onPressed: () => Navigator.push(

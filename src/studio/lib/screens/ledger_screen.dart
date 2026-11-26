@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 
 import '../services/management_store.dart';
 
-/// 两本账 — 活跃（学习记录提交）与交付（任务交付情况），只读。
+/// 课堂与实践 — 两本只读账：课堂账（学习记录提交）与实践账（任务交付情况）。
 ///
 /// 自己与 B/G 端看同一页：投影是同一批对象的读数，不另起目录、不设编辑口。
+/// 命名（用户定，2026-11-26）：两本 = 课堂与实践，不叫活跃/交付。
 class LedgerScreen extends StatelessWidget {
   const LedgerScreen({super.key});
 
@@ -23,13 +24,13 @@ class LedgerScreen extends StatelessWidget {
     final tasks = byTask.keys.toList()..sort();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('两本账')),
+      appBar: AppBar(title: const Text('课堂与实践')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Text('只读投影 · 自己与 B端/G端同一页', style: theme.textTheme.bodySmall),
           const SizedBox(height: 16),
-          Text('活跃账 · 学习记录提交', style: theme.textTheme.titleMedium),
+          Text('课堂 · 学习记录提交', style: theme.textTheme.titleMedium),
           const SizedBox(height: 4),
           if (store.learners.isEmpty)
             const Padding(
@@ -45,7 +46,7 @@ class LedgerScreen extends StatelessWidget {
                 trailing: Text('${store.recordCountOf(l.id)} 篇'),
               ),
           const Divider(),
-          Text('交付账 · 任务交付情况', style: theme.textTheme.titleMedium),
+          Text('实践 · 任务交付情况', style: theme.textTheme.titleMedium),
           const SizedBox(height: 4),
           if (tasks.isEmpty)
             const Padding(

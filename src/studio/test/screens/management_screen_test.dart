@@ -57,7 +57,7 @@ void main() {
     expect(find.text('下一步：进行中'), findsNWidgets(2), reason: '另两班仍在招生中');
   });
 
-  testWidgets('首页三个管理入口可导航', (tester) async {
+  testWidgets('首页三个入口可导航', (tester) async {
     SharedPreferences.setMockInitialValues({});
     await CourseService.load();
     await tester.pumpWidget(ChangeNotifierProvider(
@@ -65,7 +65,7 @@ void main() {
       child: const MaterialApp(home: CourseListScreen()),
     ));
     expect(find.text('教学管理'), findsOneWidget);
-    expect(find.text('两本账'), findsOneWidget);
+    expect(find.text('课堂与实践'), findsOneWidget);
     expect(find.text('创作空间'), findsOneWidget);
 
     await tester.tap(find.text('教学管理'));

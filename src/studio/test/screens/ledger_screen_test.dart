@@ -10,12 +10,12 @@ Widget _wrap() => ChangeNotifierProvider(
     );
 
 void main() {
-  testWidgets('两本账：只读抬头 + 活跃与交付读数', (tester) async {
+  testWidgets('课堂与实践：只读抬头 + 两本读数', (tester) async {
     await tester.pumpWidget(_wrap());
-    expect(find.text('两本账'), findsOneWidget);
+    expect(find.text('课堂与实践'), findsOneWidget);
     expect(find.textContaining('只读投影'), findsOneWidget);
-    expect(find.text('活跃账 · 学习记录提交'), findsOneWidget);
-    expect(find.text('交付账 · 任务交付情况'), findsOneWidget);
+    expect(find.text('课堂 · 学习记录提交'), findsOneWidget);
+    expect(find.text('实践 · 任务交付情况'), findsOneWidget);
 
     // 活跃账：同学 A 1 篇、同学 B 0 篇
     expect(find.text('同学 A'), findsOneWidget);
