@@ -79,7 +79,7 @@ export const CURRENT_TASKS: Task[] = [
   {
     slug: 'review-qtdata-lite',
     title: '测评量潮数据 Lite',
-    description: '用统一方法测评 lite.data.cloud.quanttide.com，产出四维打分与三问题一亮点的测评报告。',
+    description: '从技术实现、产品功能、市场推广三个角度测评 lite.data.cloud.quanttide.com，产出三角度测评报告与三个可立即改的推广动作。',
     status: 'todo',
     deadline: '见任务书',
     prompt: `按任务书六步执行：立题、定输入、走步骤、出交付、对验收、记报酬。提交通道接通前，本页只读。`,

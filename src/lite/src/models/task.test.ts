@@ -28,6 +28,22 @@ describe('任务契约与内容', () => {
     }
   })
 
+  it('试点：qtdata 已改三角度口径，另三本待验收仍为四维', () => {
+    expect(getTaskbook('review-qtdata-lite')?.content).toContain('技术实现、产品功能、市场推广')
+    expect(getTaskbook('review-qtdata-lite')?.content).not.toContain('四维打分')
+    for (const slug of ['review-qtclass-lite', 'review-qtcloud-lite', 'review-qtconsult-lite']) {
+      expect(getTaskbook(slug)?.content, slug).toContain('四维打分')
+      expect(getTaskbook(slug)?.content, slug).not.toContain('技术实现、产品功能、市场推广')
+    }
+  })
+
+  it('报酬统一 10 元代金券（1000 元已纠错）', () => {
+    for (const book of taskbooks) {
+      expect(book.content, book.slug).toContain('10 元代金券')
+      expect(book.content, book.slug).not.toContain('1000 元代金券')
+    }
+  })
+
   it('旧任务书已下架（不复活）', () => {
     expect(getTaskbook('qtgame-tycoon')).toBeUndefined()
     expect(getTaskbook('uibe-recruitment-pilot')).toBeUndefined()
