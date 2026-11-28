@@ -7,7 +7,9 @@ import App from './App'
 // 两把尺标签体系已转至 qtcloud-crowd lite，本仓不再有筛选器
 describe('页面渲染冒烟', () => {
   const routes = [
-    { path: '/practice', text: /货架当前为空/ },
+    { path: '/practice', text: '测评量潮数据 Lite' },
+    { path: '/practice', text: '测评量潮咨询 Lite' },
+    { path: '/tasks/review-qtclass-lite', text: /## 立题|立题/ },
     { path: '/', text: 'AI编程' },
     { path: '/courses/vibe-coding', text: '课程介绍' },
     { path: '/mine', text: /待接入/ },
@@ -21,10 +23,10 @@ describe('页面渲染冒烟', () => {
     })
   }
 
-  it('反馈页空数据不崩（无任务即无卡片）', () => {
+  it('反馈页逐任务展示评语位（四任务四卡）', () => {
     window.history.pushState({}, '', '/feedback')
     render(<App />)
-    expect(screen.queryByText(/尚无评语/)).toBeNull()
+    expect(screen.getAllByText(/尚无评语/).length).toBe(4)
   })
 
   it('未知任务回实践', () => {
@@ -56,11 +58,13 @@ describe('页面渲染冒烟', () => {
     expect(screen.queryByRole('navigation', { name: '主导航' })).toBeNull()
   })
 
-  it('实践页无筛选器（标签体系已转出）', () => {
+  it('实践页无筛选器（标签体系已转出），四本测评任务在架', () => {
     window.history.pushState({}, '', '/practice')
     render(<App />)
     expect(screen.queryByRole('group', { name: '需求的精确程度' })).toBeNull()
     expect(screen.queryByRole('group', { name: '验收标准的开放程度' })).toBeNull()
+    expect(screen.getAllByText(/测评量潮/).length).toBe(4)
+    expect(screen.queryByText(/货架当前为空/)).toBeNull()
   })
 })
 

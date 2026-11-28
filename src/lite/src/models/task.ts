@@ -73,6 +73,43 @@ export function getTaskbook(slug: string): Taskbook | undefined {
   return taskbooks.find((item) => item.slug === slug)
 }
 
-// 静态任务数据：货架当前为空——旧任务书已整体下架，待标准化小任务重新上架
-// 形状、五状态机与详情/反馈页均保留，回填即恢复
-export const CURRENT_TASKS: Task[] = []
+// 静态任务数据：四个业务平台 Lite 的测评任务（标准化小任务，按六步模板产出）
+// 形状、五状态机与详情/反馈页保留；任务书正文在 data/tasks/，两者 slug 对齐
+export const CURRENT_TASKS: Task[] = [
+  {
+    slug: 'review-qtdata-lite',
+    title: '测评量潮数据 Lite',
+    description: '用统一方法测评 lite.data.cloud.quanttide.com，产出四维打分与三问题一亮点的测评报告。',
+    status: 'todo',
+    deadline: '见任务书',
+    prompt: `按任务书六步执行：立题、定输入、走步骤、出交付、对验收、记报酬。提交通道接通前，本页只读。`,
+    taskbookSlug: 'review-qtdata-lite',
+  },
+  {
+    slug: 'review-qtclass-lite',
+    title: '测评量潮课堂 Lite',
+    description: '用统一方法测评 lite.class.quanttide.com，产出四维打分与三问题一亮点的测评报告。',
+    status: 'todo',
+    deadline: '见任务书',
+    prompt: `按任务书六步执行：立题、定输入、走步骤、出交付、对验收、记报酬。提交通道接通前，本页只读。`,
+    taskbookSlug: 'review-qtclass-lite',
+  },
+  {
+    slug: 'review-qtcloud-lite',
+    title: '测评量潮云 Lite',
+    description: '用统一方法测评 lite.cloud.quanttide.com，产出四维打分与三问题一亮点的测评报告。',
+    status: 'todo',
+    deadline: '见任务书',
+    prompt: `按任务书六步执行：立题、定输入、走步骤、出交付、对验收、记报酬。提交通道接通前，本页只读。`,
+    taskbookSlug: 'review-qtcloud-lite',
+  },
+  {
+    slug: 'review-qtconsult-lite',
+    title: '测评量潮咨询 Lite',
+    description: '用统一方法测评 lite.consult.cloud.quanttide.com，产出四维打分与三问题一亮点的测评报告。',
+    status: 'todo',
+    deadline: '见任务书',
+    prompt: `按任务书六步执行：立题、定输入、走步骤、出交付、对验收、记报酬。提交通道接通前，本页只读。`,
+    taskbookSlug: 'review-qtconsult-lite',
+  },
+]
