@@ -1,11 +1,18 @@
 # CHANGELOG
 
-## [Unreleased]
+## [0.4.2] - 2026-11-29
 
 ### Changed
 
-- **试点：qtdata 测评任务书改三角度口径**——技术实现 / 产品功能 / 市场推广（原四维打分），交付物与验收清单同步改写；另三本待验收后再铺开
-- **报酬纠错**：四本任务书 1000 元代金券 → 10 元代金券（原金额失真）
+- **四本试用任务上架**：slug 对齐档案 `trial-*`，任务结构与库存侧 qtcloud-crowd lite 一致（任务背景 / 任务内容 / 任务输入 / 交付物 / 验收 / 其他），不带两把尺 tags——分类与方法归库存侧
+- **实践页与课堂页 UI 统一**：改为同构的 `sectionHead + learnGrid + learnCard` 卡片，点卡片压入任务详情
+- **任务详情按档案结构逐字段渲染**，不再用 Markdown 组件渲染题面
+
+### Removed
+
+- **任务书 Markdown 载荷**：`data/tasks/*.md` 四本与 frontmatter 解析一并删除，正文只存档案，lite 侧走结构化字段
+- 依赖 `react-markdown`、`remark-gfm`、`js-yaml`（-98 个包）
+- 任务的 `prompt` / `taskbookSlug` / `deadline` 占位字段（随任务书一并失效）
 
 ## [0.4.1] - 2026-11-28
 

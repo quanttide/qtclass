@@ -1,38 +1,44 @@
 import { Link } from 'react-router-dom'
-import { CURRENT_TASKS, statusLabel, taskbooks } from '../models/task'
+import { CURRENT_TASKS, statusLabel } from '../models/task'
 import { taskItemPath } from '../routes'
 
-// 实践页 = 货架：任务书列表（当前指派在前）。两把尺标签体系已转至 qtcloud-crowd lite（库存侧）
+// 实践页 = 货架：任务清单。卡片与课堂页同构（sectionHead + learnGrid + learnCard），
+// 无筛选、无两把尺标签——分类与方法归库存侧 qtcloud-crowd lite
 function Practice() {
-  const currentSlugs = CURRENT_TASKS.map((task) => task.slug)
-  const books = [...taskbooks].sort((a, b) => {
-    const ai = currentSlugs.indexOf(a.slug)
-    const bi = currentSlugs.indexOf(b.slug)
-    if (ai !== -1 || bi !== -1) return (ai === -1 ? Infinity : ai) - (bi === -1 ? Infinity : bi)
-    return a.slug.localeCompare(b.slug)
-  })
+  const tasks = [...CURRENT_TASKS].sort((a, b) => a.slug.localeCompare(b.slug))
 
   return (
     <main>
-      {books.length === 0 && (
-        <p className="todayHint">货架当前为空——旧任务书已下线，标准化小任务整理中。</p>
-      )}
+      <section className="courseSection" aria-labelledby="practice-title">
+        <div className="sectionHead">
+          <div>
+            <p>Practice</p>
+            <h2 id="practice-title">任务</h2>
+          </div>
+        </div>
 
-      {books.map((book) => {
-        const task = CURRENT_TASKS.find((item) => item.slug === book.slug)
-        return (
-          <Link key={book.slug} to={taskItemPath(book.slug)} className="taskCard">
-            <div className="taskCardTop">
-              <h2>{task?.title || book.title}</h2>
-              {task && (
+        {tasks.length === 0 && <p className="todayHint">货架当前为空。</p>}
+
+        <div className="learnGrid">
+          {tasks.map((task) => (
+            <Link
+              key={task.slug}
+              to={taskItemPath(task.slug)}
+              className="learnCard"
+              aria-label={`${task.title} 任务详情`}
+            >
+              <div className="courseTop">
+                <h3>{task.title}</h3>
                 <span className={`taskStatus ${task.status}`}>{statusLabel(task.status)}</span>
-              )}
-            </div>
-            <p className="taskDesc">{task?.description || book.description}</p>
-            {task && <p className="taskDeadline">截止：{task.deadline}</p>}
-          </Link>
-        )
-      })}
+              </div>
+              <p className="summary">{task.description}</p>
+              <span className="courseHomeLink" aria-hidden="true">
+                任务详情 ›
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
     </main>
   )
 }

@@ -1,57 +1,71 @@
 import { describe, it, expect } from 'vitest'
-import { CURRENT_TASKS, TASK_STATUSES, getTaskbook, statusLabel, taskbooks } from './task'
+import { CURRENT_TASKS, TASK_STATUSES, statusLabel } from './task'
 
-describe('任务契约与内容', () => {
-  it('货架上四本业务平台 Lite 测评任务书，标题与正文可解析', () => {
-    expect(taskbooks.length).toBe(4)
-    for (const book of taskbooks) {
-      expect(book.title, book.slug).toBeTruthy()
-      expect(book.title, book.slug).not.toBe(book.slug)
-      expect(book.content, book.slug).toContain('## 立题')
-      expect(book.content, book.slug).toContain('## 验收')
-    }
-    expect(getTaskbook('review-qtdata-lite')?.title).toBe('测评量潮数据 Lite')
-    expect(getTaskbook('review-qtconsult-lite')?.title).toBe('测评量潮咨询 Lite')
-  })
+const DETAIL_SECTIONS = ['任务背景', '任务内容', '任务输入', '交付物', '验收', '其他']
 
-  it('当前任务与任务书一一对齐，题面指向六步模板', () => {
-    expect(CURRENT_TASKS.map((t) => t.slug)).toEqual([
-      'review-qtdata-lite',
-      'review-qtclass-lite',
-      'review-qtcloud-lite',
-      'review-qtconsult-lite',
+describe('任务载荷', () => {
+  it('四本已通过的试用任务在架，slug 对齐档案', () => {
+    expect(CURRENT_TASKS.map((task) => task.slug)).toEqual([
+      'trial-qtdata-lite',
+      'trial-qtclass-lite',
+      'trial-qtcloud-lite',
+      'trial-qtconsult-lite',
     ])
+  })
+
+  it('每本详情六章节齐全，字段与库存侧一致（不含两把尺）', () => {
     for (const task of CURRENT_TASKS) {
-      expect(task.taskbookSlug, task.slug).toBeTruthy()
-      expect(getTaskbook(task.taskbookSlug!), task.slug).toBeDefined()
-      expect(task.prompt, task.slug).toContain('六步')
+      const { detail } = task
+      expect(detail.business, task.slug).toBeTruthy()
+      expect(detail.category, task.slug).toBe('测评')
+      expect(detail.status, task.slug).toBe('待认领')
+      expect(detail.background, task.slug).toBeTruthy()
+      expect(detail.content.length, task.slug).toBe(3)
+      expect(detail.inputs.length, task.slug).toBe(3)
+      expect(detail.deliverable, task.slug).toContain('试用记录')
+      expect(detail.acceptance.length, task.slug).toBe(3)
+      expect(detail.notes.length, task.slug).toBe(2)
+      expect('tags' in task, task.slug).toBe(false)
     }
   })
 
-  it('试点：qtdata 已改三角度口径，另三本待验收仍为四维', () => {
-    expect(getTaskbook('review-qtdata-lite')?.content).toContain('技术实现、产品功能、市场推广')
-    expect(getTaskbook('review-qtdata-lite')?.content).not.toContain('四维打分')
-    for (const slug of ['review-qtclass-lite', 'review-qtcloud-lite', 'review-qtconsult-lite']) {
-      expect(getTaskbook(slug)?.content, slug).toContain('四维打分')
-      expect(getTaskbook(slug)?.content, slug).not.toContain('技术实现、产品功能、市场推广')
+  it('详情里没有代金券与 Issue', () => {
+    for (const task of CURRENT_TASKS) {
+      const flat = JSON.stringify(task)
+      expect(flat, task.slug).not.toContain('代金券')
+      expect(flat, task.slug).not.toContain('Issue')
+      expect(flat, task.slug).not.toContain('四维打分')
     }
   })
 
-  it('报酬统一 10 元代金券（1000 元已纠错）', () => {
-    for (const book of taskbooks) {
-      expect(book.content, book.slug).toContain('10 元代金券')
-      expect(book.content, book.slug).not.toContain('1000 元代金券')
+  it('旧 review-* 任务书 slug 不复活', () => {
+    const slugs = CURRENT_TASKS.map((task) => task.slug)
+    for (const slug of slugs) {
+      expect(slug.startsWith('review-'), slug).toBe(false)
     }
   })
 
-  it('旧任务书已下架（不复活）', () => {
-    expect(getTaskbook('qtgame-tycoon')).toBeUndefined()
-    expect(getTaskbook('uibe-recruitment-pilot')).toBeUndefined()
-  })
-
-  it('状态枚举五件套可显示', () => {
-    expect(TASK_STATUSES.map((s) => s.key)).toEqual(['todo', 'doing', 'submitted', 'returned', 'passed'])
-    expect(statusLabel('returned')).toBe('退回')
+  it('五状态机与显示名不变', () => {
+    expect(TASK_STATUSES.map((item) => item.key)).toEqual([
+      'todo',
+      'doing',
+      'submitted',
+      'returned',
+      'passed',
+    ])
+    expect(statusLabel('todo')).toBe('待做')
     expect(statusLabel('passed')).toBe('通过')
+    expect(statusLabel('unknown' as never)).toBe('unknown')
+  })
+
+  it('章节名与详情页渲染一致', () => {
+    expect(DETAIL_SECTIONS).toEqual([
+      '任务背景',
+      '任务内容',
+      '任务输入',
+      '交付物',
+      '验收',
+      '其他',
+    ])
   })
 })

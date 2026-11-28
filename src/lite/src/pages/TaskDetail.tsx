@@ -1,9 +1,9 @@
 import { Link, useParams } from 'react-router-dom'
-import Markdown from '../components/Markdown'
-import { CURRENT_TASKS, getTaskbook, statusLabel } from '../models/task'
+import { CURRENT_TASKS, statusLabel } from '../models/task'
 import { ROUTE_PATHS } from '../routes'
 
-// 任务详情：题面（说明 + 指派任务书正文）。提交通道未接通，只读
+// 任务详情：按档案结构逐字段渲染（任务背景 / 任务内容 / 任务输入 / 交付物 / 验收 / 其他）。
+// 与库存侧 qtcloud-crowd lite 详情同构，不落 Markdown。提交通道未接通，只读
 function TaskDetail() {
   const { slug } = useParams()
   const task = CURRENT_TASKS.find((item) => item.slug === slug) ?? null
@@ -21,22 +21,74 @@ function TaskDetail() {
     )
   }
 
-  const taskbook = task.taskbookSlug ? getTaskbook(task.taskbookSlug) : undefined
+  const { detail } = task
 
   return (
     <main>
-      <div className="taskMeta">
-        <span className={`taskStatus ${task.status}`}>{statusLabel(task.status)}</span>
-      </div>
+      <Link to={ROUTE_PATHS.practice} className="backLink">
+        ← 任务
+      </Link>
 
-      <article className="taskBody">
-        <Markdown>{task.prompt}</Markdown>
-        {taskbook && (
-          <section className="taskMaterial">
-            <h2 className="materialTitle">题面素材：{taskbook.title}</h2>
-            <Markdown>{taskbook.content}</Markdown>
-          </section>
-        )}
+      <article className="detailCard">
+        <div className="detailHead">
+          <h1>{task.title}</h1>
+          <span className={`taskStatus ${task.status}`}>{statusLabel(task.status)}</span>
+        </div>
+
+        <p className="detailMetaRow">
+          业务：{detail.business} · 类别：{detail.category} · 状态：{detail.status}
+        </p>
+        <p className="taskDesc">{task.description}</p>
+
+        <section className="detailSection">
+          <h2 className="detailHeading">任务背景</h2>
+          <p className="detailPara">{detail.background}</p>
+        </section>
+
+        <section className="detailSection">
+          <h2 className="detailHeading">任务内容</h2>
+          <ol className="detailList">
+            {detail.content.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="detailSection">
+          <h2 className="detailHeading">任务输入</h2>
+          <ul className="detailList">
+            {detail.inputs.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="detailSection">
+          <h2 className="detailHeading">交付物</h2>
+          <p className="detailPara">{detail.deliverable}</p>
+        </section>
+
+        <section className="detailSection">
+          <h2 className="detailHeading">验收</h2>
+          <ul className="checkList">
+            {detail.acceptance.map((line) => (
+              <li key={line}>
+                <span className="checkBox" aria-hidden="true" />
+                {line}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="detailSection">
+          <h2 className="detailHeading">其他</h2>
+          <ul className="detailList">
+            {detail.notes.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        </section>
+
         <p className="submitHint">提交通道接通后开放，当前只读。</p>
       </article>
     </main>

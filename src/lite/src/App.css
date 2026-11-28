@@ -106,21 +106,13 @@
   margin: 0.8rem 0;
 }
 
-.taskCard,
 .feedbackCard {
   display: block;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 1.1rem 1.2rem;
-}
-
-.feedbackCard {
   color: inherit;
-}
-
-.taskCard:hover {
-  border-color: var(--accent);
 }
 
 .taskCardTop {
@@ -177,33 +169,9 @@
   font-style: normal;
 }
 
-.taskDeadline {
-  margin: 0.5rem 0 0;
-  color: var(--ink-soft);
-  font-size: 0.85rem;
-}
 
 
 /* 任务详情 */
-.taskMeta {
-  display: flex;
-  justify-content: flex-end;
-  padding: 0.7rem 0 0.4rem;
-}
-
-.taskMaterial {
-  margin-top: 1.6rem;
-  padding-top: 1.2rem;
-  border-top: 2px solid var(--line);
-}
-
-.materialTitle {
-  font-size: 0.92rem;
-  color: var(--ink-soft);
-  text-transform: none;
-  margin: 0 0 0.8rem;
-}
-
 .submitHint {
   margin-top: 2rem;
   padding: 0.7rem 0.9rem;
@@ -759,4 +727,88 @@
   background: #e3f5ea;
   border-radius: 999px;
   padding: 2px 8px;
+}
+
+
+/* 任务详情：按档案结构逐字段渲染（与 qtcloud-crowd lite 同构） */
+.backLink {
+  display: inline-block;
+  margin-bottom: 0.8rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.detailCard {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem 1.3rem;
+}
+
+.detailHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.detailHead h1 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.detailMetaRow {
+  margin: 0.55rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.detailSection {
+  margin-top: 1.1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+}
+
+.detailHeading {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+}
+
+.detailPara {
+  margin: 0;
+  line-height: 1.65;
+}
+
+.detailList {
+  margin: 0;
+  padding-left: 1.15rem;
+  line-height: 1.7;
+}
+
+.detailList li {
+  margin-top: 0.25rem;
+}
+
+.checkList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.checkList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  line-height: 1.6;
+}
+
+.checkBox {
+  flex-shrink: 0;
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-top: 0.28rem;
+  border: 1.5px solid var(--line);
+  border-radius: 4px;
 }
