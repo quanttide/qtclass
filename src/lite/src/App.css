@@ -98,57 +98,6 @@
   font-size: 0.92rem;
 }
 
-/* 实践页：两排分段筛选（需求 / 验收各一排，选项常驻可见） */
-.filterBar {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  padding: 0.7rem 0 0.3rem;
-}
-
-.filterRow {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.filterLabel {
-  flex-shrink: 0;
-  color: var(--ink-soft);
-  font-size: 0.85rem;
-}
-
-.filterSegs {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--card);
-}
-
-.filterSeg {
-  flex: 1;
-  min-width: 0;
-  padding: 0.42rem 0.2rem;
-  border: none;
-  border-right: 1px solid var(--line);
-  background: transparent;
-  color: var(--ink);
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-
-.filterSeg:last-child {
-  border-right: none;
-}
-
-.filterSeg.active {
-  background: var(--accent);
-  color: #fff;
-  font-weight: 600;
-}
 
 /* 任务卡（实践页） */
 .todayHint {
@@ -234,12 +183,6 @@
   font-size: 0.85rem;
 }
 
-/* 卡片两把尺标注 */
-.taskTags {
-  margin: 0.55rem 0 0;
-  color: var(--ink-soft);
-  font-size: 0.82rem;
-}
 
 /* 任务详情 */
 .taskMeta {

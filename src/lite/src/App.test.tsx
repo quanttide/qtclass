@@ -1,9 +1,10 @@
 import { describe, it, expect, afterEach } from 'vitest'
-import { render, screen, cleanup, fireEvent, within } from '@testing-library/react'
+import { render, screen, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/vitest'
 import App from './App'
 
-// 冒烟：三个页签、压入页与筛选器必须渲染可用。白屏（坏 import、渲染期崩溃、内容定位失败）会在这里失败
+// 冒烟：三个页签与压入页必须渲染可用。白屏（坏 import、渲染期崩溃、内容定位失败）会在这里失败
+// 两把尺标签体系已转至 qtcloud-crowd lite，本仓不再有筛选器
 describe('页面渲染冒烟', () => {
   const routes = [
     { path: '/practice', text: /货架当前为空/ },
@@ -54,37 +55,12 @@ describe('页面渲染冒烟', () => {
     render(<App />)
     expect(screen.queryByRole('navigation', { name: '主导航' })).toBeNull()
   })
-})
 
-describe('两排筛选', () => {
-  it('两排选项常驻可见（无弹层），选中态行内回显', () => {
+  it('实践页无筛选器（标签体系已转出）', () => {
     window.history.pushState({}, '', '/practice')
     render(<App />)
-
-    expect(screen.queryByRole('dialog')).toBeNull()
-    for (const label of ['模糊', '半精确', '封闭', '半开放']) {
-      expect(screen.getByRole('button', { name: label })).toBeInTheDocument()
-    }
-
-    fireEvent.click(screen.getByRole('button', { name: '精确' }))
-    const row = screen.getByRole('group', { name: '需求的精确程度' })
-    expect(within(row).getByRole('button', { name: '精确' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    )
-    expect(within(row).getByRole('button', { name: '全部' })).toHaveAttribute(
-      'aria-pressed',
-      'false',
-    )
-  })
-
-  it('货架为空时提示下线态而非筛选无匹配', () => {
-    window.history.pushState({}, '', '/practice')
-    render(<App />)
-
-    fireEvent.click(screen.getByRole('button', { name: '精确' }))
-    expect(screen.getByText(/货架当前为空/)).toBeInTheDocument()
-    expect(screen.queryByText('没有符合筛选条件的任务书。')).toBeNull()
+    expect(screen.queryByRole('group', { name: '需求的精确程度' })).toBeNull()
+    expect(screen.queryByRole('group', { name: '验收标准的开放程度' })).toBeNull()
   })
 })
 

@@ -13,11 +13,10 @@ function matchFrontmatter(md: string): RegExpMatchArray | null {
 export interface Frontmatter {
   title: string
   description: string
-  // 任务书两把尺（tags.requirement / tags.acceptance），仅收字符串
-  tags?: { requirement?: string; acceptance?: string }
 }
 
-// 解析 title / description / tags，无元数据或解析失败返回 null
+// 解析 title / description，无元数据或解析失败返回 null
+// 两把尺标签（tags.requirement / tags.acceptance）已随体系转至 qtcloud-crowd lite
 export function parseFrontmatter(md: string): Frontmatter | null {
   const match = matchFrontmatter(md)
   if (!match) return null
@@ -31,16 +30,9 @@ export function parseFrontmatter(md: string): Frontmatter | null {
   if (typeof data !== 'object' || data === null) return null
 
   const text = (value: unknown) => (typeof value === 'string' ? value.trim() : '')
-  const { title, description, tags } = data as Record<string, unknown>
+  const { title, description } = data as Record<string, unknown>
   const parsed: Frontmatter = { title: text(title), description: text(description) }
-  if (typeof tags === 'object' && tags !== null && !Array.isArray(tags)) {
-    const record = tags as Record<string, unknown>
-    const out: NonNullable<Frontmatter['tags']> = {}
-    if (typeof record.requirement === 'string') out.requirement = record.requirement.trim()
-    if (typeof record.acceptance === 'string') out.acceptance = record.acceptance.trim()
-    if (out.requirement || out.acceptance) parsed.tags = out
-  }
-  if (!parsed.title && !parsed.description && !parsed.tags) return null
+  if (!parsed.title && !parsed.description) return null
   return parsed
 }
 
