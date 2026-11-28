@@ -66,7 +66,8 @@ function asAcceptance(value: string | undefined): AcceptanceValue | undefined {
   return ACCEPTANCES.some((item) => item.value === value) ? (value as AcceptanceValue) : undefined
 }
 
-// 任务书内容库：data/tasks/ 静态副本（源自 site，迁出后不再回流）
+// 任务书内容库：data/tasks/ 静态副本——当前为空，旧任务书已整体下架，待标准化小任务重新上架
+// 加载器、frontmatter 解析与两把尺筛选均保留，回填文件即恢复
 const taskbookModules = import.meta.glob('/data/tasks/**/*.md', {
   eager: true,
   query: '?raw',
@@ -117,39 +118,6 @@ export function getTaskbook(slug: string): Taskbook | undefined {
   return taskbooks.find((item) => item.slug === slug)
 }
 
-// 静态任务数据：provider 未就绪期间的载荷。当前任务 = 小说发行与游戏两个工作室任务（源 academy intention 任务书，与公众号同源）
-export const CURRENT_TASKS: Task[] = [
-  {
-    slug: 'uibe-recruitment-pilot',
-    title: '对外经济贸易大学招聘宣传合作试点',
-    description: '完成一轮招聘宣传试点，记录需求、合作条件、材料复核、发布和效果复盘。',
-    status: 'todo',
-    deadline: '待安排人确认',
-    prompt: `任务内容及验收要求见下方题面素材。通过 Issue 沟通任务领取事宜。
-
-领取、阶段成果与指导反馈沿用现有内部记录；提交通道接通前，本页只读。`,
-    taskbookSlug: 'uibe-recruitment-pilot',
-  },
-  {
-    slug: 'quanttide-fiction-of-founder',
-    title: '小说发行工作室任务',
-    description: '在晋江完成一次完整发行动作，并在小红书发布一条面向读者的推广内容。',
-    status: 'todo',
-    deadline: '见任务书',
-    prompt: `你被指派到小说发行工作室。任务书全文见下方题面素材，按其中的交付、约束与验收标准执行。
-
-提交通道将在 provider v0.2 接通后开放，当前只读。`,
-    taskbookSlug: 'quanttide-fiction-of-founder',
-  },
-  {
-    slug: 'qtgame-tycoon',
-    title: '模拟经营游戏工作室任务',
-    description: '摆摊经营类 H5 小游戏：在 4399 平台发布，并为玩家制作一份游戏宣传册。',
-    status: 'todo',
-    deadline: '见任务书',
-    prompt: `你被指派到模拟经营游戏工作室。任务书全文见下方题面素材，按其中的交付、约束与验收标准执行。
-
-提交通道将在 provider v0.2 接通后开放，当前只读。`,
-    taskbookSlug: 'qtgame-tycoon',
-  },
-]
+// 静态任务数据：货架当前为空——旧任务书已整体下架，待标准化小任务重新上架
+// 形状、五状态机与详情/反馈页均保留，回填即恢复
+export const CURRENT_TASKS: Task[] = []

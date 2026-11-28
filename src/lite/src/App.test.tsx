@@ -6,16 +6,10 @@ import App from './App'
 // 冒烟：三个页签、压入页与筛选器必须渲染可用。白屏（坏 import、渲染期崩溃、内容定位失败）会在这里失败
 describe('页面渲染冒烟', () => {
   const routes = [
-    { path: '/practice', text: '对外经济贸易大学招聘宣传合作试点' },
-    { path: '/tasks/uibe-recruitment-pilot', text: /通过 Issue 沟通任务领取事宜/ },
-    { path: '/practice', text: '小说发行工作室任务' },
-    { path: '/practice', text: '模拟经营游戏工作室任务' },
+    { path: '/practice', text: /货架当前为空/ },
     { path: '/', text: 'AI编程' },
     { path: '/courses/vibe-coding', text: '课程介绍' },
     { path: '/mine', text: /待接入/ },
-    { path: '/tasks/qtgame-tycoon', text: /题面素材/ },
-    { path: '/tasks/quanttide-fiction-of-founder', text: /4399|晋江/ },
-    { path: '/feedback', text: /尚无评语/ },
   ]
 
   for (const { path, text } of routes) {
@@ -25,6 +19,12 @@ describe('页面渲染冒烟', () => {
       expect(screen.getAllByText(text).length).toBeGreaterThan(0)
     })
   }
+
+  it('反馈页空数据不崩（无任务即无卡片）', () => {
+    window.history.pushState({}, '', '/feedback')
+    render(<App />)
+    expect(screen.queryByText(/尚无评语/)).toBeNull()
+  })
 
   it('未知任务回实践', () => {
     window.history.pushState({}, '', '/tasks/no-such')
@@ -57,17 +57,16 @@ describe('页面渲染冒烟', () => {
 })
 
 describe('两排筛选', () => {
-  it('点「精确」筛出试用 CLI，行内回显选中态', () => {
+  it('两排选项常驻可见（无弹层），选中态行内回显', () => {
     window.history.pushState({}, '', '/practice')
     render(<App />)
 
-    // 默认全部可见
-    expect(screen.getByText(/摸底 lark-cli/)).toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).toBeNull()
+    for (const label of ['模糊', '半精确', '封闭', '半开放']) {
+      expect(screen.getByRole('button', { name: label })).toBeInTheDocument()
+    }
 
     fireEvent.click(screen.getByRole('button', { name: '精确' }))
-    expect(screen.getByText(/试用量潮工作云/)).toBeInTheDocument()
-    expect(screen.queryByText(/摸底 lark-cli/)).toBeNull()
-
     const row = screen.getByRole('group', { name: '需求的精确程度' })
     expect(within(row).getByRole('button', { name: '精确' })).toHaveAttribute(
       'aria-pressed',
@@ -79,28 +78,13 @@ describe('两排筛选', () => {
     )
   })
 
-  it('精确 × 开放无交集时给出空态', () => {
+  it('货架为空时提示下线态而非筛选无匹配', () => {
     window.history.pushState({}, '', '/practice')
     render(<App />)
 
     fireEvent.click(screen.getByRole('button', { name: '精确' }))
-    fireEvent.click(screen.getByRole('button', { name: '开放' }))
-
-    expect(screen.getByText('没有符合筛选条件的任务书。')).toBeInTheDocument()
-    const row = screen.getByRole('group', { name: '验收标准的开放程度' })
-    expect(within(row).getByRole('button', { name: '开放' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    )
-  })
-
-  it('两排选项常驻可见（无弹层）', () => {
-    window.history.pushState({}, '', '/practice')
-    render(<App />)
-    expect(screen.queryByRole('dialog')).toBeNull()
-    for (const label of ['模糊', '半精确', '封闭', '半开放']) {
-      expect(screen.getByRole('button', { name: label })).toBeInTheDocument()
-    }
+    expect(screen.getByText(/货架当前为空/)).toBeInTheDocument()
+    expect(screen.queryByText('没有符合筛选条件的任务书。')).toBeNull()
   })
 })
 

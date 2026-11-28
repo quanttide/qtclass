@@ -17,7 +17,7 @@ npm test
 ## 结构
 
 ```
-data/tasks/            # 任务书内容库（frontmatter tags 标注两把尺）
+data/tasks/            # 任务书内容库（frontmatter tags 标注两把尺）——当前为空，旧任务书已下线，待标准化小任务回填
 data/lessons/          # 课时内容库（一文件一课时，静态载荷，文字源自教程仓）
 src/
 ├── models/task.ts     # 任务契约（Task 形状 + 五状态机）与两把尺枚举（单一事实源）
@@ -31,6 +31,8 @@ src/
 ## 数据面
 
 契约静态先行：页面只认 `models/task.ts` 的 `Task` 形状，数据源当前为仓内静态载荷；provider v0.2 接通后换数据源，页面不动。提交通道未开放，任务详情只读。
+
+**实践页 = 货架**：旧任务书（19 篇）与当前任务载荷已整体下线，货架为空；加载器、两把尺筛选、状态机与详情/反馈页均保留，回填 `data/tasks/` 即恢复。库存侧在 `qtcloud-crowd` lite。
 
 两把尺写在任务书 frontmatter 的 `tags:` 下（`requirement: fuzzy|semi|precise`、`acceptance: closed|semi|open`），筛选器与卡片共用 `models/task.ts` 的枚举与显示名。
 

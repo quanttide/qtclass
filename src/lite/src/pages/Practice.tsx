@@ -84,7 +84,12 @@ function Practice() {
         </div>
       </div>
 
-      {books.length === 0 && <p className="todayHint">没有符合筛选条件的任务书。</p>}
+      {taskbooks.length === 0 && (
+        <p className="todayHint">货架当前为空——旧任务书已下线，标准化小任务整理中。</p>
+      )}
+      {taskbooks.length > 0 && books.length === 0 && (
+        <p className="todayHint">没有符合筛选条件的任务书。</p>
+      )}
 
       {books.map((book) => {
         const task = CURRENT_TASKS.find((item) => item.slug === book.slug)
